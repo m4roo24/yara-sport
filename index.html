@@ -1105,14 +1105,22 @@
             { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true },
             { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/21/index.m3u8", category: "beIN Sport", needsProxy: true },
             { name: "beIN Sport direct 2", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
-            { name: "coming soon", url: "https://nl1.nghk.ai/ArenaSport1BH/index.m3u8", category: "soon", needsProxy: true },
+            { name: "Bioscope+ (FIFA)", url: "https://d1kep4defqj6r1.cloudfront.net/out/v1/4e21d5a122c549289dd6feab259266e8/index_1.m3u8", category: "FIFA" },
+            { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true },
+            { name: "TSN Sport", url: "https://pub-85819be5176c4d29bb0ce67fa13e15ab.r2.dev/en/index.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Fifa Sport WM", url: "https://s6.hopslan.com/ardX/tracks-v1a1/mono.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "FIFA", needsProxy: true },
+            { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "Coming Soon", needsProxy: true },
         ];
 
         const proxyList = [
             { name: "Cloudflare", url: "https://yara-proxy.maroduhoki6.workers.dev/?url=" }
         ];
 
-        let categories = ["All", "beIN Sport", "soon", "Sports"];
+        let categories = ["All", "beIN Sport", "FIFA", "Coming Soon", "Sports"];
         let activeCategory = "All";
 
         // ===================== STATE =====================
@@ -1692,12 +1700,20 @@
 
                 // Start fresh with original channels
                 const baseChannels = [
-                    { name: "Bein Sport Max 1", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
-                    { name: "Bein Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true },
-                    { name: "Bein Sport 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
-                    { name: "Bein Sport 2", url: "https://1nyaler.streamhostingcdn.top/stream/21/index.m3u8", category: "beIN Sport", needsProxy: true },
-                    { name: "coming soon", url: "https://nl1.nghk.ai/ArenaSport1BH/index.m3u8", category: "soon", needsProxy: true },
-                        ];
+            { name: "beIN Sport Max 1", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
+            { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true },
+            { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/21/index.m3u8", category: "beIN Sport", needsProxy: true },
+            { name: "beIN Sport direct 2", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
+            { name: "Bioscope+ (FIFA)", url: "https://d1kep4defqj6r1.cloudfront.net/out/v1/4e21d5a122c549289dd6feab259266e8/index_1.m3u8", category: "FIFA" },
+            { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true },
+            { name: "TSN Sport", url: "https://pub-85819be5176c4d29bb0ce67fa13e15ab.r2.dev/en/index.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Fifa Sport WM", url: "https://s6.hopslan.com/ardX/tracks-v1a1/mono.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "FIFA", needsProxy: true },
+            { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "Coming Soon", needsProxy: true },
+             ];
 
                 // Add custom channels
                 custom.forEach(c => {

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — Yara Sport</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --primary-light: #a78bfa;
+            --accent: #f59e0b;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #252525;
+            --bg-input: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+            --live-red: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; -webkit-touch-callout: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .header {
+            background: rgba(15,15,15,0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .back-btn {
+            background: rgba(124,58,237,0.15);
+            color: var(--primary-light);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background: rgba(124,58,237,0.3); color: #fff; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 40px;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 32px;
+        }
+        .search-box input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px 14px 48px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus { border-color: var(--primary); }
+        .search-box input::placeholder { color: var(--text-muted); }
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .faq-category {
+            margin-bottom: 32px;
+        }
+        .faq-category-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .faq-category-title i { color: var(--primary); }
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .faq-item:hover { border-color: rgba(124,58,237,0.3); }
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .faq-question:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .faq-question i { transition: transform 0.3s ease; color: var(--primary); }
+        .faq-question.open i { transform: rotate(180deg); }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            background: rgba(0,0,0,0.15);
+        }
+        .faq-answer.show {
+            max-height: 500px;
+            padding: 0 20px 20px;
+        }
+        .faq-answer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .faq-answer p:last-child { margin-bottom: 0; }
+        .faq-answer ul {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        .faq-answer ul li { margin-bottom: 6px; }
+        .faq-answer strong { color: var(--primary-light); }
+        .faq-answer a { color: var(--primary-light); text-decoration: none; }
+        .faq-answer a:hover { text-decoration: underline; }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(124,58,237,0.15);
+            color: var(--primary-light);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+        .tag.new { background: rgba(34,197,94,0.15); color: var(--success); }
+        .tag.popular { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .no-results i { font-size: 2.5rem; margin-bottom: 16px; display: block; color: var(--border); }
+        .contact-section {
+            background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(245,158,11,0.05));
+            border: 1px solid rgba(124,58,237,0.2);
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .contact-section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .contact-section p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+        .contact-links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .contact-link.email {
+            background: var(--primary);
+            color: #fff;
+        }
+        .contact-link.email:hover { background: var(--primary-light); }
+        .contact-link.tiktok {
+            background: linear-gradient(135deg, #ff0050, #00f2ea);
+            color: #fff;
+        }
+        .contact-link.tiktok:hover { opacity: 0.9; }
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        .footer a { color: var(--primary-light); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            .page-title { font-size: 1.6rem; }
+            .faq-question { padding: 14px 16px; font-size: 0.9rem; }
+            .faq-answer.show { padding: 0 16px 16px; }
+            .contact-links { flex-direction: column; }
+            .contact-link { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div>
+                <div class="logo-text">YARA SPORT</div>
+                <div class="logo-sub">FOOTBALL LIVE</div>
+            </div>
+        </div>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to App</a>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">Frequently Asked Questions</h1>
+        <p class="subtitle">Find answers to common questions about Yara Sport TV</p>
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="faqSearch" placeholder="Search questions..." onkeyup="filterFAQ()">
+        </div>
+
+        <!-- Getting Started -->
+        <div class="faq-category">
+            <div class="faq-category-title"><i class="fas fa-rocket"></i> Getting Started</div>
+
+            <div class="faq-item" data-search="how use yara sport watch stream channel click">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I use Yara Sport TV? <span class="tag popular">POPULAR</span></span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Using Yara Sport TV is simple:</p>
+                    <ul>
+                        <li>Open the app and you'll see the player on the left and the channel list on the right.</li>
+                        <li>Click on any channel from the <strong>Live Channels</strong> list to start streaming.</li>
+                        <li>The stream will automatically load in the video player.</li>
+                        <li>Use the controls at the bottom to play/pause, adjust volume, change quality, or go fullscreen.</li>
+                        <li>You can filter channels by category using the tabs above the channel list.</li>
+                    </ul>
+                    <p>No account or registration is required — just open and watch!</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="device mobile phone tablet browser support">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What devices and browsers are supported?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yara Sport TV works on any modern device with a web browser:</p>
+                    <ul>
+                        <li><strong>Desktop:</strong> Chrome, Firefox, Safari, Edge (latest versions)</li>
+                        <li><strong>Mobile:</strong> iOS Safari, Android Chrome, Samsung Internet</li>
+                        <li><strong>Tablets:</strong> iPad, Android tablets</li>
+                        <li><strong>TV:</strong> Smart TVs with web browsers, Chromecast, AirPlay</li>
+                    </ul>
+                    <p>For the best experience, we recommend using the latest version of Chrome or Safari. HLS streaming requires a browser that supports it natively or via the HLS.js library (which we include).</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="free cost payment subscription charge">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is Yara Sport TV free to use?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p><strong>Yes, Yara Sport TV is completely free to use.</strong> There are no subscription fees, no hidden charges, and no premium tiers. We are committed to providing free access to live sports streaming.</p>
+                    <p>However, please note that we rely on third-party stream sources, and the availability of streams is beyond our control.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Streaming -->
+        <div class="faq-category">
+            <div class="faq-category-title"><i class="fas fa-play-circle"></i> Streaming</div>
+
+            <div class="faq-item" data-search="stream not loading working buffering error offline">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Why is my stream not loading? <span class="tag popular">POPULAR</span></span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>There are several reasons a stream might not load:</p>
+                    <ul>
+                        <li><strong>Channel Offline:</strong> The source stream may be temporarily offline or permanently removed.</li>
+                        <li><strong>Network Issues:</strong> Check your internet connection. A stable connection of at least 5 Mbps is recommended for HD streams.</li>
+                        <li><strong>Browser Compatibility:</strong> Try a different browser or update your current one.</li>
+                        <li><strong>CORS/Proxy Issues:</strong> Some channels require a proxy to bypass browser restrictions. The app auto-detects this, but you can also try toggling connection modes in Settings.</li>
+                        <li><strong>Ad Blockers:</strong> Some ad blockers may interfere with stream loading. Try disabling them temporarily.</li>
+                    </ul>
+                    <p>If a specific channel consistently fails, try another channel or check back later — stream URLs change frequently.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="buffering lag freeze stutter quality slow">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I fix buffering or lagging?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>If you're experiencing buffering or lag:</p>
+                    <ul>
+                        <li><strong>Lower the Quality:</strong> Click the <strong>AUTO</strong> button in the player controls and select a lower resolution (e.g., 480p or 720p instead of 1080p).</li>
+                        <li><strong>Check Your Connection:</strong> Run a speed test. You need at least 3 Mbps for SD and 5+ Mbps for HD.</li>
+                        <li><strong>Close Other Tabs/Apps:</strong> Free up bandwidth by closing other streaming services, downloads, or heavy apps.</li>
+                        <li><strong>Use a Wired Connection:</strong> If possible, use an Ethernet cable instead of Wi-Fi for more stable speeds.</li>
+                        <li><strong>Clear Browser Cache:</strong> Sometimes cached data can cause playback issues.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="proxy direct connection mode auto cors mixed content">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What is Proxy mode vs Direct mode? <span class="tag new">NEW</span></span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yara Sport TV supports two connection modes:</p>
+                    <ul>
+                        <li><strong>Direct:</strong> Connects straight to the stream source. This is the fastest option but may be blocked by <strong>CORS (Cross-Origin Resource Sharing)</strong> or mixed-content policies in your browser.</li>
+                        <li><strong>Proxy:</strong> Routes the stream through our server to bypass CORS and mixed-content restrictions. Slightly slower but more reliable for blocked streams.</li>
+                    </ul>
+                    <p>The app <strong>auto-detects</strong> the best mode for each channel. You can see the current connection mode in the channel info bar below the player.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="quality resolution hd 1080p 720p 480p auto change">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I change the video quality?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>To change video quality:</p>
+                    <ul>
+                        <li>Hover over the player to reveal the controls.</li>
+                        <li>Click the <strong>AUTO</strong> button in the bottom-right corner of the player.</li>
+                        <li>Select your preferred resolution (e.g., 1080p, 720p, 480p) or leave it on <strong>AUTO</strong> to let the player adapt to your connection speed.</li>
+                    </ul>
+                    <p>Note: Not all streams offer multiple quality options. If only one quality is available, the menu will show only AUTO.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="fullscreen picture picture pip mode expand">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I use Fullscreen or Picture-in-Picture?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p><strong>Fullscreen:</strong> Click the expand icon (bottom-right of the player) or press the <strong>F</strong> key on your keyboard.</p>
+                    <p><strong>Picture-in-Picture (PiP):</strong> Click the clone icon (next to the fullscreen button) or press the <strong>P</strong> key. This lets you watch the stream in a small floating window while using other apps.</p>
+                    <p>On mobile, you can also use your device's native fullscreen gesture (usually double-tap or rotate to landscape).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Channels -->
+        <div class="faq-category">
+            <div class="faq-category-title"><i class="fas fa-plus-circle"></i> Custom Channels</div>
+
+            <div class="faq-item" data-search="add custom channel m3u8 url own stream">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I add my own M3U8 stream? <span class="tag popular">POPULAR</span></span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>To add a custom channel:</p>
+                    <ul>
+                        <li>Click the <strong>Settings (gear)</strong> icon in the top-right corner of the app.</li>
+                        <li>Scroll to the <strong>"Add Your Channel"</strong> section.</li>
+                        <li>Enter a <strong>Channel Name</strong> (e.g., "My Sports Channel").</li>
+                        <li>Paste the <strong>M3U8 URL</strong> (must end in .m3u8 or .ts).</li>
+                        <li>Select a <strong>Category</strong> or leave it as "Custom".</li>
+                        <li>Check <strong>"Needs Proxy"</strong> if the stream requires CORS bypass.</li>
+                        <li>Click <strong>"Add Channel"</strong>.</li>
+                    </ul>
+                    <p>Your custom channels are saved locally in your browser and will appear in the Live Channels list. You can remove them anytime from the same Settings panel.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="m3u8 url valid stream link find source">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Where can I find valid M3U8 URLs?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>M3U8 URLs are streaming links used by IPTV services and live broadcasters. You can find them from:</p>
+                    <ul>
+                        <li>Official broadcaster websites that offer HLS streams</li>
+                        <li>IPTV subscription services (ensure you have the right to use them)</li>
+                        <li>Publicly available stream indexes and directories</li>
+                    </ul>
+                    <p><strong>Important:</strong> Only add streams that you have the legal right to access. Yara Sport TV does not provide or endorse pirated content.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="delete remove custom channel settings">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I delete a custom channel?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>To remove a custom channel:</p>
+                    <ul>
+                        <li>Open <strong>Settings</strong> (gear icon).</li>
+                        <li>Scroll to the <strong>"Add Your Channel"</strong> section.</li>
+                        <li>You'll see a list of your custom channels.</li>
+                        <li>Click the <strong>"Remove"</strong> button next to the channel you want to delete.</li>
+                    </ul>
+                    <p>Note: You cannot delete the default built-in channels — only custom channels you've added yourself.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings & Customization -->
+        <div class="faq-category">
+            <div class="faq-category-title"><i class="fas fa-cog"></i> Settings & Customization</div>
+
+            <div class="faq-item" data-search="theme color change purple red green blue customize appearance">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I change the theme color?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>To change the accent color:</p>
+                    <ul>
+                        <li>Open <strong>Settings</strong> (gear icon).</li>
+                        <li>Scroll to <strong>"Theme Color"</strong>.</li>
+                        <li>Click on any color circle to apply it instantly.</li>
+                    </ul>
+                    <p>Available colors: Purple (default), Red, Green, Blue, Orange, Pink, Cyan, and Orange. Your choice is saved locally and persists across sessions.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="dark light mode theme auto switch appearance">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I switch between Dark and Light mode?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! In <strong>Settings → Theme Mode</strong>, you can choose:</p>
+                    <ul>
+                        <li><strong>Dark:</strong> Always use the dark theme (default).</li>
+                        <li><strong>Light:</strong> Always use the light theme.</li>
+                        <li><strong>Auto:</strong> Automatically switch based on your device's/system preference.</li>
+                    </ul>
+                    <p>Your preference is saved and will be remembered the next time you open the app.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="faq-category">
+            <div class="faq-category-title"><i class="fas fa-wrench"></i> Troubleshooting</div>
+
+            <div class="faq-item" data-search="black screen no video audio sound only">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>The player shows a black screen but I hear audio</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>This usually indicates a video decoding issue:</p>
+                    <ul>
+                        <li><strong>Try a different browser.</strong> Chrome and Firefox have the best HLS support.</li>
+                        <li><strong>Update your browser</strong> to the latest version.</li>
+                        <li><strong>Disable hardware acceleration</strong> in your browser settings (can sometimes conflict with HLS playback).</li>
+                        <li><strong>Try the Proxy mode</strong> if available for that channel — the direct stream may have encoding issues.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="keyboard shortcuts hotkeys controls space play pause f fullscreen">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What keyboard shortcuts are available? <span class="tag new">NEW</span></span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yara Sport TV supports the following keyboard shortcuts:</p>
+                    <ul>
+                        <li><strong>Space</strong> — Play/Pause</li>
+                        <li><strong>F</strong> — Toggle Fullscreen</li>
+                        <li><strong>M</strong> — Toggle Mute</li>
+                        <li><strong>P</strong> — Toggle Picture-in-Picture</li>
+                    </ul>
+                    <p>Make sure the player is focused (click on it once) before using shortcuts.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="clear cache reset data localstorage fix bug issue">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How do I reset the app or clear saved data?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>To clear all saved data (custom channels, theme preferences):</p>
+                    <ul>
+                        <li><strong>Chrome:</strong> Press F12 → Application tab → Local Storage → Select this site → Right-click → Clear.</li>
+                        <li><strong>Firefox:</strong> Press F12 → Storage tab → Local Storage → Select this site → Delete All.</li>
+                        <li><strong>Safari:</strong> Preferences → Privacy → Manage Website Data → Search for the site → Remove.</li>
+                    </ul>
+                    <p>Alternatively, you can clear your browser's cache and cookies for this site. This will reset all preferences and remove custom channels.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legal & Safety -->
+        <div class="faq-category">
+            <div class="faq-category-title"><i class="fas fa-balance-scale"></i> Legal & Safety</div>
+
+            <div class="faq-item" data-search="legal safe copyright dmca takedown content ownership">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is Yara Sport TV legal?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yara Sport TV is a <strong>stream aggregator</strong> — we do not host, store, or distribute any video content. We only provide links to publicly available streams hosted by third parties.</p>
+                    <p>The legality of accessing specific streams depends on:</p>
+                    <ul>
+                        <li>The source of the stream</li>
+                        <li>Your local laws and regulations</li>
+                        <li>Whether you have the right to access that content</li>
+                    </ul>
+                    <p>We encourage users to only access content they are legally entitled to view. If you are a rights holder and believe a stream infringes your copyright, please contact us at <a href="mailto:maroduhoki6@gmail.com">maroduhoki6@gmail.com</a>.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-search="virus malware safe secure download install app">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is Yara Sport TV safe? Do I need to download anything?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p><strong>Yara Sport TV is completely safe and requires no downloads.</strong> It runs entirely in your web browser — there is no app to install, no executable files, and no software to download.</p>
+                    <p>We do not:</p>
+                    <ul>
+                        <li>Ask for personal information or login credentials</li>
+                        <li>Require downloads or installations</li>
+                        <li>Inject ads, pop-ups, or malware</li>
+                        <li>Track you across the web</li>
+                    </ul>
+                    <p>Always ensure you are accessing the official Yara Sport TV website. Be cautious of fake clones or copycat sites.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="contact-section">
+            <h3><i class="fas fa-life-ring"></i> Still Need Help?</h3>
+            <p>Can't find what you're looking for? Reach out to us directly and we'll get back to you as soon as possible.</p>
+            <div class="contact-links">
+                <a href="mailto:maroduhoki6@gmail.com" class="contact-link email">
+                    <i class="fas fa-envelope"></i> Email Support
+                </a>
+                <a href="https://www.tiktok.com/@m4roo14" target="_blank" class="contact-link tiktok">
+                    <i class="fab fa-tiktok"></i> TikTok @m4roo14
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Yara Sport TV &copy; 2026 — <a href="index.html">Back to App</a> | <a href="terms.html">Terms of Service</a> | <a href="privacy.html">Privacy Policy</a></p>
+    </div>
+
+    <script>
+        function toggleFaq(el) {
+            const answer = el.nextElementSibling;
+            const isOpen = answer.classList.contains('show');
+            // Close all
+            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('show'));
+            document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('open'));
+            // Open clicked if was closed
+            if (!isOpen) {
+                answer.classList.add('show');
+                el.classList.add('open');
+            }
+        }
+
+        function filterFAQ() {
+            const query = document.getElementById('faqSearch').value.toLowerCase().trim();
+            const items = document.querySelectorAll('.faq-item');
+            const categories = document.querySelectorAll('.faq-category');
+
+            items.forEach(item => {
+                const searchData = item.getAttribute('data-search') || '';
+                const questionText = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answerText = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+                const match = searchData.includes(query) || questionText.includes(query) || answerText.includes(query);
+                item.style.display = match ? 'block' : 'none';
+            });
+
+            // Hide empty categories
+            categories.forEach(cat => {
+                const visibleItems = cat.querySelectorAll('.faq-item[style="display: block;"], .faq-item:not([style*="display: none"])');
+                cat.style.display = visibleItems.length > 0 ? 'block' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

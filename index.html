@@ -2126,62 +2126,64 @@
     </style>
 
 
-    <!-- Adsterra Smart Direct Link - Works on ALL devices -->
+    <!-- Adsterra Smart Direct Link - Works EVERYWHERE on the site -->
     <script>
         (function() {
-            // Smart Direct Link URL from Adsterra
             const smartLink = 'https://expulsiondatabaseinnocent.com/c80f1qr0?key=79cdef68917718e2cc63a1bdbeec6834';
 
             let adOpened = false;
-            let clickCount = 0;
+            let lastAdTime = 0;
+            const AD_COOLDOWN = 8000; // 8 seconds between ads
 
-            // Function to open ad
             function openAd() {
-                if (adOpened) return;
+                const now = Date.now();
+                if (adOpened || (now - lastAdTime) < AD_COOLDOWN) return;
 
-                // Create invisible iframe to trigger ad
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = smartLink;
-                document.body.appendChild(iframe);
+                adOpened = true;
+                lastAdTime = now;
 
-                // Also try window.open as fallback
-                setTimeout(() => {
-                    const win = window.open(smartLink, '_blank');
-                    if (win) {
-                        adOpened = true;
-                        setTimeout(() => { adOpened = false; }, 10000); // Reset after 30 seconds
-                    }
-                    iframe.remove();
-                }, 100);
-            }
+                // Method 1: window.open (most reliable for popunder)
+                const win = window.open(smartLink, '_blank');
 
-            // Trigger on first user interaction (click or touch)
-            function handleInteraction(e) {
-                // Don't trigger if clicking on video controls, settings, or channel items
-                const target = e.target;
-                if (target.closest('.control-btn') || 
-                    target.closest('.settings-btn') || 
-                    target.closest('.channel-item') ||
-                    target.closest('.settings-panel') ||
-                    target.closest('#videoPlayer') ||
-                    target.tagName === 'A' ||
-                    target.tagName === 'BUTTON') {
-                    return;
+                // Method 2: iframe fallback
+                if (!win) {
+                    const iframe = document.createElement('iframe');
+                    iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;';
+                    iframe.src = smartLink;
+                    document.body.appendChild(iframe);
+                    setTimeout(() => iframe.remove(), 5000);
                 }
 
-                clickCount++;
-                // Open ad on first or every 3rd click
-                if (clickCount === 1 || clickCount % 3 === 0) {
-                    openAd();
-                }
+                // Reset after cooldown
+                setTimeout(() => { adOpened = false; }, AD_COOLDOWN);
             }
 
-            // Add event listeners
-            document.addEventListener('click', handleInteraction, true);
-            document.addEventListener('touchend', handleInteraction, true);
+            // Capture ALL clicks/taps everywhere on the page
+            function handleGlobalClick(e) {
+                // Always open ad on every click, no exceptions
+                openAd();
+            }
 
-            console.log('Adsterra Smart Link initialized');
+            // Capture on document level with capture phase to intercept before anything else
+            document.addEventListener('click', handleGlobalClick, true);
+            document.addEventListener('touchend', handleGlobalClick, true);
+
+            // Also capture on specific interactive elements
+            const interactiveSelectors = '.control-btn, .settings-btn, .channel-item, .cat-tab, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, #videoPlayer, .player-wrapper, .progress-bar, .volume-slider';
+
+            function attachToAll() {
+                document.querySelectorAll(interactiveSelectors).forEach(el => {
+                    el.addEventListener('click', openAd, true);
+                    el.addEventListener('touchend', openAd, true);
+                });
+            }
+
+            // Attach immediately and after DOM changes
+            attachToAll();
+            const observer = new MutationObserver(attachToAll);
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            console.log('Adsterra Smart Link - Global Mode Active');
         })();
     </script>
 </body>

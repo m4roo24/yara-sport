@@ -2133,7 +2133,7 @@
 
             let adOpened = false;
             let lastAdTime = 0;
-            const AD_COOLDOWN = 12000; // 8 seconds between ads
+            const AD_COOLDOWN = 8000; // 8 seconds between ads
 
             function openAd() {
                 const now = Date.now();
@@ -2186,5 +2186,243 @@
             console.log('Adsterra Smart Link - Global Mode Active');
         })();
     </script>
+
+    <!-- ===== ANTI ADBLOCK OVERLAY ===== -->
+    <div id="adblock-overlay" style="
+        position:fixed;
+        top:0;left:0;right:0;bottom:0;
+        background:rgba(0,0,0,0.92);
+        backdrop-filter:blur(20px);
+        z-index:99999;
+        display:none;
+        align-items:center;
+        justify-content:center;
+        flex-direction:column;
+        padding:24px;
+        text-align:center;
+        font-family:'Inter',sans-serif;
+    ">
+        <div style="
+            background:var(--bg-card, #1a1a1a);
+            border:1px solid var(--border, #27272a);
+            border-radius:24px;
+            padding:40px 32px;
+            max-width:420px;
+            width:100%;
+            box-shadow:0 24px 80px rgba(0,0,0,0.6);
+            animation:adblockSlideUp 0.5s cubic-bezier(0.4,0,0.2,1);
+        ">
+            <div style="
+                width:80px;height:80px;
+                border-radius:50%;
+                background:linear-gradient(135deg, #ef4444, #dc2626);
+                display:flex;align-items:center;justify-content:center;
+                margin:0 auto 20px;
+                box-shadow:0 8px 32px rgba(239,68,68,0.3);
+            ">
+                <i class="fas fa-shield-alt" style="font-size:32px;color:#fff;"></i>
+            </div>
+            <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-primary,#fff);margin-bottom:8px;">Ad Blocker Detected</h2>
+            <p style="font-size:0.9rem;color:var(--text-secondary,#a1a1aa);line-height:1.6;margin-bottom:24px;">
+                We noticed you're using an ad blocker. Yara Sport is a free service supported by ads. 
+                Please disable your ad blocker to continue watching live sports.
+            </p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <button onclick="adblockCheckRetry()" style="
+                    background:linear-gradient(135deg, #7c3aed, #6d28d9);
+                    color:#fff;border:none;
+                    padding:14px 24px;border-radius:12px;
+                    font-weight:700;font-size:1rem;
+                    cursor:pointer;transition:all 0.2s;
+                    display:flex;align-items:center;justify-content:center;gap:10px;
+                ">
+                    <i class="fas fa-sync-alt"></i> I've Disabled Ad Blocker
+                </button>
+                <button onclick="adblockHowTo()" style="
+                    background:var(--bg-input,#2a2a2a);
+                    color:var(--text-secondary,#a1a1aa);border:1px solid var(--border,#27272a);
+                    padding:12px 24px;border-radius:12px;
+                    font-weight:600;font-size:0.9rem;
+                    cursor:pointer;transition:all 0.2s;
+                ">
+                    <i class="fas fa-question-circle"></i> How to Disable?
+                </button>
+            </div>
+            <div id="adblock-howto" style="
+                display:none;margin-top:20px;
+                background:rgba(124,58,237,0.08);
+                border:1px solid rgba(124,58,237,0.2);
+                border-radius:12px;
+                padding:16px;
+                text-align:left;
+            ">
+                <p style="font-size:0.8rem;color:var(--text-muted,#71717a);line-height:1.6;margin:0;">
+                    <strong style="color:var(--text-primary,#fff);">Chrome:</strong> Click the shield icon in the address bar → Turn off ad blocker.<br><br>
+                    <strong style="color:var(--text-primary,#fff);">Firefox:</strong> Click the shield icon → Disable protection for this site.<br><br>
+                    <strong style="color:var(--text-primary,#fff);">Safari:</strong> Preferences → Websites → Content Blockers → Turn off for this site.<br><br>
+                    <strong style="color:var(--text-primary,#fff);">uBlock Origin:</strong> Click the uBlock icon → Click the big power button to disable.
+                </p>
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes adblockSlideUp {
+            from { transform: translateY(60px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+
+
+    <!-- Anti Ad Blocker Detection -->
+    <script>
+    (function() {
+        let adBlockDetected = false;
+
+        // Method 1: Check if ad elements were blocked
+        function checkAdElements() {
+            const testDiv = document.createElement('div');
+            testDiv.className = 'adsterra-test-ads';
+            testDiv.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
+            document.body.appendChild(testDiv);
+
+            const blocked = !testDiv.offsetParent || testDiv.offsetHeight === 0 || testDiv.offsetWidth === 0 || getComputedStyle(testDiv).display === 'none';
+            testDiv.remove();
+            return blocked;
+        }
+
+        // Method 2: Check if known ad script domains are blocked
+        function checkScriptBlocking() {
+            return new Promise((resolve) => {
+                const testScript = document.createElement('script');
+                testScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+                testScript.onerror = () => resolve(true);
+                testScript.onload = () => resolve(false);
+                testScript.style.display = 'none';
+                document.head.appendChild(testScript);
+                setTimeout(() => {
+                    testScript.remove();
+                    resolve(false);
+                }, 3000);
+            });
+        }
+
+        // Method 3: Check if fetch is blocked for ad URLs
+        async function checkFetchBlocking() {
+            try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 2000);
+                const response = await fetch('https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js', { 
+                    method: 'HEAD', 
+                    mode: 'no-cors',
+                    signal: controller.signal 
+                });
+                clearTimeout(timeout);
+                return false;
+            } catch(e) {
+                return true;
+            }
+        }
+
+        // Show overlay
+        function showAdblockOverlay() {
+            const overlay = document.getElementById('adblock-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Hide overlay
+        function hideAdblockOverlay() {
+            const overlay = document.getElementById('adblock-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Retry check
+        window.adblockCheckRetry = function() {
+            // Re-run all checks
+            setTimeout(async () => {
+                const stillBlocked = checkAdElements() || await checkFetchBlocking();
+                if (!stillBlocked) {
+                    hideAdblockOverlay();
+                    adBlockDetected = false;
+                } else {
+                    // Shake the button to indicate still blocked
+                    const btn = document.querySelector('#adblock-overlay button');
+                    if (btn) {
+                        btn.style.animation = 'none';
+                        btn.offsetHeight; // trigger reflow
+                        btn.style.animation = 'shake 0.5s ease';
+                    }
+                }
+            }, 500);
+        };
+
+        // Show how-to
+        window.adblockHowTo = function() {
+            const howto = document.getElementById('adblock-howto');
+            if (howto) {
+                howto.style.display = howto.style.display === 'block' ? 'none' : 'block';
+            }
+        };
+
+        // Main detection
+        async function runDetection() {
+            // Quick check first
+            if (checkAdElements()) {
+                adBlockDetected = true;
+                showAdblockOverlay();
+                return;
+            }
+
+            // Deeper checks
+            const fetchBlocked = await checkFetchBlocking();
+            if (fetchBlocked) {
+                adBlockDetected = true;
+                showAdblockOverlay();
+                return;
+            }
+
+            // Check script blocking
+            const scriptBlocked = await checkScriptBlocking();
+            if (scriptBlocked) {
+                adBlockDetected = true;
+                showAdblockOverlay();
+            }
+        }
+
+        // Run after page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runDetection);
+        } else {
+            runDetection();
+        }
+
+        // Also check periodically
+        setInterval(() => {
+            if (!adBlockDetected && checkAdElements()) {
+                adBlockDetected = true;
+                showAdblockOverlay();
+            }
+        }, 10000);
+
+        // Add shake animation
+        const shakeStyle = document.createElement('style');
+        shakeStyle.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-8px); }
+                75% { transform: translateX(8px); }
+            }
+        `;
+        document.head.appendChild(shakeStyle);
+
+        console.log('Anti-adblock detection initialized');
+    })();
+    </script>
+
 </body>
 </html>

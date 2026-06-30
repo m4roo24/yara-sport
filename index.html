@@ -2124,6 +2124,65 @@
             to { transform: translateX(-50%) translateY(0); opacity: 1; }
         }
     </style>
-<script src="https://pl30132915.effectivecpmnetwork.com/f4/92/84/f492843784221cb360af9eb1c59a4eed.js"></script>
+
+
+    <!-- Adsterra Smart Direct Link - Works on ALL devices -->
+    <script>
+        (function() {
+            // Smart Direct Link URL from Adsterra
+            const smartLink = 'https://www.effectiveratecpm.com/f4/92/84/f492843784221cb360af9eb1c59a4eed.js';
+
+            let adOpened = false;
+            let clickCount = 0;
+
+            // Function to open ad
+            function openAd() {
+                if (adOpened) return;
+
+                // Create invisible iframe to trigger ad
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = smartLink;
+                document.body.appendChild(iframe);
+
+                // Also try window.open as fallback
+                setTimeout(() => {
+                    const win = window.open(smartLink, '_blank');
+                    if (win) {
+                        adOpened = true;
+                        setTimeout(() => { adOpened = false; }, 30000); // Reset after 30 seconds
+                    }
+                    iframe.remove();
+                }, 100);
+            }
+
+            // Trigger on first user interaction (click or touch)
+            function handleInteraction(e) {
+                // Don't trigger if clicking on video controls, settings, or channel items
+                const target = e.target;
+                if (target.closest('.control-btn') || 
+                    target.closest('.settings-btn') || 
+                    target.closest('.channel-item') ||
+                    target.closest('.settings-panel') ||
+                    target.closest('#videoPlayer') ||
+                    target.tagName === 'A' ||
+                    target.tagName === 'BUTTON') {
+                    return;
+                }
+
+                clickCount++;
+                // Open ad on first or every 3rd click
+                if (clickCount === 1 || clickCount % 3 === 0) {
+                    openAd();
+                }
+            }
+
+            // Add event listeners
+            document.addEventListener('click', handleInteraction, true);
+            document.addEventListener('touchend', handleInteraction, true);
+
+            console.log('Adsterra Smart Link initialized');
+        })();
+    </script>
 </body>
 </html>

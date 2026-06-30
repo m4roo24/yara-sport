@@ -994,11 +994,39 @@
             background: #f5f5f5;
         }
 
+        /* Adsterra Banner Responsive */
+        .adsterra-banner-wrapper { width: 100%; position: relative; z-index: 1; }
+        .adsterra-banner-desktop { display: block; max-width: 100%; }
+        .adsterra-banner-desktop iframe,
+        .adsterra-banner-desktop script { max-width: 100% !important; height: auto !important; }
+        .adsterra-banner-mobile { display: none !important; max-width: 100%; }
+        .adsterra-banner-mobile iframe,
+        .adsterra-banner-mobile script { max-width: 100% !important; height: auto !important; }
+
+        @media (max-width: 768px) {
+            .adsterra-banner-desktop { display: none !important; }
+            .adsterra-banner-mobile { display: block !important; }
+        }
+
         @media (max-width: 640px) {
             .settings-panel { width: 100%; max-width: 100%; right: -100%; }
         }
 
         @media (max-width: 1024px) { .main-container { flex-direction: column; } .sidebar { width: 100%; } }
+        /* Adsterra Banner Responsive */
+        .adsterra-banner-wrapper { width: 100%; position: relative; z-index: 1; }
+        .adsterra-banner-desktop { display: block; max-width: 100%; }
+        .adsterra-banner-desktop iframe,
+        .adsterra-banner-desktop script { max-width: 100% !important; height: auto !important; }
+        .adsterra-banner-mobile { display: none !important; max-width: 100%; }
+        .adsterra-banner-mobile iframe,
+        .adsterra-banner-mobile script { max-width: 100% !important; height: auto !important; }
+
+        @media (max-width: 768px) {
+            .adsterra-banner-desktop { display: none !important; }
+            .adsterra-banner-mobile { display: block !important; }
+        }
+
         @media (max-width: 640px) {
             .header { padding: 10px 16px; }
             .logo-text { font-size: 1.1rem; }
@@ -1029,7 +1057,7 @@
 
     <div class="main-container">
         <div class="video-section">
-            <div class="player-wrapper" id="playerWrapper">
+                <div class="player-wrapper" id="playerWrapper">
                 <video id="videoPlayer" playsinline disablePictureInPicture autoplay muted preload="auto" crossorigin="anonymous"></video>
                 <div class="loading-overlay" id="loadingOverlay">
                     <div class="loading-spinner"></div>
@@ -1078,6 +1106,62 @@
                 </div>
             </div>
             </div>
+                <!-- Adsterra Banner 728x90 (Desktop) -->
+                <div class="adsterra-banner-728" style="margin-top: 12px; text-align: center; overflow: hidden;">
+                    <script>
+  atOptions = {
+    'key' : '90db5cef6329ff1501b45edf0218bf13',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
+                </div>
+                <!-- Adsterra Banner 320x50 (Mobile) -->
+                <div class="adsterra-banner-mobile" style="margin-top: 12px;">
+                    <script>
+  atOptions = {
+    'key' : '90db5cef6329ff1501b45edf0218bf13',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
+                </div>
+            </div>
+            <!-- Adsterra Banner -->
+            <div class="adsterra-banner-wrapper" style="margin-top: 16px; text-align: center; width: 100%;">
+                <!-- Desktop Banner 728x90 -->
+                <div class="adsterra-banner-desktop" style="display: inline-block; max-width: 100%; overflow: hidden;">
+                    <script>
+                      atOptions = {
+                        'key' : '90db5cef6329ff1501b45edf0218bf13',
+                        'format' : 'iframe',
+                        'height' : 90,
+                        'width' : 728,
+                        'params' : {}
+                      };
+                    </script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
+                </div>
+                <!-- Mobile Banner 320x50 -->
+                <div class="adsterra-banner-mobile" style="display: none; max-width: 100%; overflow: hidden;">
+                    <script>
+                      atOptions = {
+                        'key' : '90db5cef6329ff1501b45edf0218bf13',
+                        'format' : 'iframe',
+                        'height' : 50,
+                        'width' : 320,
+                        'params' : {}
+                      };
+                    </script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
+                </div>
+            </div>
 
         <div class="sidebar">
             <div class="sidebar-card">
@@ -1087,6 +1171,11 @@
                 </div>
                 <div class="category-tabs" id="categoryTabs"></div>
                 <div class="channel-list" id="channelList"></div>
+                <!-- Adsterra Native Banner -->
+                <div style="padding: 12px 8px;">
+                    <script async="async" data-cfasync="false" src="https://pl30132916.effectivecpmnetwork.com/7993136198efe6167a1e33c297e1d2b5/invoke.js"></script>
+                    <div id="container-7993136198efe6167a1e33c297e1d2b5"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -2066,5 +2155,6 @@
             deferredPrompt = null;
         });
     </script>
+<script src="https://pl30132915.effectivecpmnetwork.com/f4/92/84/f492843784221cb360af9eb1c59a4eed.js"></script>
 </body>
 </html>

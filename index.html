@@ -995,13 +995,11 @@
         }
 
         /* Adsterra Banner Responsive */
-        .adsterra-banner-wrapper { width: 100%; position: relative; z-index: 1; }
+        .adsterra-banner-top { width: 100%; position: relative; z-index: 1; }
         .adsterra-banner-desktop { display: block; max-width: 100%; }
-        .adsterra-banner-desktop iframe,
-        .adsterra-banner-desktop script { max-width: 100% !important; height: auto !important; }
+        .adsterra-banner-desktop iframe { max-width: 100% !important; height: 90px !important; }
         .adsterra-banner-mobile { display: none !important; max-width: 100%; }
-        .adsterra-banner-mobile iframe,
-        .adsterra-banner-mobile script { max-width: 100% !important; height: auto !important; }
+        .adsterra-banner-mobile iframe { max-width: 100% !important; height: 50px !important; }
 
         @media (max-width: 768px) {
             .adsterra-banner-desktop { display: none !important; }
@@ -1014,13 +1012,11 @@
 
         @media (max-width: 1024px) { .main-container { flex-direction: column; } .sidebar { width: 100%; } }
         /* Adsterra Banner Responsive */
-        .adsterra-banner-wrapper { width: 100%; position: relative; z-index: 1; }
+        .adsterra-banner-top { width: 100%; position: relative; z-index: 1; }
         .adsterra-banner-desktop { display: block; max-width: 100%; }
-        .adsterra-banner-desktop iframe,
-        .adsterra-banner-desktop script { max-width: 100% !important; height: auto !important; }
+        .adsterra-banner-desktop iframe { max-width: 100% !important; height: 90px !important; }
         .adsterra-banner-mobile { display: none !important; max-width: 100%; }
-        .adsterra-banner-mobile iframe,
-        .adsterra-banner-mobile script { max-width: 100% !important; height: auto !important; }
+        .adsterra-banner-mobile iframe { max-width: 100% !important; height: 50px !important; }
 
         @media (max-width: 768px) {
             .adsterra-banner-desktop { display: none !important; }
@@ -1057,8 +1053,35 @@
 
     <div class="main-container">
         <div class="video-section">
+                            <!-- Adsterra Banner -->
+            <div class="adsterra-banner-top" style="margin-bottom: 12px; text-align: center; width: 100%;">
+                <div class="adsterra-banner-desktop">
+                    <script>
+                      atOptions = {
+                        'key' : '90db5cef6329ff1501b45edf0218bf13',
+                        'format' : 'iframe',
+                        'height' : 90,
+                        'width' : 728,
+                        'params' : {}
+                      };
+                    </script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
+                </div>
+                <div class="adsterra-banner-mobile">
+                    <script>
+                      atOptions = {
+                        'key' : '90db5cef6329ff1501b45edf0218bf13',
+                        'format' : 'iframe',
+                        'height' : 50,
+                        'width' : 320,
+                        'params' : {}
+                      };
+                    </script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
+                </div>
+            </div>
                 <div class="player-wrapper" id="playerWrapper">
-                <video id="videoPlayer" playsinline disablePictureInPicture autoplay muted preload="auto" crossorigin="anonymous"></video>
+                <video id="videoPlayer" playsinline autoplay muted preload="auto" crossorigin="anonymous"></video>
                 <div class="loading-overlay" id="loadingOverlay">
                     <div class="loading-spinner"></div>
                     <div class="loading-text" id="loadingText">Loading stream...</div>
@@ -1133,37 +1156,7 @@
                     <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
                 </div>
             </div>
-            <!-- Adsterra Banner -->
-            <div class="adsterra-banner-wrapper" style="margin-top: 16px; text-align: center; width: 100%;">
-                <!-- Desktop Banner 728x90 -->
-                <div class="adsterra-banner-desktop" style="display: inline-block; max-width: 100%; overflow: hidden;">
-                    <script>
-                      atOptions = {
-                        'key' : '90db5cef6329ff1501b45edf0218bf13',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
-                        'params' : {}
-                      };
-                    </script>
-                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
-                </div>
-                <!-- Mobile Banner 320x50 -->
-                <div class="adsterra-banner-mobile" style="display: none; max-width: 100%; overflow: hidden;">
-                    <script>
-                      atOptions = {
-                        'key' : '90db5cef6329ff1501b45edf0218bf13',
-                        'format' : 'iframe',
-                        'height' : 50,
-                        'width' : 320,
-                        'params' : {}
-                      };
-                    </script>
-                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
-                </div>
-            </div>
-
-        <div class="sidebar">
+            <div class="sidebar">
             <div class="sidebar-card">
                 <div class="sidebar-header">
                     <h2><i class="fas fa-tv"></i> Live Channels</h2>

@@ -2040,7 +2040,8 @@
     </div>
 
 
-    <!-- PWA Service Worker Registration -->
+    
+    <!-- Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -2053,101 +2054,6 @@
                     });
             });
         }
-
-        // PWA Install Banner
-        let deferredPrompt;
-        const installBanner = document.createElement('div');
-        installBanner.id = 'pwa-install-banner';
-        installBanner.innerHTML = `
-            <div style="
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: linear-gradient(135deg, #7c3aed, #6d28d9);
-                color: #fff;
-                padding: 16px 24px;
-                border-radius: 16px;
-                display: flex;
-                align-items: center;
-                gap: 16px;
-                z-index: 9999;
-                box-shadow: 0 8px 32px rgba(124,58,237,0.3);
-                font-family: 'Inter', sans-serif;
-                max-width: 90vw;
-                width: 380px;
-                animation: slideUp 0.4s ease;
-            ">
-                <img src="icon-192x192.png" style="width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;" alt="Yara Sport">
-                <div style="flex: 1; min-width: 0;">
-                    <div style="font-weight: 700; font-size: 1rem; margin-bottom: 2px;">Install Yara Sport TV</div>
-                    <div style="font-size: 0.8rem; opacity: 0.8;">Add to home screen for quick access</div>
-                </div>
-                <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                    <button id="pwa-dismiss" style="
-                        background: rgba(255,255,255,0.15);
-                        border: none;
-                        color: #fff;
-                        padding: 8px 14px;
-                        border-radius: 10px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        font-size: 0.8rem;
-                        font-family: 'Inter', sans-serif;
-                    ">Later</button>
-                    <button id="pwa-install" style="
-                        background: #fff;
-                        border: none;
-                        color: #7c3aed;
-                        padding: 8px 18px;
-                        border-radius: 10px;
-                        font-weight: 700;
-                        cursor: pointer;
-                        font-size: 0.8rem;
-                        font-family: 'Inter', sans-serif;
-                    ">Install</button>
-                </div>
-            </div>
-            <style>
-                @keyframes slideUp {
-                    from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-                    to { transform: translateX(-50%) translateY(0); opacity: 1; }
-                }
-            </style>
-        `;
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            // Only show if not already installed
-            if (!window.matchMedia('(display-mode: standalone)').matches) {
-                document.body.appendChild(installBanner);
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (e.target.id === 'pwa-install' && deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User installed PWA');
-                    }
-                    installBanner.remove();
-                    deferredPrompt = null;
-                });
-            }
-            if (e.target.id === 'pwa-dismiss') {
-                installBanner.remove();
-                deferredPrompt = null;
-            }
-        });
-
-        window.addEventListener('appinstalled', () => {
-            console.log('PWA was installed');
-            installBanner.remove();
-            deferredPrompt = null;
-        });
     </script>
-<script src="https://pl30132915.effectivecpmnetwork.com/f4/92/84/f492843784221cb360af9eb1c59a4eed.js"></script>
 </body>
 </html>

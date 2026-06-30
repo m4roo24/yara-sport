@@ -2041,8 +2041,71 @@
 
 
     
-    <!-- Service Worker -->
+    <!-- PWA Install Prompt -->
     <script>
+        let deferredPrompt;
+
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Show the install button
+            showInstallButton();
+            console.log('beforeinstallprompt fired');
+        });
+
+        function showInstallButton() {
+            // Create install button if not exists
+            if (document.getElementById('pwa-install-btn')) return;
+
+            const btn = document.createElement('button');
+            btn.id = 'pwa-install-btn';
+            btn.innerHTML = '<i class="fas fa-download"></i> Install App';
+            btn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #7c3aed, #6d28d9);
+                color: #fff;
+                border: none;
+                padding: 14px 28px;
+                border-radius: 50px;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                z-index: 9999;
+                box-shadow: 0 8px 32px rgba(124,58,237,0.4);
+                font-family: 'Inter', sans-serif;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideUp 0.4s ease;
+            `;
+            btn.onclick = async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User installed PWA');
+                }
+                deferredPrompt = null;
+                btn.remove();
+            };
+            document.body.appendChild(btn);
+        }
+
+        // Hide install button if app is already installed
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            const btn = document.getElementById('pwa-install-btn');
+            if (btn) btn.remove();
+            deferredPrompt = null;
+        });
+
+        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -2055,5 +2118,12 @@
             });
         }
     </script>
+    <style>
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+    </style>
+<script src="https://pl30132915.effectivecpmnetwork.com/f4/92/84/f492843784221cb360af9eb1c59a4eed.js"></script>
 </body>
 </html>

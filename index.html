@@ -1015,9 +1015,30 @@
             .adsterra-banner-desktop { display: none !important; }
             .adsterra-banner-mobile { display: block !important; }
         }
+        @media (max-width: 400px) {
+            .header { padding: 8px 10px; }
+            .logo-icon { width: 42px; height: 42px; }
+            .logo-text { font-size: 0.9rem; }
+            .header-right { gap: 4px; }
+            .live-badge { padding: 3px 8px; font-size: 0.7rem; gap: 4px; }
+            .live-dot { width: 6px; height: 6px; }
+            .settings-btn { width: 32px; height: 32px; font-size: 0.85rem; }
+            .premium-header-btn { padding: 5px 8px; }
+            .premium-header-btn i { font-size: 0.8rem; }
+        }
+
 
         @media (max-width: 640px) {
             .settings-panel { width: 100%; max-width: 100%; right: -100%; }
+            .header { padding: 10px 12px; gap: 8px; }
+            .logo-icon { width: 48px; height: 48px; }
+            .logo-text { font-size: 1rem; }
+            .logo-sub { font-size: 0.6rem; }
+            .header-right { gap: 6px; }
+            .live-badge { padding: 4px 10px; font-size: 0.75rem; gap: 5px; }
+            .settings-btn { width: 34px; height: 34px; font-size: 0.9rem; }
+            .premium-header-btn { padding: 6px 10px; font-size: 0.7rem; gap: 4px; }
+            .premium-header-btn span { display: none; }
         }
 
         @media (max-width: 1024px) { 
@@ -2491,10 +2512,11 @@
 </style>
 
 <script>
-    // ===== PWA INSTALL SYSTEM =====
+    // ===== PWA INSTALL SYSTEM - UNIVERSAL BLOCK =====
     let deferredPrompt = null;
     let pwaBannerDismissed = false;
     let pwaInstalled = false;
+    let beforeinstallpromptFired = false;
 
     // Check if already installed
     function isPwaInstalled() {
@@ -2533,10 +2555,9 @@
         localStorage.setItem('yara_pwa_banner_dismissed', 'true');
     }
 
-    // Install PWA
+    // Install PWA - trigger native install dialog
     async function installPWA() {
         if (deferredPrompt) {
-            // Show native install prompt
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
@@ -2546,7 +2567,6 @@
             }
             deferredPrompt = null;
         } else {
-            // Show manual install instructions for iOS/Safari
             showPwaModal();
         }
     }
@@ -2567,19 +2587,32 @@
         if (modal) modal.style.display = 'none';
     }
 
-    // Listen for beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', (e) => {
-        console.log('beforeinstallprompt fired');
-        e.preventDefault();
-        deferredPrompt = e;
+    // ===== BLOCK ALL NATIVE INSTALL PROMPTS =====
+    (function() {
+        // Must be defined BEFORE the event fires
+        const handler = function(e) {
+            console.log('[PWA] Native prompt BLOCKED');
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            deferredPrompt = e;
+            beforeinstallpromptFired = true;
 
-        // Show banner after a short delay
-        setTimeout(() => {
-            if (!isPwaInstalled() && !wasBannerDismissed()) {
-                showInstallBanner();
-            }
-        }, 3000);
-    });
+            setTimeout(() => {
+                if (!isPwaInstalled() && !wasBannerDismissed()) {
+                    showInstallBanner();
+                }
+            }, 2000);
+            return false;
+        };
+
+        window.addEventListener('beforeinstallprompt', handler, { capture: true });
+
+        // Also try to intercept Samsung Internet's custom event
+        if (window.samsung) {
+            window.addEventListener('samsunginstallprompt', handler, { capture: true });
+        }
+    })();
 
     // Listen for appinstalled event
     window.addEventListener('appinstalled', () => {
@@ -2596,6 +2629,14 @@
         if (pwaInstalled) {
             hideInstallBanner();
         }
+
+        // For browsers that don't fire beforeinstallprompt
+        setTimeout(() => {
+            if (!beforeinstallpromptFired && !isPwaInstalled() && !wasBannerDismissed()) {
+                console.log('[PWA] Showing manual install banner');
+                showInstallBanner();
+            }
+        }, 5000);
     });
 
     // Also check when display mode changes
@@ -3481,5 +3522,172 @@
     window.YaraGamepad = GamepadSystem;
 
 })();
-</script</body>
+</script
+<!-- ===== PREMIUM PAGE ===== -->
+<div id="premiumPage" style="
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.9);
+    backdrop-filter: blur(12px);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+">
+    <div style="
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 32px 28px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+        animation: pwaModalPop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    ">
+        <div style="
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+        ">
+            <i class="fas fa-crown" style="font-size: 1.8rem; color: #fff;"></i>
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">Premium Membership</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 24px;">Unlock ad-free streaming, HD quality, and exclusive channels.</p>
+
+        <div style="text-align: left; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(251,191,36,0.08); border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(251,191,36,0.15);">
+                <i class="fas fa-check-circle" style="color: #fbbf24; font-size: 1.1rem;"></i>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;">Ad-Free Experience</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(251,191,36,0.08); border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(251,191,36,0.15);">
+                <i class="fas fa-check-circle" style="color: #fbbf24; font-size: 1.1rem;"></i>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;">HD & 4K Streaming</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(251,191,36,0.08); border-radius: 12px; border: 1px solid rgba(251,191,36,0.15);">
+                <i class="fas fa-check-circle" style="color: #fbbf24; font-size: 1.1rem;"></i>
+                <span style="color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;">Exclusive Premium Channels</span>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <input type="text" id="premiumCodeInput" placeholder="Enter your premium code" style="
+                background: var(--bg-input);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 12px 16px;
+                color: var(--text-primary);
+                font-size: 0.9rem;
+                font-family: 'Inter', sans-serif;
+                outline: none;
+                text-align: center;
+                letter-spacing: 2px;
+            ">
+            <button onclick="activatePremium()" style="
+                background: linear-gradient(135deg, #fbbf24, #f59e0b);
+                border: none;
+                color: #1a1a1a;
+                padding: 14px 24px;
+                border-radius: 12px;
+                font-weight: 700;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            "><i class="fas fa-crown" style="margin-right: 8px;"></i>Activate Premium</button>
+        </div>
+
+        <div id="premiumMessage" style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 12px; min-height: 20px;"></div>
+
+        <button onclick="closePremiumPage()" style="
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+        ">Close</button>
+    </div>
+</div>
+
+<script>
+    // ===== PREMIUM FUNCTIONS =====
+    function openPremiumPage() {
+        const page = document.getElementById('premiumPage');
+        if (page) {
+            page.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            // Check if already premium
+            checkPremiumStatus();
+        }
+    }
+
+    function closePremiumPage() {
+        const page = document.getElementById('premiumPage');
+        if (page) {
+            page.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+
+    function checkPremiumStatus() {
+        try {
+            const saved = localStorage.getItem('yara_premium');
+            const msg = document.getElementById('premiumMessage');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.active) {
+                    if (msg) msg.innerHTML = '<span style="color: #22c55e;"><i class="fas fa-check-circle"></i> Premium is active!</span>';
+                    document.getElementById('premiumBtnText').textContent = 'Premium';
+                    document.querySelector('.premium-header-btn').style.background = 'linear-gradient(135deg, rgba(34,197,94,0.15), rgba(22,163,74,0.1))';
+                    document.querySelector('.premium-header-btn').style.borderColor = 'rgba(34,197,94,0.3)';
+                    document.querySelector('.premium-header-btn').style.color = '#22c55e';
+                }
+            }
+        } catch(e) {}
+    }
+
+    function activatePremium() {
+        const code = document.getElementById('premiumCodeInput').value.trim();
+        const msg = document.getElementById('premiumMessage');
+
+        if (!code) {
+            if (msg) msg.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-exclamation-circle"></i> Please enter a code</span>';
+            return;
+        }
+
+        // Demo: any 6+ character code activates premium
+        if (code.length >= 6) {
+            const premiumData = {
+                active: true,
+                code: code,
+                activatedAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            localStorage.setItem('yara_premium', JSON.stringify(premiumData));
+            if (msg) msg.innerHTML = '<span style="color: #22c55e;"><i class="fas fa-check-circle"></i> Premium activated successfully!</span>';
+            document.getElementById('premiumBtnText').textContent = 'Premium';
+            setTimeout(() => {
+                closePremiumPage();
+                checkPremiumStatus();
+            }, 1500);
+        } else {
+            if (msg) msg.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> Invalid code</span>';
+        }
+    }
+
+    // Check premium on load
+    document.addEventListener('DOMContentLoaded', checkPremiumStatus);
+</script>
+</body>
 </html>

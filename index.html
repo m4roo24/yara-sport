@@ -1249,76 +1249,201 @@
             .controls-overlay { padding: 30px 12px 12px; }
         }
 
-        /* ===== PWA INSTALL BANNER ===== */
-        .pwa-install-banner {
+
+
+        /* ===== MODERN PWA INSTALL BANNER ===== */
+        .pwa-banner-modern {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-top: 1px solid rgba(124,58,237,0.3);
-            padding: 16px 20px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(120%);
             z-index: 9999;
             display: none;
             align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
-            font-family: 'Inter', sans-serif;
-            animation: bannerSlideUp 0.4s ease;
-        }
-        .pwa-install-banner.show { display: flex; }
-        .pwa-install-content {
-            display: flex;
-            align-items: center;
             gap: 14px;
-            flex: 1;
-            min-width: 0;
+            background: linear-gradient(135deg, rgba(26,26,46,0.98), rgba(22,33,62,0.98));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(124,58,237,0.3);
+            border-radius: 20px;
+            padding: 14px 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.1);
+            max-width: 420px;
+            width: calc(100% - 40px);
+            animation: pwaBannerSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        .pwa-install-icon {
-            width: 48px;
-            height: 48px;
+        .pwa-banner-modern.show {
+            display: flex;
+        }
+        .pwa-banner-modern.pwa-visible {
+            transform: translateX(-50%) translateY(0);
+        }
+        @keyframes pwaBannerSlideUp {
+            from { transform: translateX(-50%) translateY(120%); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        .pwa-banner-icon {
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             background: linear-gradient(135deg, #7c3aed, #6d28d9);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
         }
-        .pwa-install-icon i { font-size: 1.2rem; color: #fff; }
-        .pwa-install-text { flex: 1; min-width: 0; }
-        .pwa-install-title { font-weight: 700; color: #fff; font-size: 0.95rem; }
-        .pwa-install-sub { color: #a1a1aa; font-size: 0.75rem; }
-        .pwa-ios-instructions {
-            display: none;
-            background: rgba(124,58,237,0.1);
-            border: 1px solid rgba(124,58,237,0.3);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-top: 8px;
+        .pwa-banner-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        .pwa-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
+        .pwa-banner-title {
+            font-weight: 700;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+        .pwa-banner-sub {
+            color: #a1a1aa;
+            font-size: 0.75rem;
+            line-height: 1.3;
+        }
+        .pwa-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .pwa-banner-close {
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pwa-banner-close:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+        .pwa-banner-install {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
             font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+        }
+        .pwa-banner-install:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(124,58,237,0.4);
+        }
+        .pwa-banner-install:active {
+            transform: translateY(0);
+        }
+        .pwa-ios-guide {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .pwa-ios-guide.show {
+            display: flex;
+        }
+        .pwa-ios-guide-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            animation: pwaGuidePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes pwaGuidePop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .pwa-ios-guide-box h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        .pwa-ios-guide-box p {
+            font-size: 0.85rem;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
-        .pwa-ios-instructions.show { display: block; }
-        .pwa-ios-instructions strong { color: var(--primary-light); }
-
-        @keyframes bannerSlideUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .pwa-ios-guide-box .share-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.3rem;
+            color: #fff;
+        }
+        .pwa-ios-guide-close {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+        }
+        .pwa-ios-guide-close:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
         }
 
-        /* Standalone mode optimizations */
+        /* Standalone hide */
         @media all and (display-mode: standalone) {
-            .pwa-install-banner { display: none !important; }
-            body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-            .header { padding-top: max(16px, env(safe-area-inset-top)); }
+            .pwa-banner-modern, .pwa-ios-guide { display: none !important; }
         }
         @media all and (display-mode: fullscreen) {
-            .pwa-install-banner { display: none !important; }
+            .pwa-banner-modern, .pwa-ios-guide { display: none !important; }
         }
-        @media all and (display-mode: window-controls-overlay) {
-            .pwa-install-banner { display: none !important; }
+        @media (max-width: 480px) {
+            .pwa-banner-modern {
+                padding: 12px 16px;
+                gap: 10px;
+                bottom: 12px;
+            }
+            .pwa-banner-icon { width: 38px; height: 38px; }
+            .pwa-banner-icon img { width: 24px; height: 24px; }
+            .pwa-banner-title { font-size: 0.85rem; }
+            .pwa-banner-sub { font-size: 0.7rem; }
+            .pwa-banner-install { padding: 7px 12px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -1338,9 +1463,8 @@
                 <i class="fas fa-gamepad"></i>
             </button>
             <button class="settings-btn" onclick="toggleSettings()" title="Settings" tabindex="0"><i class="fas fa-cog"></i></button>
-            <button class="premium-header-btn" onclick="openPremiumPage()" title="Premium" tabindex="0">
+            <button class="premium-header-btn" onclick="openPremiumPage()" title="Premium" tabindex="0" style="padding:5px 10px;">
                 <i class="fas fa-crown"></i>
-                <span id="premiumBtnText">Premium</span>
             </button>
             <div class="visitor-badge" id="visitorBadge" tabindex="0" title="Total Visitors">
                 <i class="fas fa-users"></i>
@@ -1650,28 +1774,7 @@
         </div>
     </div>
 
-    <!-- PWA Install Banner -->
-    <div id="pwaBanner" class="pwa-install-banner">
-        <div class="pwa-install-content">
-            <div class="pwa-install-icon">
-                <i class="fas fa-tv"></i>
-            </div>
-            <div class="pwa-install-text">
-                <div class="pwa-install-title">Yara Sport</div>
-                <div class="pwa-install-sub" id="pwaBannerSubtitle">Install for the best experience</div>
-                <div class="pwa-ios-instructions" id="pwaIosInstructions">
-                    <strong>iOS:</strong> Tap the Share button <i class="fas fa-share-square"></i> then "Add to Home Screen"<br>
-                    <strong>Samsung:</strong> Tap Menu <i class="fas fa-ellipsis-v"></i> then "Add to Home Screen"
-                </div>
-            </div>
-        </div>
-        <div class="pwa-install-actions">
-            <button class="pwa-dismiss-btn" onclick="dismissPwaBanner()" tabindex="0">Later</button>
-            <button class="pwa-install-btn" onclick="installPwa()" id="pwaInstallBtn" tabindex="0">
-                <i class="fas fa-download"></i> Install App
-            </button>
-        </div>
-    </div>
+
 
     <!-- Premium Page -->
     <div class="premium-page" id="premiumPage">
@@ -2599,87 +2702,151 @@
         playerWrapper.addEventListener('touchstart', showControls);
         playerWrapper.addEventListener('mouseleave', hideControlsNow);
 
-        // ===================== PWA INSTALL =====================
-        let deferredPrompt = null;
-        let pwaBannerDismissed = false;
 
-        function isStandalone() {
-            return window.matchMedia('(display-mode: standalone)').matches ||
-                   window.matchMedia('(display-mode: fullscreen)').matches ||
-                   window.matchMedia('(display-mode: window-controls-overlay)').matches ||
-                   window.navigator.standalone === true;
-        }
 
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
 
-        function isSamsung() {
-            return /SamsungBrowser/.test(navigator.userAgent);
-        }
+        // ===================== MODERN PWA INSTALL =====================
+        (function() {
+            let deferredPrompt = null;
+            let bannerDismissed = false;
+            const BANNER_KEY = 'yara_pwa_dismissed_v2';
 
-        function shouldShowPwaBanner() {
-            if (isStandalone()) return false;
-            return !pwaBannerDismissed;
-        }
+            function isStandalone() {
+                return window.matchMedia('(display-mode: standalone)').matches ||
+                       window.matchMedia('(display-mode: fullscreen)').matches ||
+                       window.navigator.standalone === true;
+            }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (shouldShowPwaBanner()) {
-                const banner = document.getElementById('pwaBanner');
+            function isIOS() {
+                return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            }
+
+            function isSamsung() {
+                return /SamsungBrowser/.test(navigator.userAgent);
+            }
+
+            function isChrome() {
+                return /Chrome/.test(navigator.userAgent) && !/Edg|OPR|SamsungBrowser/.test(navigator.userAgent);
+            }
+
+            function wasDismissed() {
+                try {
+                    return localStorage.getItem(BANNER_KEY) === 'true';
+                } catch(e) { return false; }
+            }
+
+            function markDismissed() {
+                try { localStorage.setItem(BANNER_KEY, 'true'); } catch(e) {}
+            }
+
+            function showBanner() {
+                if (isStandalone() || bannerDismissed || wasDismissed()) return;
+                const banner = document.getElementById('pwaBannerModern');
+                if (!banner) return;
+
                 banner.classList.add('show');
-                if (isIOS()) {
-                    document.getElementById('pwaBannerSubtitle').textContent = 'Add to Home Screen for app-like experience';
-                    document.getElementById('pwaIosInstructions').classList.add('show');
-                    document.getElementById('pwaInstallBtn').innerHTML = '<i class="fas fa-share-square"></i> How to Install';
-                } else if (isSamsung()) {
-                    document.getElementById('pwaBannerSubtitle').textContent = 'Install Yara Sport as an app';
-                }
-            }
-            console.log('beforeinstallprompt fired');
-        });
 
-        function installPwa() {
-            if (isIOS()) {
-                document.getElementById('pwaIosInstructions').classList.toggle('show');
-                return;
-            }
-            if (!deferredPrompt) {
-                if (isSamsung()) {
-                    alert('Tap the menu button (⋮) and select "Add to Home Screen" to install Yara Sport as an app.');
+                // Update text based on device
+                const sub = document.getElementById('pwaBannerSub');
+                const installBtn = document.getElementById('pwaInstallBtnModern');
+
+                if (isIOS()) {
+                    if (sub) sub.textContent = 'Tap Install for iOS instructions';
+                    if (installBtn) installBtn.innerHTML = '<i class="fab fa-apple"></i> Install';
+                } else if (isSamsung()) {
+                    if (sub) sub.textContent = 'Add to Home Screen for best experience';
+                    if (installBtn) installBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Install';
+                } else {
+                    if (sub) sub.textContent = 'Install as app for best experience';
+                    if (installBtn) installBtn.innerHTML = '<i class="fas fa-download"></i> Install';
                 }
-                return;
+
+                // Auto-hide after 15 seconds if not interacted
+                setTimeout(() => {
+                    if (banner.classList.contains('show')) {
+                        dismissPwaModern();
+                    }
+                }, 15000);
             }
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User installed PWA');
-                    document.getElementById('pwaBanner').classList.remove('show');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Show banner after a short delay for better UX
+                setTimeout(showBanner, 2000);
+                console.log('beforeinstallprompt captured');
+            });
+
+            // For browsers that don't fire beforeinstallprompt (iOS, some Android)
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if (!deferredPrompt && !isStandalone() && !wasDismissed()) {
+                        showBanner();
+                    }
+                }, 3000);
+            });
+
+            window.installPwaModern = function() {
+                if (isIOS()) {
+                    document.getElementById('pwaIosGuide').classList.add('show');
+                    return;
                 }
+
+                if (!deferredPrompt) {
+                    // Try manual install for Samsung/Chrome
+                    if (isSamsung()) {
+                        alert('Tap the menu button (⋮) and select "Add to Home Screen"');
+                    } else if (isChrome()) {
+                        alert('Tap the menu (⋮) → "Install Yara Sport" or "Add to Home Screen"');
+                    } else {
+                        alert('Open your browser menu and select "Add to Home Screen" to install');
+                    }
+                    return;
+                }
+
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('PWA installed');
+                        dismissPwaModern();
+                    }
+                    deferredPrompt = null;
+                });
+            };
+
+            window.dismissPwaModern = function() {
+                bannerDismissed = true;
+                markDismissed();
+                const banner = document.getElementById('pwaBannerModern');
+                if (banner) {
+                    banner.style.animation = 'none';
+                    banner.style.transform = 'translateX(-50%) translateY(120%)';
+                    banner.style.opacity = '0';
+                    banner.style.transition = 'all 0.4s ease';
+                    setTimeout(() => banner.classList.remove('show'), 400);
+                }
+            };
+
+            window.closeIosGuide = function(e) {
+                if (e && e.target !== e.currentTarget) return;
+                document.getElementById('pwaIosGuide').classList.remove('show');
+            };
+
+            window.addEventListener('appinstalled', () => {
+                console.log('PWA installed event');
+                dismissPwaModern();
                 deferredPrompt = null;
             });
-        }
 
-        function dismissPwaBanner() {
-            pwaBannerDismissed = true;
-            document.getElementById('pwaBanner').classList.remove('show');
-            console.log('PWA banner dismissed');
-        }
-
-        window.addEventListener('appinstalled', () => {
-            console.log('PWA was installed');
-            document.getElementById('pwaBanner').classList.remove('show');
-            deferredPrompt = null;
-        });
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then((reg) => console.log('SW registered:', reg.scope))
-                    .catch((err) => console.log('SW failed:', err));
-            });
-        }
+            // Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js')
+                        .then((reg) => console.log('SW registered:', reg.scope))
+                        .catch((err) => console.log('SW failed:', err));
+                });
+            }
+        })();
 
         // ===================== UNIVERSAL INPUT SUPPORT =====================
         (function() {
@@ -3078,7 +3245,8 @@
 
             // TV-specific: Auto focus first element and auto fullscreen
             const isTV = /SmartTV|TV|Android TV|webOS|Chromecast|Roku|AppleTV|HbbTV|NetCast|Tizen|Web0S|CrKey/.test(navigator.userAgent);
-            if (isTV || isStandalone()) {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isTV || isStandalone) {
                 setTimeout(() => {
                     const firstChannel = document.querySelector('.channel-item');
                     if (firstChannel) firstChannel.focus();
@@ -3095,11 +3263,6 @@
         renderCategoryTabs();
         renderChannels();
         updatePlayButton();
-
-        // Hide PWA banner if already standalone
-        if (isStandalone()) {
-            document.getElementById('pwaBanner').style.display = 'none';
-        }
 
         console.log('INIT complete. Channels:', channels.length, 'Categories:', categories);
     </script>
@@ -3446,16 +3609,19 @@
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
             border: 1px solid rgba(251, 191, 36, 0.3);
             color: #fbbf24;
-            padding: 5px 12px;
+            padding: 5px 10px;
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            gap: 0;
             flex-shrink: 0;
+            width: 34px;
+            height: 34px;
         }
         .premium-header-btn:hover {
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
@@ -3696,5 +3862,34 @@
             to { transform: translateY(0); opacity: 1; }
         }
     </style>
+
+    <!-- Modern PWA Install Banner -->
+    <div id="pwaBannerModern" class="pwa-banner-modern">
+        <div class="pwa-banner-icon">
+            <img src="icon-512x512.png" alt="Yara Sport">
+        </div>
+        <div class="pwa-banner-text">
+            <div class="pwa-banner-title">Install Yara Sport</div>
+            <div class="pwa-banner-sub" id="pwaBannerSub">Add to Home Screen for app experience</div>
+        </div>
+        <div class="pwa-banner-actions">
+            <button class="pwa-banner-close" onclick="dismissPwaModern()" tabindex="0" aria-label="Dismiss">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="pwa-banner-install" onclick="installPwaModern()" id="pwaInstallBtnModern" tabindex="0">
+                <i class="fas fa-download"></i> Install
+            </button>
+        </div>
+    </div>
+
+    <!-- iOS Install Guide -->
+    <div id="pwaIosGuide" class="pwa-ios-guide" onclick="closeIosGuide(event)">
+        <div class="pwa-ios-guide-box" onclick="event.stopPropagation()">
+            <div class="share-icon"><i class="fas fa-share-square"></i></div>
+            <h3>Install on iOS</h3>
+            <p>Tap the <strong>Share</strong> button in Safari's toolbar, then select <strong>"Add to Home Screen"</strong> to install Yara Sport as an app.</p>
+            <button class="pwa-ios-guide-close" onclick="closeIosGuide()" tabindex="0">Got it</button>
+        </div>
+    </div>
 </body>
 </html>

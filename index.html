@@ -1190,12 +1190,6 @@
     <div class="footer">
         <p>Yara Sport TV &copy; 2026 — <a href="https://yara-sport.vercel.app/terms.html" target="_blank">Terms</a> | <a href="https://yara-sport.vercel.app/privacy.html" target="_blank">Privacy</a> | <a href="https://yara-sport.vercel.app/faq.html" target="_blank">FAQ</a></p>
     </div>
-    <style>
-        /* Hide any stray characters */
-        body > *:not(.header):not(.main-container):not(.footer):not(.settings-overlay):not(.settings-panel):not(.premium-page):not(.adblock-overlay):not(#pwaBanner):not(script):not(style):not(link):not(meta):not(title):not(head):not(html) {
-            display: none !important;
-        }
-    </style>
 
     <script>
         // DEBUG
@@ -2061,92 +2055,130 @@
 
 
     
-    <!-- PWA Install Prompt -->
-    <script>
-        let deferredPrompt;
+    <!-- PWA Install Banner -->
+    <div id="pwaBanner" style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        border-top: 1px solid rgba(124,58,237,0.3);
+        padding: 16px 20px;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+        font-family: 'Inter', sans-serif;
+        animation: bannerSlideUp 0.4s ease;
+    ">
+        <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;">
+            <div style="
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #7c3aed, #6d28d9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            ">
+                <i class="fas fa-tv" style="font-size: 1.2rem; color: #fff;"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+                <div style="font-weight:700;color:#fff;font-size:0.95rem;">Yara Sport</div>
+                <div style="color:#a1a1aa;font-size:0.75rem;">Install for the best experience</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; flex-shrink: 0;">
+            <button onclick="dismissPwaBanner()" style="
+                background: transparent;
+                border: 1px solid rgba(255,255,255,0.2);
+                color: #a1a1aa;
+                padding: 8px 16px;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 0.85rem;
+                cursor: pointer;
+                white-space: nowrap;
+            ">Later</button>
+            <button onclick="installPwa()" style="
+                background: linear-gradient(135deg, #7c3aed, #6d28d9);
+                border: none;
+                color: #fff;
+                padding: 8px 18px;
+                border-radius: 10px;
+                font-weight: 700;
+                font-size: 0.85rem;
+                cursor: pointer;
+                white-space: nowrap;
+            ">Install App</button>
+        </div>
+    </div>
 
-        // Listen for the beforeinstallprompt event
+    <script>
+        let deferredPrompt = null;
+        let pwaBannerDismissed = false;
+
+        function shouldShowPwaBanner() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                return false;
+            }
+            return !pwaBannerDismissed;
+        }
+
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
-            // Stash the event so it can be triggered later
             deferredPrompt = e;
-            // Show the install button
-            showInstallButton();
+            if (shouldShowPwaBanner()) {
+                document.getElementById('pwaBanner').style.display = 'flex';
+            }
             console.log('beforeinstallprompt fired');
         });
 
-        function showInstallButton() {
-            // Create install button if not exists
-            if (document.getElementById('pwa-install-btn')) return;
-
-            const btn = document.createElement('button');
-            btn.id = 'pwa-install-btn';
-            btn.innerHTML = '<i class="fas fa-download"></i> Install App';
-            btn.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: linear-gradient(135deg, #7c3aed, #6d28d9);
-                color: #fff;
-                border: none;
-                padding: 14px 28px;
-                border-radius: 50px;
-                font-weight: 700;
-                font-size: 1rem;
-                cursor: pointer;
-                z-index: 9999;
-                box-shadow: 0 8px 32px rgba(124,58,237,0.4);
-                font-family: 'Inter', sans-serif;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                animation: slideUp 0.4s ease;
-            `;
-            btn.onclick = async () => {
-                if (!deferredPrompt) return;
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
+        function installPwa() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
                     console.log('User installed PWA');
+                    document.getElementById('pwaBanner').style.display = 'none';
                 }
                 deferredPrompt = null;
-                btn.remove();
-            };
-            document.body.appendChild(btn);
+            });
         }
 
-        // Hide install button if app is already installed
+        function dismissPwaBanner() {
+            pwaBannerDismissed = true;
+            document.getElementById('pwaBanner').style.display = 'none';
+            console.log('PWA banner dismissed - will show again on page refresh');
+        }
+
         window.addEventListener('appinstalled', () => {
             console.log('PWA was installed');
-            const btn = document.getElementById('pwa-install-btn');
-            if (btn) btn.remove();
+            document.getElementById('pwaBanner').style.display = 'none';
             deferredPrompt = null;
         });
 
-        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then((registration) => {
-                        console.log('SW registered:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('SW registration failed:', error);
-                    });
+                    .then((reg) => console.log('SW registered:', reg.scope))
+                    .catch((err) => console.log('SW failed:', err));
             });
         }
     </script>
+
     <style>
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        @keyframes bannerSlideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 
 
-    <!-- Adsterra Smart Direct Link - Respects Premium Status -->
+    <!-- Adsterra Smart Direct Link - Premium Aware -->
     <script>
         (function() {
             const smartLink = 'https://expulsiondatabaseinnocent.com/va4tkxk6?key=584b2c926b75e2bfdf32568f0dd172cd';
@@ -2167,18 +2199,14 @@
             }
 
             function openAd() {
-                // Don't show ads for premium users
                 if (isPremium()) {
-                    console.log('Premium user - skipping ad');
+                    console.log('Premium user - skipping popunder');
                     return;
                 }
-
                 const now = Date.now();
                 if (adOpened || (now - lastAdTime) < AD_COOLDOWN) return;
-
                 adOpened = true;
                 lastAdTime = now;
-
                 const win = window.open(smartLink, '_blank');
                 if (!win) {
                     const iframe = document.createElement('iframe');
@@ -2187,7 +2215,6 @@
                     document.body.appendChild(iframe);
                     setTimeout(() => iframe.remove(), 5000);
                 }
-
                 setTimeout(() => { adOpened = false; }, AD_COOLDOWN);
             }
 
@@ -2590,11 +2617,10 @@
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
             transform: translateY(-1px);
         }
-        /* Premium users: hide ad banners */
         body.premium-active .adsterra-banner-top,
         body.premium-active .adsterra-banner-728,
         body.premium-active .adsterra-banner-mobile,
-        body.premium-active #container-7993136198efe6167a1e33c297e1d2b5 {
+        body.premium-active [id*="container-"] {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
@@ -2681,7 +2707,7 @@
 (function() {
     "use strict";
 
-    const API_BASE_URL = 'https://yara-sport-premium.spcfy.eu'; // Same domain - set to full URL if backend is on different domain
+    const API_BASE_URL = 'https://yara-sport-premium.spcfy.eu'; // Your Spaceify backend - set to full URL if backend is on different domain
     let premiumData = null;
 
     function getDeviceId() {
@@ -2801,10 +2827,9 @@
             console.log('Sending request to:', API_BASE_URL + '/verify-code');
 
             let data;
-            if (!API_BASE_URL && window.location.protocol === 'file:') {
-                // Local file mode - no backend available
-                console.log('Local file mode detected - simulating backend unavailable');
-                throw new Error('Backend server not available. Please deploy the backend first.');
+            if (!API_BASE_URL) {
+                console.log('No API_BASE_URL set');
+                throw new Error('Backend URL not configured. Please set API_BASE_URL in the code.');
             }
 
             const response = await fetch(API_BASE_URL + '/verify-code', {
@@ -2885,5 +2910,3 @@
     });
 })();
 </script>
-
->

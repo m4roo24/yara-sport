@@ -1044,14 +1044,28 @@
         </div>
         <div class="header-right">
             <button class="settings-btn" onclick="toggleSettings()" title="Settings"><i class="fas fa-cog"></i></button>
-            <div class="live-badge">
+                        <button class="premium-header-btn" onclick="openPremiumPage()" title="Premium">
+                <i class="fas fa-crown"></i>
+                <span id="premiumBtnText">Premium</span>
+            </button>
+<div class="live-badge">
                 <span class="live-dot"></span>
                 <span>LIVE</span>
             </div>
         </div>
     </header>
 
-    <div class="main-container">
+        <!-- Premium Status Bar -->
+    <div id="premiumStatusBar" style="display:none; max-width:1600px; margin:12px auto 0; padding:0 20px;">
+        <div class="premium-status-bar">
+            <i class="fas fa-crown"></i>
+            <span class="premium-label">Status:</span>
+            <span class="premium-value">Premium Active</span>
+            <span class="premium-expires" id="premiumExpiresText">Expires: --</span>
+        </div>
+    </div>
+
+<div class="main-container">
         <div class="video-section">
                             <!-- Adsterra Banner -->
             <div class="adsterra-banner-top" style="margin-bottom: 12px; text-align: center; width: 100%;">
@@ -2270,159 +2284,591 @@
             from { transform: translateY(60px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-    </style>
-
-
-    <!-- Anti Ad Blocker Detection -->
-    <script>
-    (function() {
-        let adBlockDetected = false;
-
-        // Method 1: Check if ad elements were blocked
-        function checkAdElements() {
-            const testDiv = document.createElement('div');
-            testDiv.className = 'adsterra-test-ads';
-            testDiv.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
-            document.body.appendChild(testDiv);
-
-            const blocked = !testDiv.offsetParent || testDiv.offsetHeight === 0 || testDiv.offsetWidth === 0 || getComputedStyle(testDiv).display === 'none';
-            testDiv.remove();
-            return blocked;
+    
+        /* ===== PREMIUM SYSTEM ===== */
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a1a;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 12px rgba(251, 191, 36, 0.3);
+            animation: premiumGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes premiumGlow {
+            0% { box-shadow: 0 2px 12px rgba(251, 191, 36, 0.3); }
+            100% { box-shadow: 0 4px 24px rgba(251, 191, 36, 0.5); }
+        }
+        .premium-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+        .premium-status-bar i { color: #fbbf24; font-size: 1.1rem; }
+        .premium-status-bar .premium-label { color: var(--text-secondary); font-weight: 600; }
+        .premium-status-bar .premium-value { color: #fbbf24; font-weight: 700; }
+        .premium-status-bar .premium-expires { color: var(--text-muted); font-size: 0.75rem; margin-left: auto; }
+        .premium-page {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 3000;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .premium-page.show { display: block; }
+        .premium-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .premium-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .premium-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .premium-hero .price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #fbbf24;
+            margin: 16px 0;
+        }
+        .premium-hero .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .premium-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            margin-bottom: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .premium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 64px rgba(251, 191, 36, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .premium-benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .premium-benefit {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: rgba(251, 191, 36, 0.05);
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            border-radius: 14px;
+            transition: all 0.2s ease;
+        }
+        .premium-benefit:hover {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+        .premium-benefit i {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .premium-benefit div { flex: 1; }
+        .premium-benefit strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .premium-benefit span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .premium-activation-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+        }
+        .premium-activation-box h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .premium-activation-box h3 i { color: #fbbf24; }
+        .premium-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .premium-input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .premium-input:focus {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+        }
+        .premium-input::placeholder {
+            color: var(--text-muted);
+            text-transform: none;
+            font-weight: 400;
+            letter-spacing: normal;
+        }
+        .premium-btn {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a1a;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .premium-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
+        }
+        .premium-btn:active { transform: translateY(0); }
+        .premium-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .premium-message {
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: premiumMsgSlide 0.4s ease;
+        }
+        @keyframes premiumMsgSlide {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .premium-message.show { display: flex; }
+        .premium-message.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+        .premium-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        .premium-success-animation {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 24px;
+            animation: premiumSuccessPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .premium-success-animation.show { display: flex; }
+        @keyframes premiumSuccessPop {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .premium-success-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3);
+            animation: premiumSuccessPulse 1s ease-in-out infinite alternate;
+        }
+        @keyframes premiumSuccessPulse {
+            0% { box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3); }
+            100% { box-shadow: 0 12px 48px rgba(34, 197, 94, 0.5); }
+        }
+        .premium-success-circle i { font-size: 2rem; color: #fff; }
+        .premium-success-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #22c55e;
+        }
+        .premium-success-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .premium-header-btn {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .premium-header-btn:hover {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
+            transform: translateY(-1px);
+        }
+        body.premium-active .adsterra-banner-top,
+        body.premium-active .adsterra-banner-728,
+        body.premium-active .adsterra-banner-mobile,
+        body.premium-active [id*="container-"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            pointer-events: none !important;
+        }
+        @media (max-width: 640px) {
+            .premium-hero h1 { font-size: 1.8rem; }
+            .premium-hero .price { font-size: 2.2rem; }
+            .premium-card { padding: 24px 20px; }
+            .premium-input-group { flex-direction: column; }
+            .premium-btn { width: 100%; justify-content: center; }
+            .premium-container { padding: 24px 16px; }
         }
 
-        // Method 2: Check if known ad script domains are blocked
-        function checkScriptBlocking() {
-            return new Promise((resolve) => {
-                const testScript = document.createElement('script');
-                testScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-                testScript.onerror = () => resolve(true);
-                testScript.onload = () => resolve(false);
-                testScript.style.display = 'none';
-                document.head.appendChild(testScript);
-                setTimeout(() => {
-                    testScript.remove();
-                    resolve(false);
-                }, 3000);
+    </style
+    <!-- ===== PREMIUM PAGE ===== -->
+    <div class="premium-page" id="premiumPage">
+        <div class="premium-container">
+            <div class="premium-hero">
+                <h1><i class="fas fa-crown"></i> Premium Membership</h1>
+                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:8px;">Unlock the ultimate Yara Sport experience</p>
+                <div class="price">$1<span>/month</span></div>
+            </div>
+
+            <div class="premium-card">
+                <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:8px; text-align:center;">
+                    <i class="fas fa-star" style="color:#fbbf24;"></i> Benefits
+                </h3>
+                <div class="premium-benefits">
+                    <div class="premium-benefit">
+                        <i class="fas fa-ban"></i>
+                        <div>
+                            <strong>Ad-Free Experience</strong>
+                            <span>Watch all channels without any advertisements</span>
+                        </div>
+                    </div>
+                    <div class="premium-benefit">
+                        <i class="fas fa-gem"></i>
+                        <div>
+                            <strong>Premium Badge</strong>
+                            <span>Show off your premium status with a golden badge</span>
+                        </div>
+                    </div>
+                    <div class="premium-benefit">
+                        <i class="fas fa-bolt"></i>
+                        <div>
+                            <strong>Faster Experience</strong>
+                            <span>Priority streaming with optimized performance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-activation-box" id="premiumActivationBox">
+                <h3><i class="fas fa-key"></i> Activate Premium</h3>
+                <div class="premium-input-group">
+                    <input type="text" class="premium-input" id="premiumCodeInput" placeholder="Enter your Premium Code" maxlength="14">
+                    <button class="premium-btn" id="premiumConfirmBtn" onclick="activatePremium()">
+                        <i class="fas fa-check"></i> Confirm
+                    </button>
+                </div>
+                <div class="premium-message" id="premiumMessage"></div>
+                <div class="premium-success-animation" id="premiumSuccessAnimation">
+                    <div class="premium-success-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="premium-success-text">Premium Activated Successfully</div>
+                    <div class="premium-success-sub" id="premiumSuccessSub">Your premium expires on --</div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:24px;">
+                <button class="premium-btn" onclick="closePremiumPage()" style="background:var(--bg-input); color:var(--text-secondary); border:1px solid var(--border);">
+                    <i class="fas fa-arrow-left"></i> Back to Yara Sport
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ===================== PREMIUM SYSTEM =====================
+(function() {
+    "use strict";
+
+    const API_BASE_URL = ''; // Same domain - set to full URL if backend is on different domain
+    let premiumData = null;
+
+    function getDeviceId() {
+        try {
+            let deviceId = localStorage.getItem('yara_device_id');
+            if (!deviceId) {
+                deviceId = 'dev_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('yara_device_id', deviceId);
+            }
+            return deviceId;
+        } catch(e) {
+            return 'dev_fallback_' + Date.now();
+        }
+    }
+
+    function loadPremiumStatus() {
+        try {
+            const saved = localStorage.getItem('yara_premium');
+            if (saved) {
+                premiumData = JSON.parse(saved);
+                if (premiumData && premiumData.active === true) {
+                    applyPremiumUI();
+                }
+            }
+        } catch(e) {
+            console.warn('Could not load premium status:', e);
+        }
+    }
+
+    function savePremiumStatus(data) {
+        try {
+            localStorage.setItem('yara_premium', JSON.stringify(data));
+        } catch(e) {
+            console.warn('Could not save premium status:', e);
+        }
+    }
+
+    function applyPremiumUI() {
+        if (!premiumData || premiumData.active !== true) return;
+
+        document.body.classList.add('premium-active');
+
+        const btn = document.querySelector('.premium-header-btn');
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-crown"></i><span id="premiumBtnText">Premium</span>';
+            btn.style.background = 'linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2))';
+            btn.style.borderColor = 'rgba(251, 191, 36, 0.5)';
+        }
+
+        const statusBar = document.getElementById('premiumStatusBar');
+        if (statusBar) {
+            statusBar.style.display = 'block';
+            const expiresText = document.getElementById('premiumExpiresText');
+            if (expiresText && premiumData.expires) {
+                expiresText.textContent = 'Expires: ' + premiumData.expires;
+            }
+        }
+
+        const activationBox = document.getElementById('premiumActivationBox');
+        if (activationBox) {
+            activationBox.innerHTML = '<div style="text-align:center; padding:20px;"><div style="width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg, #fbbf24, #f59e0b); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 4px 20px rgba(251,191,36,0.3);"><i class="fas fa-crown" style="font-size:1.5rem; color:#1a1a1a;"></i></div><h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:8px;">You are Premium!</h3><p style="color:var(--text-muted); font-size:0.85rem;">Your premium membership is active until <strong style="color:#fbbf24;">' + (premiumData.expires || 'N/A') + '</strong></p></div>';
+        }
+
+        document.querySelectorAll('.adsterra-banner-top, .adsterra-banner-728, .adsterra-banner-mobile, [id*="container-"]').forEach(function(el) {
+            el.style.display = 'none';
+        });
+    }
+
+    window.openPremiumPage = function() {
+        const page = document.getElementById('premiumPage');
+        if (page) {
+            page.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    };
+
+    window.closePremiumPage = function() {
+        const page = document.getElementById('premiumPage');
+        if (page) {
+            page.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    };
+
+    window.activatePremium = async function() {
+        console.log('activatePremium called');
+
+        const input = document.getElementById('premiumCodeInput');
+        const btn = document.getElementById('premiumConfirmBtn');
+        const msg = document.getElementById('premiumMessage');
+        const successAnim = document.getElementById('premiumSuccessAnimation');
+
+        if (!input || !btn) {
+            console.error('Missing input or button element');
+            alert('Error: Page elements not found. Please refresh.');
+            return;
+        }
+
+        const code = input.value.trim().toUpperCase();
+        console.log('Code entered:', code);
+
+        if (!code) {
+            showPremiumMessage('Please enter a premium code', 'error');
+            return;
+        }
+
+        if (!/^YARA-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
+            showPremiumMessage('Invalid code format. Use format: YARA-XXXX-XXXX', 'error');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+        hidePremiumMessage();
+
+        try {
+            console.log('Sending request to:', API_BASE_URL + '/verify-code');
+
+            let data;
+            if (!API_BASE_URL && window.location.protocol === 'file:') {
+                // Local file mode - no backend available
+                console.log('Local file mode detected - simulating backend unavailable');
+                throw new Error('Backend server not available. Please deploy the backend first.');
+            }
+
+            const response = await fetch(API_BASE_URL + '/verify-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code, deviceId: getDeviceId() })
+            });
+
+            data = await response.json();
+            console.log('Response:', data);
+
+            if (data.valid) {
+                premiumData = {
+                    active: true,
+                    code: code,
+                    activatedAt: new Date().toISOString(),
+                    expires: data.expires
+                };
+                savePremiumStatus(premiumData);
+                applyPremiumUI();
+
+                if (successAnim) {
+                    successAnim.classList.add('show');
+                    successAnim.style.display = 'flex';
+                    const sub = document.getElementById('premiumSuccessSub');
+                    if (sub) sub.textContent = 'Your premium expires on ' + data.expires;
+                }
+
+                const inputGroup = document.querySelector('.premium-input-group');
+                if (inputGroup) inputGroup.style.display = 'none';
+                if (msg) msg.style.display = 'none';
+            } else {
+                showPremiumMessage(data.message || 'Invalid Premium Code', 'error');
+            }
+        } catch (err) {
+            console.error('Premium activation error:', err);
+            showPremiumMessage('Connection failed. Backend server not running. Please start the backend first.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Confirm';
+        }
+    };
+
+    function showPremiumMessage(text, type) {
+        console.log('showPremiumMessage:', text, type);
+        const msg = document.getElementById('premiumMessage');
+        if (msg) {
+            msg.style.display = 'flex';
+            msg.textContent = text;
+            msg.className = 'premium-message show ' + type;
+            msg.style.opacity = '1';
+            msg.style.visibility = 'visible';
+        } else {
+            console.error('premiumMessage element not found');
+            alert(text);
+        }
+    }
+
+    function hidePremiumMessage() {
+        const msg = document.getElementById('premiumMessage');
+        if (msg) {
+            msg.classList.remove('show');
+            msg.style.display = 'none';
+            msg.style.opacity = '0';
+        }
+    }
+
+    // Enter key support
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Premium system DOMContentLoaded');
+        const input = document.getElementById('premiumCodeInput');
+        if (input) {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') window.activatePremium();
             });
         }
+        loadPremiumStatus();
+    });
+})();
+</script>
 
-        // Method 3: Check if fetch is blocked for ad URLs
-        async function checkFetchBlocking() {
-            try {
-                const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 2000);
-                const response = await fetch('https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js', { 
-                    method: 'HEAD', 
-                    mode: 'no-cors',
-                    signal: controller.signal 
-                });
-                clearTimeout(timeout);
-                return false;
-            } catch(e) {
-                return true;
-            }
-        }
-
-        // Show overlay
-        function showAdblockOverlay() {
-            const overlay = document.getElementById('adblock-overlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        // Hide overlay
-        function hideAdblockOverlay() {
-            const overlay = document.getElementById('adblock-overlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-        }
-
-        // Retry check
-        window.adblockCheckRetry = function() {
-            // Re-run all checks
-            setTimeout(async () => {
-                const stillBlocked = checkAdElements() || await checkFetchBlocking();
-                if (!stillBlocked) {
-                    hideAdblockOverlay();
-                    adBlockDetected = false;
-                } else {
-                    // Shake the button to indicate still blocked
-                    const btn = document.querySelector('#adblock-overlay button');
-                    if (btn) {
-                        btn.style.animation = 'none';
-                        btn.offsetHeight; // trigger reflow
-                        btn.style.animation = 'shake 0.5s ease';
-                    }
-                }
-            }, 500);
-        };
-
-        // Show how-to
-        window.adblockHowTo = function() {
-            const howto = document.getElementById('adblock-howto');
-            if (howto) {
-                howto.style.display = howto.style.display === 'block' ? 'none' : 'block';
-            }
-        };
-
-        // Main detection
-        async function runDetection() {
-            // Quick check first
-            if (checkAdElements()) {
-                adBlockDetected = true;
-                showAdblockOverlay();
-                return;
-            }
-
-            // Deeper checks
-            const fetchBlocked = await checkFetchBlocking();
-            if (fetchBlocked) {
-                adBlockDetected = true;
-                showAdblockOverlay();
-                return;
-            }
-
-            // Check script blocking
-            const scriptBlocked = await checkScriptBlocking();
-            if (scriptBlocked) {
-                adBlockDetected = true;
-                showAdblockOverlay();
-            }
-        }
-
-        // Run after page loads
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', runDetection);
-        } else {
-            runDetection();
-        }
-
-        // Also check periodically
-        setInterval(() => {
-            if (!adBlockDetected && checkAdElements()) {
-                adBlockDetected = true;
-                showAdblockOverlay();
-            }
-        }, 10000);
-
-        // Add shake animation
-        const shakeStyle = document.createElement('style');
-        shakeStyle.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-8px); }
-                75% { transform: translateX(8px); }
-            }
-        `;
-        document.head.appendChild(shakeStyle);
-
-        console.log('Anti-adblock detection initialized');
-    })();
-    </script>
-
-</body>
-</html>
+>

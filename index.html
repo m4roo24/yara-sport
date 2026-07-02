@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7c3aed">
     <meta name="msapplication-TileColor" content="#7c3aed">
@@ -137,8 +137,17 @@
             margin: 0 auto;
             width: 100%;
             box-sizing: border-box;
+            height: auto;
         }
-        .video-section { flex: 1; min-width: 0;  max-width: 100%; overflow: hidden; }
+        .video-section { 
+            flex: 1; 
+            min-width: 0;  
+            max-width: 100%; 
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
         .player-wrapper {
             position: relative;
             background: #000;
@@ -149,7 +158,45 @@
             display: flex;
             align-items: center;
             justify-content: center;
-         max-width: 100%; }
+            max-width: 100%;
+            width: 100%;
+        }
+        .player-wrapper.fullscreen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            height: -webkit-fill-available !important;
+            z-index: 9999 !important;
+            border-radius: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: #000 !important;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        }
+        .player-wrapper.fullscreen #videoPlayer {
+            width: 100% !important;
+            height: 100% !important;
+            aspect-ratio: auto !important;
+            object-fit: contain !important;
+            border-radius: 0 !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            max-height: 100dvh !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
         body.light-theme .player-wrapper {
             box-shadow: 0 8px 32px rgba(0,0,0,0.08);
         }
@@ -192,7 +239,9 @@
             background: #000;
             object-fit: contain;
             transition: opacity 0.2s ease;
+            max-height: 70vh;
         }
+        
         .controls-overlay {
             position: absolute;
             bottom: 0;
@@ -571,25 +620,7 @@
             transition: all 0.2s;
         }
         .retry-btn:hover { background: var(--primary-light); }
-        .player-wrapper.fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9999;
-            border-radius: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-        }
-        .player-wrapper.fullscreen #videoPlayer {
-            width: 100vw;
-            height: 100vh;
-            aspect-ratio: auto;
-            object-fit: contain;
-        }
+        
         .footer {
             text-align: center;
             padding: 24px;
@@ -1023,8 +1054,8 @@
             .live-badge { padding: 3px 8px; font-size: 0.7rem; gap: 4px; }
             .live-dot { width: 6px; height: 6px; }
             .settings-btn { width: 32px; height: 32px; font-size: 0.85rem; }
-            .premium-header-btn { padding: 5px 8px; }
-            .premium-header-btn i { font-size: 0.8rem; }
+            .premium-header-btn { padding: 6px 10px; font-size: 0.75rem; gap: 4px; }
+            .premium-header-btn i { font-size: 0.85rem; }
         }
 
 
@@ -1037,8 +1068,8 @@
             .header-right { gap: 6px; }
             .live-badge { padding: 4px 10px; font-size: 0.75rem; gap: 5px; }
             .settings-btn { width: 34px; height: 34px; font-size: 0.9rem; }
-            .premium-header-btn { padding: 6px 10px; font-size: 0.7rem; gap: 4px; }
-            .premium-header-btn span { display: none; }
+            .premium-header-btn { padding: 8px 14px; font-size: 0.8rem; gap: 6px; min-width: 44px; min-height: 44px; }
+            .premium-header-btn span { display: inline; }
         }
 
         @media (max-width: 1024px) { 
@@ -1052,6 +1083,7 @@
                 max-width: 100%;
             } 
         }
+        
         /* Adsterra Banner Responsive */
         .adsterra-banner-top { width: 100%; position: relative; z-index: 1; }
         .adsterra-banner-desktop { display: block; max-width: 100%; }
@@ -1059,17 +1091,9 @@
         .adsterra-banner-mobile { display: none !important; max-width: 100%; }
         .adsterra-banner-mobile iframe { max-width: 100% !important; height: 50px !important; }
 
-        @media (max-width: 768px) {
-            .adsterra-banner-desktop { display: none !important; }
-            .adsterra-banner-mobile { display: block !important; }
-        }
+        
 
-        @media (max-width: 640px) {
-            .header { padding: 10px 16px; }
-            .logo-text { font-size: 1.1rem; }
-            .main-container { padding: 12px; gap: 12px; }
-            .controls-overlay { padding: 30px 12px 12px; }
-        }
+        
     </style>
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Yara Sport">
@@ -1277,14 +1301,7 @@
         }
 
         /* ===== ORIENTATION SUPPORT ===== */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .main-container {
-                flex-direction: row !important;
-            }
-            .sidebar {
-                width: 320px !important;
-            }
-        }
+        
 
         /* ===== PRINT STYLES ===== */
         @media print {
@@ -1329,7 +1346,16 @@
             white-space: nowrap;
             border: 0;
         }
-    </style>
+    
+        /* ===== LANDSCAPE MODE - FULL VIDEO ===== */
+        
+
+        /* For tablets in landscape */
+        
+
+        /* ===== PORTRAIT FULLSCREEN ===== */
+        
+</style>
 </head>
 <body>
     <header class="header">
@@ -1418,6 +1444,7 @@
                             <span class="time-display" id="timeDisplay">LIVE</span>
                         </div>
                         <div class="controls-right">
+                            <button class="control-btn channel-toggle-btn" onclick="toggleChannelList()" title="Channels" style="display:none;"><i class="fas fa-list"></i></button>
                             <button class="control-btn quality-btn" id="qualityBtn" onclick="toggleQualityMenu()" title="Quality">AUTO</button>
                             <div class="quality-menu" id="qualityMenu"></div>
                             <button class="control-btn" onclick="togglePip()" title="Picture in Picture"><i class="fas fa-clone"></i></button>
@@ -1944,28 +1971,87 @@
         function toggleMute() { video.muted = !video.muted; volumeIcon.className = video.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up'; }
         function setVolume(val) { video.volume = val; if (val > 0 && video.muted) video.muted = false; volumeIcon.className = video.muted ? 'fas fa-volume-mute' : (val < 0.5 ? 'fas fa-volume-down' : 'fas fa-volume-up'); }
         function toggleFullscreen() {
-            // Try standard fullscreen API first
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                const el = playerWrapper;
-                if (el.requestFullscreen) {
-                    el.requestFullscreen().catch(() => {});
-                } else if (el.webkitRequestFullscreen) {
-                    el.webkitRequestFullscreen();
-                } else if (el.msRequestFullscreen) {
-                    el.msRequestFullscreen();
+            const el = playerWrapper;
+            const doc = document;
+
+            // Check if already in fullscreen
+            const isFullscreen = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement || doc.mozFullScreenElement || playerWrapper.classList.contains('fullscreen'));
+
+            if (!isFullscreen) {
+                // Try native fullscreen API first
+                const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen || el.mozRequestFullScreen || el.webkitEnterFullScreen;
+
+                if (req) {
+                    try {
+                        const promise = req.call(el);
+                        if (promise && promise.then) {
+                            promise.then(() => {
+                                playerWrapper.classList.add('fullscreen');
+                                fullscreenIcon.className = 'fas fa-compress';
+                            }).catch((err) => {
+                                // Fallback to CSS fullscreen
+                                playerWrapper.classList.add('fullscreen');
+                                fullscreenIcon.className = 'fas fa-compress';
+                                document.body.style.overflow = 'hidden';
+                            });
+                        } else {
+                            // Synchronous (older webkit)
+                            playerWrapper.classList.add('fullscreen');
+                            fullscreenIcon.className = 'fas fa-compress';
+                        }
+                    } catch(e) {
+                        // Fallback to CSS fullscreen
+                        playerWrapper.classList.add('fullscreen');
+                        fullscreenIcon.className = 'fas fa-compress';
+                        document.body.style.overflow = 'hidden';
+                    }
+                } else {
+                    // No fullscreen API - use CSS fallback
+                    playerWrapper.classList.add('fullscreen');
+                    fullscreenIcon.className = 'fas fa-compress';
+                    document.body.style.overflow = 'hidden';
                 }
-                fullscreenIcon.className = 'fas fa-compress';
-                playerWrapper.classList.add('fullscreen');
+
+                // Try to lock landscape on mobile
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(() => {});
+                }
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
+                // Exit fullscreen
+                const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen || doc.mozCancelFullScreen || doc.webkitCancelFullScreen;
+                if (exit) {
+                    try {
+                        const promise = exit.call(doc);
+                        if (promise && promise.then) {
+                            promise.then(() => {
+                                playerWrapper.classList.remove('fullscreen');
+                                fullscreenIcon.className = 'fas fa-expand';
+                                document.body.style.overflow = '';
+                            }).catch(() => {
+                                playerWrapper.classList.remove('fullscreen');
+                                fullscreenIcon.className = 'fas fa-expand';
+                                document.body.style.overflow = '';
+                            });
+                        } else {
+                            playerWrapper.classList.remove('fullscreen');
+                            fullscreenIcon.className = 'fas fa-expand';
+                            document.body.style.overflow = '';
+                        }
+                    } catch(e) {
+                        playerWrapper.classList.remove('fullscreen');
+                        fullscreenIcon.className = 'fas fa-expand';
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    playerWrapper.classList.remove('fullscreen');
+                    fullscreenIcon.className = 'fas fa-expand';
+                    document.body.style.overflow = '';
                 }
-                fullscreenIcon.className = 'fas fa-expand';
-                playerWrapper.classList.remove('fullscreen');
+
+                // Unlock orientation
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock().catch(() => {});
+                }
             }
         }
         function onFullscreenChange() {
@@ -2246,12 +2332,52 @@
         // Also hide when mouse leaves the player area
         playerWrapper.addEventListener('mouseleave', hideControlsNow);
 
+        // ===================== CHANNEL LIST TOGGLE (Landscape) =====================
+        function toggleChannelList() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('show');
+            }
+        }
+
+        // Close sidebar when clicking outside in landscape
+        document.addEventListener('click', (e) => {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.channel-toggle-btn');
+            if (sidebar && sidebar.classList.contains('show')) {
+                if (!sidebar.contains(e.target) && (!toggleBtn || !toggleBtn.contains(e.target))) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+
+        // Detect orientation change and show/hide channel toggle
+        function handleOrientationChange() {
+            const toggleBtn = document.querySelector('.channel-toggle-btn');
+            const sidebar = document.querySelector('.sidebar');
+            if (!toggleBtn) return;
+
+            const isLandscape = window.innerWidth > window.innerHeight;
+            const isMobile = window.innerWidth <= 1024;
+
+            if (isLandscape && isMobile) {
+                toggleBtn.style.display = 'flex';
+            } else {
+                toggleBtn.style.display = 'none';
+                if (sidebar) sidebar.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('resize', handleOrientationChange);
+        window.addEventListener('orientationchange', handleOrientationChange);
+
         // ===================== INIT =====================
         loadPreferences();
         document.getElementById('channelCount').textContent = channels.length;
         renderCategoryTabs();
         renderChannels();
         updatePlayButton();
+        handleOrientationChange();
         console.log('INIT complete. Channels:', channels.length, 'Categories:', categories);
     </script>
 
@@ -2674,7 +2800,205 @@
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-    </style>
+    
+        /* ===== RESPONSIVE LAYOUT - ALL DEVICES ===== */
+
+        /* Mobile Portrait (default) */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .main-container { 
+                flex-direction: column; 
+                padding: 12px;
+                gap: 12px;
+            } 
+            .sidebar { 
+                width: 100%; 
+                max-width: 100%;
+            }
+            .header { padding: 10px 12px; }
+            .logo-icon { width: 48px; height: 48px; }
+            .logo-text { font-size: 1rem; }
+            .header-right { gap: 6px; }
+            .live-badge { padding: 4px 10px; font-size: 0.75rem; gap: 5px; }
+            .settings-btn { width: 34px; height: 34px; font-size: 0.9rem; }
+            .premium-header-btn { padding: 8px 14px; font-size: 0.8rem; gap: 6px; min-width: 44px; min-height: 44px; }
+            .premium-header-btn span { display: inline; }
+            .adsterra-banner-desktop { display: none !important; }
+            .adsterra-banner-mobile { display: block !important; }
+        }
+
+        /* Mobile Landscape - Video + Sidebar side by side */
+        /* ===== MOBILE LANDSCAPE - Video Focus with Channel Toggle ===== */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            html, body { height: 100vh; height: 100dvh; overflow: hidden; }
+            .header { display: none !important; }
+            .footer { display: none !important; }
+            .main-container {
+                flex-direction: row !important;
+                padding: 0 !important;
+                gap: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                width: 100vw !important;
+                overflow: hidden;
+            }
+            .video-section {
+                flex: 1 !important;
+                width: auto !important;
+                max-width: none !important;
+                height: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden;
+                min-width: 0;
+            }
+            .player-wrapper {
+                flex: 1 !important;
+                width: 100% !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                border-radius: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                aspect-ratio: auto !important;
+            }
+            #videoPlayer {
+                width: 100% !important;
+                height: 100% !important;
+                aspect-ratio: auto !important;
+                object-fit: contain !important;
+                max-height: 100% !important;
+            }
+            .channel-info-bar { display: none !important; }
+
+            /* Sidebar - hidden by default, shown when toggled */
+            .sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                right: -280px !important;
+                width: 280px !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                border-radius: 0 !important;
+                flex-shrink: 0 !important;
+                display: flex !important;
+                min-width: 280px !important;
+                overflow: hidden;
+                border-left: 1px solid var(--border);
+                z-index: 100 !important;
+                transition: right 0.3s ease !important;
+                background: var(--bg-dark) !important;
+            }
+            .sidebar.show {
+                right: 0 !important;
+            }
+            .sidebar-card {
+                border-radius: 0 !important;
+                height: 100% !important;
+                width: 100% !important;
+                display: flex;
+                flex-direction: column;
+                background: var(--bg-dark) !important;
+            }
+            .sidebar-header { padding: 12px 16px !important; }
+            .sidebar-header h2 { font-size: 0.9rem !important; }
+            .category-tabs { padding: 10px 12px 0 !important; }
+            .channel-list {
+                max-height: none !important;
+                flex: 1;
+                overflow-y: auto;
+            }
+            .channel-item { padding: 8px 10px !important; }
+            .ch-name { font-size: 0.8rem !important; }
+            .ch-number { width: 32px; height: 32px; font-size: 0.75rem; }
+            .cat-tab { padding: 5px 10px !important; font-size: 0.7rem !important; }
+            .adsterra-banner-top, .adsterra-banner-728, .adsterra-banner-mobile { display: none !important; }
+            .controls-overlay { padding: 40px 12px 12px !important; }
+
+            /* Show channel toggle button in landscape */
+            .channel-toggle-btn {
+                display: flex !important;
+            }
+        }
+
+        /* Tablet Landscape */
+        @media (min-width: 769px) and (max-width: 1200px) and (orientation: landscape) {
+            .main-container { padding: 12px; gap: 12px; }
+            .sidebar { width: 300px; }
+            .video-section { flex: 1; }
+        }
+
+        /* Laptop / Desktop (always landscape) */
+        @media (min-width: 1201px) {
+            .main-container { 
+                max-width: 1600px; 
+                margin: 0 auto;
+                height: calc(100vh - 80px);
+                height: calc(100dvh - 80px);
+                display: flex;
+                gap: 20px;
+                padding: 20px;
+            }
+            .video-section { 
+                flex: 1; 
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                max-width: none;
+            }
+            .player-wrapper { 
+                flex: 1; 
+                min-height: 0;
+                width: 100%;
+            }
+            #videoPlayer {
+                width: 100%;
+                height: 100%;
+                max-height: 100%;
+                aspect-ratio: auto;
+            }
+            .sidebar { 
+                width: 380px; 
+                flex-shrink: 0;
+                display: flex;
+            }
+            .sidebar-card {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .channel-list {
+                max-height: none;
+                flex: 1;
+            }
+        }
+
+        /* TV / Large Screens */
+        @media (min-width: 1920px) {
+            body { font-size: 1.1rem; }
+            .header { padding: 20px 32px; }
+            .logo-icon { width: 64px; height: 64px; }
+            .logo-text { font-size: 1.6rem; }
+            .channel-item { padding: 14px 16px; }
+            .ch-number { width: 44px; height: 44px; font-size: 0.9rem; }
+            .ch-name { font-size: 0.95rem; }
+            .control-btn { font-size: 1.3rem; padding: 10px; }
+        }
+
+        /* Very small phones */
+        @media (max-width: 400px) {
+            .header { padding: 8px 10px; }
+            .logo-icon { width: 42px; height: 42px; }
+            .logo-text { font-size: 0.9rem; }
+            .header-right { gap: 4px; }
+            .live-badge { padding: 3px 8px; font-size: 0.7rem; gap: 4px; }
+            .live-dot { width: 6px; height: 6px; }
+            .settings-btn { width: 32px; height: 32px; font-size: 0.85rem; }
+            .premium-header-btn { padding: 6px 10px; font-size: 0.75rem; gap: 4px; }
+            .premium-header-btn i { font-size: 0.85rem; }
+        }
+</style>
 
 
     <!-- Adsterra Smart Direct Link - Premium Aware -->

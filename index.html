@@ -1190,6 +1190,12 @@
     <div class="footer">
         <p>Yara Sport TV &copy; 2026 — <a href="https://yara-sport.vercel.app/terms.html" target="_blank">Terms</a> | <a href="https://yara-sport.vercel.app/privacy.html" target="_blank">Privacy</a> | <a href="https://yara-sport.vercel.app/faq.html" target="_blank">FAQ</a></p>
     </div>
+    <style>
+        /* Hide any stray characters */
+        body > *:not(.header):not(.main-container):not(.footer):not(.settings-overlay):not(.settings-panel):not(.premium-page):not(.adblock-overlay):not(#pwaBanner):not(script):not(style):not(link):not(meta):not(title):not(head):not(html) {
+            display: none !important;
+        }
+    </style>
 
     <script>
         // DEBUG
@@ -2140,26 +2146,40 @@
     </style>
 
 
-    <!-- Adsterra Smart Direct Link - Works EVERYWHERE on the site -->
+    <!-- Adsterra Smart Direct Link - Respects Premium Status -->
     <script>
         (function() {
             const smartLink = 'https://expulsiondatabaseinnocent.com/va4tkxk6?key=584b2c926b75e2bfdf32568f0dd172cd';
 
             let adOpened = false;
             let lastAdTime = 0;
-            const AD_COOLDOWN = 15000; // 1m seconds between ads
+            const AD_COOLDOWN = 15000;
+
+            function isPremium() {
+                try {
+                    const saved = localStorage.getItem('yara_premium');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        return data.active === true;
+                    }
+                } catch(e) {}
+                return false;
+            }
 
             function openAd() {
+                // Don't show ads for premium users
+                if (isPremium()) {
+                    console.log('Premium user - skipping ad');
+                    return;
+                }
+
                 const now = Date.now();
                 if (adOpened || (now - lastAdTime) < AD_COOLDOWN) return;
 
                 adOpened = true;
                 lastAdTime = now;
 
-                // Method 1: window.open (most reliable for popunder)
                 const win = window.open(smartLink, '_blank');
-
-                // Method 2: iframe fallback
                 if (!win) {
                     const iframe = document.createElement('iframe');
                     iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;';
@@ -2168,21 +2188,16 @@
                     setTimeout(() => iframe.remove(), 5000);
                 }
 
-                // Reset after cooldown
                 setTimeout(() => { adOpened = false; }, AD_COOLDOWN);
             }
 
-            // Capture ALL clicks/taps everywhere on the page
             function handleGlobalClick(e) {
-                // Always open ad on every click, no exceptions
                 openAd();
             }
 
-            // Capture on document level with capture phase to intercept before anything else
             document.addEventListener('click', handleGlobalClick, true);
             document.addEventListener('touchend', handleGlobalClick, true);
 
-            // Also capture on specific interactive elements
             const interactiveSelectors = '.control-btn, .settings-btn, .channel-item, .cat-tab, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, #videoPlayer, .player-wrapper, .progress-bar, .volume-slider';
 
             function attachToAll() {
@@ -2192,12 +2207,11 @@
                 });
             }
 
-            // Attach immediately and after DOM changes
             attachToAll();
             const observer = new MutationObserver(attachToAll);
             observer.observe(document.body, { childList: true, subtree: true });
 
-            console.log('Adsterra Smart Link - Global Mode Active');
+            console.log('Adsterra Smart Link - Premium-aware mode active');
         })();
     </script>
 
@@ -2576,10 +2590,11 @@
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
             transform: translateY(-1px);
         }
+        /* Premium users: hide ad banners */
         body.premium-active .adsterra-banner-top,
         body.premium-active .adsterra-banner-728,
         body.premium-active .adsterra-banner-mobile,
-        body.premium-active [id*="container-"] {
+        body.premium-active #container-7993136198efe6167a1e33c297e1d2b5 {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
@@ -2666,7 +2681,7 @@
 (function() {
     "use strict";
 
-    const API_BASE_URL = 'https://yara-sport-premium.spcfy.eu'; // Same domain - set to full URL if backend is on different domain
+    const API_BASE_URL = ''; // Same domain - set to full URL if backend is on different domain
     let premiumData = null;
 
     function getDeviceId() {

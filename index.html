@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#7c3aed">
+    <meta name="msapplication-TileColor" content="#7c3aed">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Yara Sport">
@@ -34,13 +36,19 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; -webkit-touch-callout: none; user-select: none; }
         input, textarea, select, [contenteditable] { user-select: auto; -webkit-user-select: auto; }
-        html { -webkit-tap-highlight-color: transparent; }
+        html { 
+            -webkit-tap-highlight-color: transparent; 
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
         }
         button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button {
             -webkit-tap-highlight-color: transparent !important;
@@ -127,8 +135,10 @@
             padding: 20px;
             max-width: 1600px;
             margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         }
-        .video-section { flex: 1; min-width: 0; }
+        .video-section { flex: 1; min-width: 0;  max-width: 100%; overflow: hidden; }
         .player-wrapper {
             position: relative;
             background: #000;
@@ -139,7 +149,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
+         max-width: 100%; }
         body.light-theme .player-wrapper {
             box-shadow: 0 8px 32px rgba(0,0,0,0.08);
         }
@@ -1010,7 +1020,17 @@
             .settings-panel { width: 100%; max-width: 100%; right: -100%; }
         }
 
-        @media (max-width: 1024px) { .main-container { flex-direction: column; } .sidebar { width: 100%; } }
+        @media (max-width: 1024px) { 
+            .main-container { 
+                flex-direction: column; 
+                padding: 12px;
+                gap: 12px;
+            } 
+            .sidebar { 
+                width: 100%; 
+                max-width: 100%;
+            } 
+        }
         /* Adsterra Banner Responsive */
         .adsterra-banner-top { width: 100%; position: relative; z-index: 1; }
         .adsterra-banner-desktop { display: block; max-width: 100%; }
@@ -1030,12 +1050,271 @@
             .controls-overlay { padding: 30px 12px 12px; }
         }
     </style>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Yara Sport">
+    <meta name="msapplication-starturl" content="/">
+    <link rel="mask-icon" href="icon-192x192.png" color="#7c3aed">
+<style>
+    /* Hide install banner when app is installed */
+    @media (display-mode: standalone) {
+        #pwaInstallBanner { display: none !important; }
+    }
+    @media (display-mode: fullscreen) {
+        #pwaInstallBanner { display: none !important; }
+    }
+</style>
+    <!-- ===== UNIVERSAL PWA DEVICE SUPPORT ===== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Yara Sport">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#7c3aed">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    <meta name="application-name" content="Yara Sport">
+    <meta name="msapplication-starturl" content="/">
+    <meta name="msapplication-navbutton-color" content="#7c3aed">
+    <meta name="color-scheme" content="dark light">
+    <meta name="supported-color-schemes" content="dark light">
+
+    <!-- TV / Smart TV Support -->
+    <meta name="tv" content="true">
+    <meta name="smart-tv" content="true">
+    <meta name="tv-app" content="true">
+    <meta name="tv-browser" content="true">
+
+    <!-- Game Console Support -->
+    <meta name="game-console" content="true">
+    <meta name="console" content="true">
+
+    <!-- Wearable Support -->
+    <meta name="wearable" content="true">
+
+    <!-- Prefers reduced motion for accessibility -->
+    <meta name="prefers-reduced-motion" content="no-preference">
+
+    <link rel="mask-icon" href="icon-192x192.png" color="#7c3aed">
+
+    <style>
+        /* ===== UNIVERSAL INPUT STYLES ===== */
+        /* Remove tap highlight on all elements */
+        * { 
+            -webkit-tap-highlight-color: transparent; 
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            outline: none;
+        }
+
+        /* Allow text selection on inputs */
+        input, textarea, select, [contenteditable] { 
+            -webkit-user-select: auto; 
+            user-select: auto; 
+        }
+
+        /* Focus visible for keyboard navigation */
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        /* ===== PREMIUM HEADER BUTTON ===== */
+        .premium-header-btn {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .premium-header-btn:hover {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
+            transform: translateY(-1px);
+        }
+        .premium-header-btn i {
+            font-size: 0.9rem;
+        }
+
+
+        /* ===== TV / REMOTE CONTROL STYLES ===== */
+        /* D-Pad / Arrow key navigation */
+        .tv-focusable {
+            transition: all 0.15s ease;
+            border: 2px solid transparent;
+        }
+        .tv-focusable.tv-focused {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.3);
+            transform: scale(1.02);
+        }
+        .tv-focusable.tv-selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4);
+        }
+
+        /* TV Mode - Larger UI */
+        body.tv-mode {
+            font-size: 1.2rem;
+        }
+        body.tv-mode .header {
+            padding: 24px 32px;
+        }
+        body.tv-mode .logo-icon {
+            width: 64px;
+            height: 64px;
+        }
+        body.tv-mode .logo-text {
+            font-size: 1.8rem;
+        }
+        body.tv-mode .channel-item {
+            padding: 16px 18px;
+        }
+        body.tv-mode .ch-number {
+            width: 48px;
+            height: 48px;
+            font-size: 1rem;
+        }
+        body.tv-mode .ch-name {
+            font-size: 1.1rem;
+        }
+        body.tv-mode .control-btn {
+            font-size: 1.5rem;
+            padding: 12px;
+        }
+        body.tv-mode .cat-tab {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+        body.tv-mode .settings-btn {
+            width: 48px;
+            height: 48px;
+            font-size: 1.3rem;
+        }
+        body.tv-mode .premium-header-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
+        /* TV Overscan safe area */
+        @media (tv) {
+            body { padding: 3vw; }
+            .main-container { padding: 3vw; }
+        }
+
+        /* ===== GAMEPAD STYLES ===== */
+        .gamepad-focus {
+            transition: all 0.1s ease;
+        }
+        .gamepad-focus.gamepad-active {
+            box-shadow: 0 0 0 4px var(--accent), 0 0 20px rgba(245, 158, 11, 0.4);
+            transform: scale(1.03);
+        }
+
+        /* ===== MOUSE / POINTER STYLES ===== */
+        @media (pointer: fine) {
+            .channel-item:hover {
+                background: var(--bg-card-hover);
+            }
+            .control-btn:hover {
+                background: rgba(255,255,255,0.15);
+                color: var(--primary-light);
+            }
+        }
+
+        /* ===== TOUCH / COARSE POINTER STYLES ===== */
+        @media (pointer: coarse) {
+            .channel-item {
+                min-height: 56px;
+            }
+            .control-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            .cat-tab {
+                min-height: 40px;
+            }
+            .settings-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+
+        /* ===== KEYBOARD NAVIGATION STYLES ===== */
+        [data-keyboard-focus="true"] {
+            outline: 3px solid var(--primary) !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.2) !important;
+        }
+
+        /* ===== ORIENTATION SUPPORT ===== */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .main-container {
+                flex-direction: row !important;
+            }
+            .sidebar {
+                width: 320px !important;
+            }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            body { background: white; color: black; }
+            .header, .sidebar, .controls-overlay, .adsterra-banner-top,
+            .adsterra-banner-728, .adsterra-banner-mobile, .footer,
+            #pwaInstallBanner, #pwaInstallModal, #settingsOverlay,
+            #settingsPanel, #premiumPage, #adblock-overlay {
+                display: none !important;
+            }
+            .video-section { width: 100% !important; }
+            #videoPlayer { width: 100% !important; height: auto !important; }
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ===== HIGH CONTRAST MODE ===== */
+        @media (prefers-contrast: high) {
+            :root {
+                --text-primary: #ffffff;
+                --text-secondary: #e0e0e0;
+                --border: #666666;
+            }
+        }
+
+        /* ===== SCREEN READER ONLY ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
         <div class="logo-section">
             <div class="logo-icon">
-                <img src="data:image/png;base64,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" alt="Yara Sport TV">
+                <img src="icon-512x512.png" alt="Yara Sport TV">
             </div>
             <div>
                 <div class="logo-text">YARA SPORT</div>
@@ -2055,120 +2334,299 @@
 
 
     
-    <!-- PWA Install Banner -->
-    <div id="pwaBanner" style="
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(135deg, #1a1a2e, #16213e);
-        border-top: 1px solid rgba(124,58,237,0.3);
-        padding: 16px 20px;
-        z-index: 9999;
-        display: none;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
-        font-family: 'Inter', sans-serif;
-        animation: bannerSlideUp 0.4s ease;
-    ">
-        <div style="display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;">
-            <div style="
-                width: 48px;
-                height: 48px;
-                border-radius: 12px;
-                background: linear-gradient(135deg, #7c3aed, #6d28d9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-            ">
-                <i class="fas fa-tv" style="font-size: 1.2rem; color: #fff;"></i>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-                <div style="font-weight:700;color:#fff;font-size:0.95rem;">Yara Sport</div>
-                <div style="color:#a1a1aa;font-size:0.75rem;">Install for the best experience</div>
-            </div>
+    <!-- ===== PWA INSTALL BANNER - Amanj TV Style ===== -->
+<div id="pwaInstallBanner" style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, rgba(15,15,15,0.98) 0%, rgba(26,26,26,0.99) 100%);
+    border-top: 1px solid var(--border);
+    padding: 20px 24px;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+    font-family: 'Inter', sans-serif;
+    animation: pwaSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+">
+    <div style="display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0;">
+        <div style="
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+        ">
+            <img src="icon-192x192.png" alt="Yara Sport" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
-        <div style="display: flex; gap: 10px; flex-shrink: 0;">
-            <button onclick="dismissPwaBanner()" style="
-                background: transparent;
-                border: 1px solid rgba(255,255,255,0.2);
-                color: #a1a1aa;
-                padding: 8px 16px;
-                border-radius: 10px;
-                font-weight: 600;
-                font-size: 0.85rem;
-                cursor: pointer;
-                white-space: nowrap;
-            ">Later</button>
-            <button onclick="installPwa()" style="
-                background: linear-gradient(135deg, #7c3aed, #6d28d9);
-                border: none;
-                color: #fff;
-                padding: 8px 18px;
-                border-radius: 10px;
-                font-weight: 700;
-                font-size: 0.85rem;
-                cursor: pointer;
-                white-space: nowrap;
-            ">Install App</button>
+        <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 800; color: var(--text-primary); font-size: 1.1rem; margin-bottom: 4px;">Install Yara Sport</div>
+            <div style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.4;">Add to home screen for a native, full-screen experience.</div>
         </div>
     </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; align-items: flex-end;">
+        <button onclick="installPWA()" id="pwaInstallBtn" style="
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+            transition: all 0.2s ease;
+        ">Install App</button>
+        <button onclick="dismissPwaBanner()" style="
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 4px;
+            font-weight: 500;
+        ">Later</button>
+    </div>
+</div>
 
-    <script>
-        let deferredPrompt = null;
-        let pwaBannerDismissed = false;
+<!-- PWA Install Modal (for browsers without beforeinstallprompt) -->
+<div id="pwaInstallModal" style="
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+">
+    <div style="
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 32px 28px;
+        max-width: 380px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+        animation: pwaModalPop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    ">
+        <div style="
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(124,58,237,0.3);
+            overflow: hidden;
+        ">
+            <img src="icon-192x192.png" alt="Yara Sport" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">Install Yara Sport</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 24px;">Install this app on your device for the best experience. Access it directly from your home screen.</p>
 
-        function shouldShowPwaBanner() {
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                return false;
-            }
-            return !pwaBannerDismissed;
+        <div id="pwaInstallSteps" style="text-align: left; margin-bottom: 24px; display: none;">
+            <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">1</div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0; line-height: 1.4;">Tap the <strong style="color: var(--text-primary);">Share</strong> button in your browser</p>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">2</div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0; line-height: 1.4;">Scroll down and tap <strong style="color: var(--text-primary);">Add to Home Screen</strong></p>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">3</div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0; line-height: 1.4;">Tap <strong style="color: var(--text-primary);">Add</strong> to confirm</p>
+            </div>
+        </div>
+
+        <button onclick="closePwaModal()" style="
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+        ">Close</button>
+    </div>
+</div>
+
+<style>
+    @keyframes pwaSlideUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes pwaModalPop {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pwaPulse {
+        0%, 100% { box-shadow: 0 4px 16px rgba(124,58,237,0.3); }
+        50% { box-shadow: 0 4px 24px rgba(124,58,237,0.5); }
+    }
+    #pwaInstallBtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(124,58,237,0.4) !important;
+    }
+    #pwaInstallBtn:active {
+        transform: translateY(0);
+    }
+</style>
+
+<script>
+    // ===== PWA INSTALL SYSTEM =====
+    let deferredPrompt = null;
+    let pwaBannerDismissed = false;
+    let pwaInstalled = false;
+
+    // Check if already installed
+    function isPwaInstalled() {
+        return window.matchMedia('(display-mode: standalone)').matches ||
+               window.matchMedia('(display-mode: fullscreen)').matches ||
+               window.navigator.standalone === true ||
+               localStorage.getItem('yara_pwa_installed') === 'true';
+    }
+
+    // Check if banner was dismissed
+    function wasBannerDismissed() {
+        return localStorage.getItem('yara_pwa_banner_dismissed') === 'true';
+    }
+
+    // Show install banner
+    function showInstallBanner() {
+        if (pwaInstalled || pwaBannerDismissed || wasBannerDismissed()) return;
+        const banner = document.getElementById('pwaInstallBanner');
+        if (banner) {
+            banner.style.display = 'flex';
         }
+    }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (shouldShowPwaBanner()) {
-                document.getElementById('pwaBanner').style.display = 'flex';
-            }
-            console.log('beforeinstallprompt fired');
-        });
+    // Hide install banner
+    function hideInstallBanner() {
+        const banner = document.getElementById('pwaInstallBanner');
+        if (banner) {
+            banner.style.display = 'none';
+        }
+    }
 
-        function installPwa() {
-            if (!deferredPrompt) return;
+    // Dismiss banner
+    function dismissPwaBanner() {
+        pwaBannerDismissed = true;
+        hideInstallBanner();
+        localStorage.setItem('yara_pwa_banner_dismissed', 'true');
+    }
+
+    // Install PWA
+    async function installPWA() {
+        if (deferredPrompt) {
+            // Show native install prompt
             deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User installed PWA');
-                    document.getElementById('pwaBanner').style.display = 'none';
-                }
-                deferredPrompt = null;
-            });
-        }
-
-        function dismissPwaBanner() {
-            pwaBannerDismissed = true;
-            document.getElementById('pwaBanner').style.display = 'none';
-            console.log('PWA banner dismissed - will show again on page refresh');
-        }
-
-        window.addEventListener('appinstalled', () => {
-            console.log('PWA was installed');
-            document.getElementById('pwaBanner').style.display = 'none';
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('User accepted PWA install');
+                localStorage.setItem('yara_pwa_installed', 'true');
+                hideInstallBanner();
+            }
             deferredPrompt = null;
-        });
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then((reg) => console.log('SW registered:', reg.scope))
-                    .catch((err) => console.log('SW failed:', err));
-            });
+        } else {
+            // Show manual install instructions for iOS/Safari
+            showPwaModal();
         }
-    </script>
+    }
+
+    // Show PWA install modal (for iOS/manual install)
+    function showPwaModal() {
+        const modal = document.getElementById('pwaInstallModal');
+        const steps = document.getElementById('pwaInstallSteps');
+        if (modal) {
+            modal.style.display = 'flex';
+            if (steps) steps.style.display = 'block';
+        }
+    }
+
+    // Close PWA modal
+    function closePwaModal() {
+        const modal = document.getElementById('pwaInstallModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    // Listen for beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('beforeinstallprompt fired');
+        e.preventDefault();
+        deferredPrompt = e;
+
+        // Show banner after a short delay
+        setTimeout(() => {
+            if (!isPwaInstalled() && !wasBannerDismissed()) {
+                showInstallBanner();
+            }
+        }, 3000);
+    });
+
+    // Listen for appinstalled event
+    window.addEventListener('appinstalled', () => {
+        console.log('PWA was installed');
+        pwaInstalled = true;
+        localStorage.setItem('yara_pwa_installed', 'true');
+        hideInstallBanner();
+        deferredPrompt = null;
+    });
+
+    // Check on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        pwaInstalled = isPwaInstalled();
+        if (pwaInstalled) {
+            hideInstallBanner();
+        }
+    });
+
+    // Also check when display mode changes
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+        if (e.matches) {
+            pwaInstalled = true;
+            localStorage.setItem('yara_pwa_installed', 'true');
+            hideInstallBanner();
+        }
+    });
+</script>
+<script>
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js', { scope: '/' })
+                .then((reg) => {
+                    console.log('SW registered:', reg.scope);
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('New version available');
+                            }
+                        });
+                    });
+                })
+                .catch((err) => console.log('SW failed:', err));
+        });
+    }
+</script>
 
     <style>
         @keyframes bannerSlideUp {
@@ -2242,671 +2700,786 @@
         })();
     </script>
 
-    <!-- ===== ANTI ADBLOCK OVERLAY ===== -->
-    <div id="adblock-overlay" style="
-        position:fixed;
-        top:0;left:0;right:0;bottom:0;
-        background:rgba(0,0,0,0.92);
-        backdrop-filter:blur(20px);
-        z-index:99999;
-        display:none;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
-        padding:24px;
-        text-align:center;
-        font-family:'Inter',sans-serif;
-    ">
-        <div style="
-            background:var(--bg-card, #1a1a1a);
-            border:1px solid var(--border, #27272a);
-            border-radius:24px;
-            padding:40px 32px;
-            max-width:420px;
-            width:100%;
-            box-shadow:0 24px 80px rgba(0,0,0,0.6);
-            animation:adblockSlideUp 0.5s cubic-bezier(0.4,0,0.2,1);
-        ">
-            <div style="
-                width:80px;height:80px;
-                border-radius:50%;
-                background:linear-gradient(135deg, #ef4444, #dc2626);
-                display:flex;align-items:center;justify-content:center;
-                margin:0 auto 20px;
-                box-shadow:0 8px 32px rgba(239,68,68,0.3);
-            ">
-                <i class="fas fa-shield-alt" style="font-size:32px;color:#fff;"></i>
-            </div>
-            <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-primary,#fff);margin-bottom:8px;">Ad Blocker Detected</h2>
-            <p style="font-size:0.9rem;color:var(--text-secondary,#a1a1aa);line-height:1.6;margin-bottom:24px;">
-                We noticed you're using an ad blocker. Yara Sport is a free service supported by ads. 
-                Please disable your ad blocker to continue watching live sports.
-            </p>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-                <button onclick="adblockCheckRetry()" style="
-                    background:linear-gradient(135deg, #7c3aed, #6d28d9);
-                    color:#fff;border:none;
-                    padding:14px 24px;border-radius:12px;
-                    font-weight:700;font-size:1rem;
-                    cursor:pointer;transition:all 0.2s;
-                    display:flex;align-items:center;justify-content:center;gap:10px;
-                ">
-                    <i class="fas fa-sync-alt"></i> I've Disabled Ad Blocker
-                </button>
-                <button onclick="adblockHowTo()" style="
-                    background:var(--bg-input,#2a2a2a);
-                    color:var(--text-secondary,#a1a1aa);border:1px solid var(--border,#27272a);
-                    padding:12px 24px;border-radius:12px;
-                    font-weight:600;font-size:0.9rem;
-                    cursor:pointer;transition:all 0.2s;
-                ">
-                    <i class="fas fa-question-circle"></i> How to Disable?
-                </button>
-            </div>
-            <div id="adblock-howto" style="
-                display:none;margin-top:20px;
-                background:rgba(124,58,237,0.08);
-                border:1px solid rgba(124,58,237,0.2);
-                border-radius:12px;
-                padding:16px;
-                text-align:left;
-            ">
-                <p style="font-size:0.8rem;color:var(--text-muted,#71717a);line-height:1.6;margin:0;">
-                    <strong style="color:var(--text-primary,#fff);">Chrome:</strong> Click the shield icon in the address bar → Turn off ad blocker.<br><br>
-                    <strong style="color:var(--text-primary,#fff);">Firefox:</strong> Click the shield icon → Disable protection for this site.<br><br>
-                    <strong style="color:var(--text-primary,#fff);">Safari:</strong> Preferences → Websites → Content Blockers → Turn off for this site.<br><br>
-                    <strong style="color:var(--text-primary,#fff);">uBlock Origin:</strong> Click the uBlock icon → Click the big power button to disable.
-                </p>
-            </div>
-        </div>
-    </div>
-    <style>
-        @keyframes adblockSlideUp {
-            from { transform: translateY(60px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-    
-        /* ===== PREMIUM SYSTEM ===== */
-        .premium-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #1a1a1a;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 12px rgba(251, 191, 36, 0.3);
-            animation: premiumGlow 2s ease-in-out infinite alternate;
-        }
-        @keyframes premiumGlow {
-            0% { box-shadow: 0 2px 12px rgba(251, 191, 36, 0.3); }
-            100% { box-shadow: 0 4px 24px rgba(251, 191, 36, 0.5); }
-        }
-        .premium-status-bar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            background: rgba(251, 191, 36, 0.08);
-            border: 1px solid rgba(251, 191, 36, 0.2);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-        }
-        .premium-status-bar i { color: #fbbf24; font-size: 1.1rem; }
-        .premium-status-bar .premium-label { color: var(--text-secondary); font-weight: 600; }
-        .premium-status-bar .premium-value { color: #fbbf24; font-weight: 700; }
-        .premium-status-bar .premium-expires { color: var(--text-muted); font-size: 0.75rem; margin-left: auto; }
-        .premium-page {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 3000;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .premium-page.show { display: block; }
-        .premium-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 40px 24px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .premium-hero {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .premium-hero h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-        }
-        .premium-hero .price {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #fbbf24;
-            margin: 16px 0;
-        }
-        .premium-hero .price span {
-            font-size: 1rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .premium-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(251, 191, 36, 0.15);
-            border-radius: 24px;
-            padding: 32px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            margin-bottom: 24px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .premium-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 64px rgba(251, 191, 36, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-        .premium-benefits {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin: 24px 0;
-        }
-        .premium-benefit {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            background: rgba(251, 191, 36, 0.05);
-            border: 1px solid rgba(251, 191, 36, 0.1);
-            border-radius: 14px;
-            transition: all 0.2s ease;
-        }
-        .premium-benefit:hover {
-            background: rgba(251, 191, 36, 0.1);
-            border-color: rgba(251, 191, 36, 0.2);
-        }
-        .premium-benefit i {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1a1a1a;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-        .premium-benefit div { flex: 1; }
-        .premium-benefit strong {
-            display: block;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-        .premium-benefit span {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-        .premium-activation-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(251, 191, 36, 0.15);
-            border-radius: 20px;
-            padding: 28px;
-            text-align: center;
-        }
-        .premium-activation-box h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .premium-activation-box h3 i { color: #fbbf24; }
-        .premium-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-        .premium-input {
-            flex: 1;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 18px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .premium-input:focus {
-            border-color: #fbbf24;
-            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
-        }
-        .premium-input::placeholder {
-            color: var(--text-muted);
-            text-transform: none;
-            font-weight: 400;
-            letter-spacing: normal;
-        }
-        .premium-btn {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #1a1a1a;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-        .premium-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
-        }
-        .premium-btn:active { transform: translateY(0); }
-        .premium-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .premium-message {
-            padding: 14px 18px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            animation: premiumMsgSlide 0.4s ease;
-        }
-        @keyframes premiumMsgSlide {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .premium-message.show { display: flex; }
-        .premium-message.success {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            color: #22c55e;
-        }
-        .premium-message.error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
-        .premium-success-animation {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            padding: 24px;
-            animation: premiumSuccessPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .premium-success-animation.show { display: flex; }
-        @keyframes premiumSuccessPop {
-            0% { opacity: 0; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .premium-success-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3);
-            animation: premiumSuccessPulse 1s ease-in-out infinite alternate;
-        }
-        @keyframes premiumSuccessPulse {
-            0% { box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3); }
-            100% { box-shadow: 0 12px 48px rgba(34, 197, 94, 0.5); }
-        }
-        .premium-success-circle i { font-size: 2rem; color: #fff; }
-        .premium-success-text {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #22c55e;
-        }
-        .premium-success-sub {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        .premium-header-btn {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            color: #fbbf24;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .premium-header-btn:hover {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
-            transform: translateY(-1px);
-        }
-        body.premium-active .adsterra-banner-top,
-        body.premium-active .adsterra-banner-728,
-        body.premium-active .adsterra-banner-mobile,
-        body.premium-active [id*="container-"] {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            height: 0 !important;
-            width: 0 !important;
-            pointer-events: none !important;
-        }
-        @media (max-width: 640px) {
-            .premium-hero h1 { font-size: 1.8rem; }
-            .premium-hero .price { font-size: 2.2rem; }
-            .premium-card { padding: 24px 20px; }
-            .premium-input-group { flex-direction: column; }
-            .premium-btn { width: 100%; justify-content: center; }
-            .premium-container { padding: 24px 16px; }
-        }
-
-    </style
-    <!-- ===== PREMIUM PAGE ===== -->
-    <div class="premium-page" id="premiumPage">
-        <div class="premium-container">
-            <div class="premium-hero">
-                <h1><i class="fas fa-crown"></i> Premium Membership</h1>
-                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:8px;">Unlock the ultimate Yara Sport experience</p>
-                <div class="price">$1<span>/month</span></div>
-            </div>
-
-            <div class="premium-card">
-                <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:8px; text-align:center;">
-                    <i class="fas fa-star" style="color:#fbbf24;"></i> Benefits
-                </h3>
-                <div class="premium-benefits">
-                    <div class="premium-benefit">
-                        <i class="fas fa-ban"></i>
-                        <div>
-                            <strong>Ad-Free Experience</strong>
-                            <span>Watch all channels without any advertisements</span>
-                        </div>
-                    </div>
-                    <div class="premium-benefit">
-                        <i class="fas fa-gem"></i>
-                        <div>
-                            <strong>Premium Badge</strong>
-                            <span>Show off your premium status with a golden badge</span>
-                        </div>
-                    </div>
-                    <div class="premium-benefit">
-                        <i class="fas fa-bolt"></i>
-                        <div>
-                            <strong>Faster Experience</strong>
-                            <span>Priority streaming with optimized performance</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="premium-activation-box" id="premiumActivationBox">
-                <h3><i class="fas fa-key"></i> Activate Premium</h3>
-                <div class="premium-input-group">
-                    <input type="text" class="premium-input" id="premiumCodeInput" placeholder="Enter your Premium Code" maxlength="14">
-                    <button class="premium-btn" id="premiumConfirmBtn" onclick="activatePremium()">
-                        <i class="fas fa-check"></i> Confirm
-                    </button>
-                </div>
-                <div class="premium-message" id="premiumMessage"></div>
-                <div class="premium-success-animation" id="premiumSuccessAnimation">
-                    <div class="premium-success-circle">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="premium-success-text">Premium Activated Successfully</div>
-                    <div class="premium-success-sub" id="premiumSuccessSub">Your premium expires on --</div>
-                </div>
-            </div>
-
-            <div style="text-align:center; margin-top:24px;">
-                <button class="premium-btn" onclick="closePremiumPage()" style="background:var(--bg-input); color:var(--text-secondary); border:1px solid var(--border);">
-                    <i class="fas fa-arrow-left"></i> Back to Yara Sport
-                </button>
-            </div>
-        </div>
-    </div>
-
+<!-- ===== UNIVERSAL INPUT SYSTEM - TV / Remote / Keyboard / Mouse / Touch / Gamepad ===== -->
+<!-- ===== UNIVERSAL INPUT SYSTEM - TV / Remote / Keyboard / Mouse / Touch / Gamepad ===== -->
 <script>
-// ===================== PREMIUM SYSTEM =====================
 (function() {
     "use strict";
 
-    const API_BASE_URL = 'https://yara-sport-premium.spcfy.eu'; // Your Spaceify backend - set to full URL if backend is on different domain
-    let premiumData = null;
+    // ===================== DEVICE DETECTION =====================
+    const DeviceDetector = {
+        isTV: false,
+        isMobile: false,
+        isTablet: false,
+        isDesktop: false,
+        isGameConsole: false,
+        isWearable: false,
+        hasTouch: false,
+        hasMouse: false,
+        hasKeyboard: false,
+        hasGamepad: false,
 
-    function getDeviceId() {
-        try {
-            let deviceId = localStorage.getItem('yara_device_id');
-            if (!deviceId) {
-                deviceId = 'dev_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-                localStorage.setItem('yara_device_id', deviceId);
-            }
-            return deviceId;
-        } catch(e) {
-            return 'dev_fallback_' + Date.now();
-        }
-    }
+        init() {
+            const ua = navigator.userAgent.toLowerCase();
+            const platform = navigator.platform.toLowerCase();
 
-    function loadPremiumStatus() {
-        try {
-            const saved = localStorage.getItem('yara_premium');
-            if (saved) {
-                premiumData = JSON.parse(saved);
-                if (premiumData && premiumData.active === true) {
-                    applyPremiumUI();
-                }
-            }
-        } catch(e) {
-            console.warn('Could not load premium status:', e);
-        }
-    }
+            // TV Detection
+            this.isTV = /smart-tv|smarttv|googletv|appletv|hbbtv|pov_tv|netcast.tv|webos.+large|tizen.+tv|roku|firetv|android.+tv|crkey|chromecast|xbox|playstation|nintendo/.test(ua);
 
-    function savePremiumStatus(data) {
-        try {
-            localStorage.setItem('yara_premium', JSON.stringify(data));
-        } catch(e) {
-            console.warn('Could not save premium status:', e);
-        }
-    }
+            // Game Console Detection
+            this.isGameConsole = /xbox|playstation|nintendo|switch/.test(ua);
 
-    function applyPremiumUI() {
-        if (!premiumData || premiumData.active !== true) return;
+            // Mobile Detection
+            this.isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(ua) && !this.isTV;
 
-        document.body.classList.add('premium-active');
+            // Tablet Detection
+            this.isTablet = /ipad|android(?!.*mobile)|tablet/.test(ua) || (this.isMobile && window.innerWidth >= 768);
 
-        const btn = document.querySelector('.premium-header-btn');
-        if (btn) {
-            btn.innerHTML = '<i class="fas fa-crown"></i><span id="premiumBtnText">Premium</span>';
-            btn.style.background = 'linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2))';
-            btn.style.borderColor = 'rgba(251, 191, 36, 0.5)';
-        }
+            // Desktop Detection
+            this.isDesktop = !this.isMobile && !this.isTablet && !this.isTV && !this.isGameConsole;
 
-        const statusBar = document.getElementById('premiumStatusBar');
-        if (statusBar) {
-            statusBar.style.display = 'block';
-            const expiresText = document.getElementById('premiumExpiresText');
-            if (expiresText && premiumData.expires) {
-                expiresText.textContent = 'Expires: ' + premiumData.expires;
-            }
-        }
+            // Wearable Detection
+            this.isWearable = /watch|wearable|glass/.test(ua);
 
-        const activationBox = document.getElementById('premiumActivationBox');
-        if (activationBox) {
-            activationBox.innerHTML = '<div style="text-align:center; padding:20px;"><div style="width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg, #fbbf24, #f59e0b); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 4px 20px rgba(251,191,36,0.3);"><i class="fas fa-crown" style="font-size:1.5rem; color:#1a1a1a;"></i></div><h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:8px;">You are Premium!</h3><p style="color:var(--text-muted); font-size:0.85rem;">Your premium membership is active until <strong style="color:#fbbf24;">' + (premiumData.expires || 'N/A') + '</strong></p></div>';
-        }
+            // Input Capability Detection
+            this.hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            this.hasMouse = window.matchMedia('(pointer: fine)').matches;
+            this.hasKeyboard = true; // Assume keyboard available
 
-        document.querySelectorAll('.adsterra-banner-top, .adsterra-banner-728, .adsterra-banner-mobile, [id*="container-"]').forEach(function(el) {
-            el.style.display = 'none';
-        });
-    }
-
-    window.openPremiumPage = function() {
-        const page = document.getElementById('premiumPage');
-        if (page) {
-            page.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-    };
-
-    window.closePremiumPage = function() {
-        const page = document.getElementById('premiumPage');
-        if (page) {
-            page.classList.remove('show');
-            document.body.style.overflow = '';
-        }
-    };
-
-    window.activatePremium = async function() {
-        console.log('activatePremium called');
-
-        const input = document.getElementById('premiumCodeInput');
-        const btn = document.getElementById('premiumConfirmBtn');
-        const msg = document.getElementById('premiumMessage');
-        const successAnim = document.getElementById('premiumSuccessAnimation');
-
-        if (!input || !btn) {
-            console.error('Missing input or button element');
-            alert('Error: Page elements not found. Please refresh.');
-            return;
-        }
-
-        const code = input.value.trim().toUpperCase();
-        console.log('Code entered:', code);
-
-        if (!code) {
-            showPremiumMessage('Please enter a premium code', 'error');
-            return;
-        }
-
-        if (!/^YARA-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
-            showPremiumMessage('Invalid code format. Use format: YARA-XXXX-XXXX', 'error');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-        hidePremiumMessage();
-
-        try {
-            console.log('Sending request to:', API_BASE_URL + '/verify-code');
-
-            let data;
-            if (!API_BASE_URL) {
-                console.log('No API_BASE_URL set');
-                throw new Error('Backend URL not configured. Please set API_BASE_URL in the code.');
+            // Detect if TV remote is present
+            if (this.isTV || window.innerWidth > 1920) {
+                this.isTV = true;
             }
 
-            const response = await fetch(API_BASE_URL + '/verify-code', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code, deviceId: getDeviceId() })
+            console.log('[Device]', {
+                TV: this.isTV, Mobile: this.isMobile, Tablet: this.isTablet,
+                Desktop: this.isDesktop, Console: this.isGameConsole,
+                Touch: this.hasTouch, Mouse: this.hasMouse
             });
 
-            data = await response.json();
-            console.log('Response:', data);
+            return this;
+        }
+    };
 
-            if (data.valid) {
-                premiumData = {
-                    active: true,
-                    code: code,
-                    activatedAt: new Date().toISOString(),
-                    expires: data.expires
-                };
-                savePremiumStatus(premiumData);
-                applyPremiumUI();
+    DeviceDetector.init();
 
-                if (successAnim) {
-                    successAnim.classList.add('show');
-                    successAnim.style.display = 'flex';
-                    const sub = document.getElementById('premiumSuccessSub');
-                    if (sub) sub.textContent = 'Your premium expires on ' + data.expires;
-                }
+    // ===================== TV / REMOTE CONTROL SYSTEM =====================
+    const TVRemoteSystem = {
+        focusableElements: [],
+        currentIndex: -1,
+        enabled: false,
 
-                const inputGroup = document.querySelector('.premium-input-group');
-                if (inputGroup) inputGroup.style.display = 'none';
-                if (msg) msg.style.display = 'none';
+        init() {
+            if (!DeviceDetector.isTV && !DeviceDetector.isGameConsole) {
+                // Still enable for keyboard navigation on all devices
+                this.enabled = true;
             } else {
-                showPremiumMessage(data.message || 'Invalid Premium Code', 'error');
+                this.enabled = true;
+                document.body.classList.add('tv-mode');
             }
-        } catch (err) {
-            console.error('Premium activation error:', err);
-            showPremiumMessage('Connection failed. Backend server not running. Please start the backend first.', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-check"></i> Confirm';
+
+            this.updateFocusableElements();
+            this.bindEvents();
+
+            // Auto-focus first element on TV
+            if (DeviceDetector.isTV || DeviceDetector.isGameConsole) {
+                setTimeout(() => this.focusFirst(), 1000);
+            }
+        },
+
+        updateFocusableElements() {
+            this.focusableElements = Array.from(document.querySelectorAll(
+                '.channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, ' +
+                '.retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, ' +
+                '.faq-question, .custom-channel-item button, #pwaInstallBtn, ' +
+                'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            )).filter(el => {
+                return el.offsetParent !== null && 
+                       getComputedStyle(el).visibility !== 'hidden' &&
+                       getComputedStyle(el).display !== 'none';
+            });
+        },
+
+        focusElement(index) {
+            if (this.focusableElements.length === 0) return;
+
+            // Remove focus from all
+            this.focusableElements.forEach(el => {
+                el.classList.remove('tv-focused', 'tv-selected');
+                el.removeAttribute('data-keyboard-focus');
+            });
+
+            // Wrap around
+            if (index < 0) index = this.focusableElements.length - 1;
+            if (index >= this.focusableElements.length) index = 0;
+
+            this.currentIndex = index;
+            const el = this.focusableElements[index];
+
+            if (el) {
+                el.classList.add('tv-focused');
+                el.setAttribute('data-keyboard-focus', 'true');
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
+                // Announce for screen readers
+                const label = el.getAttribute('aria-label') || el.textContent || el.title || 'Button';
+                this.announce(label);
+            }
+        },
+
+        focusFirst() {
+            this.updateFocusableElements();
+            this.focusElement(0);
+        },
+
+        focusNext() {
+            this.focusElement(this.currentIndex + 1);
+        },
+
+        focusPrev() {
+            this.focusElement(this.currentIndex - 1);
+        },
+
+        activateCurrent() {
+            if (this.currentIndex >= 0 && this.currentIndex < this.focusableElements.length) {
+                const el = this.focusableElements[this.currentIndex];
+                el.classList.add('tv-selected');
+
+                // Simulate click
+                const clickEvent = new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
+                el.dispatchEvent(clickEvent);
+
+                // Also trigger the element's onclick if exists
+                if (el.onclick) el.onclick();
+
+                setTimeout(() => el.classList.remove('tv-selected'), 300);
+            }
+        },
+
+        goBack() {
+            // Close modals/panels first
+            const settingsPanel = document.getElementById('settingsPanel');
+            const premiumPage = document.getElementById('premiumPage');
+            const pwaModal = document.getElementById('pwaInstallModal');
+
+            if (settingsPanel && settingsPanel.classList.contains('open')) {
+                toggleSettings();
+                return;
+            }
+            if (premiumPage && premiumPage.classList.contains('show')) {
+                closePremiumPage();
+                return;
+            }
+            if (pwaModal && pwaModal.style.display === 'flex') {
+                closePwaModal();
+                return;
+            }
+
+            // Toggle fullscreen on video
+            if (document.fullscreenElement) {
+                toggleFullscreen();
+            }
+        },
+
+        announce(message) {
+            // Create live region for screen readers
+            let announcer = document.getElementById('sr-announcer');
+            if (!announcer) {
+                announcer = document.createElement('div');
+                announcer.id = 'sr-announcer';
+                announcer.className = 'sr-only';
+                announcer.setAttribute('aria-live', 'polite');
+                announcer.setAttribute('aria-atomic', 'true');
+                document.body.appendChild(announcer);
+            }
+            announcer.textContent = message;
+        },
+
+        bindEvents() {
+            document.addEventListener('keydown', (e) => {
+                // Ignore if typing in input
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    if (e.key === 'Escape') e.target.blur();
+                    return;
+                }
+
+                switch(e.key) {
+                    // D-Pad / Arrow Keys
+                    case 'ArrowRight':
+                    case 'Right':
+                        e.preventDefault();
+                        this.focusNext();
+                        break;
+                    case 'ArrowLeft':
+                    case 'Left':
+                        e.preventDefault();
+                        this.focusPrev();
+                        break;
+                    case 'ArrowDown':
+                    case 'Down':
+                        e.preventDefault();
+                        // Find next element below current
+                        this.focusNext();
+                        break;
+                    case 'ArrowUp':
+                    case 'Up':
+                        e.preventDefault();
+                        // Find previous element above current
+                        this.focusPrev();
+                        break;
+
+                    // Select / OK / Enter
+                    case 'Enter':
+                    case 'OK':
+                    case 'Select':
+                        e.preventDefault();
+                        this.activateCurrent();
+                        break;
+
+                    // Back / Escape
+                    case 'Backspace':
+                    case 'Escape':
+                    case 'Back':
+                        e.preventDefault();
+                        this.goBack();
+                        break;
+
+                    // Media Keys
+                    case 'MediaPlayPause':
+                    case 'Play':
+                    case 'Pause':
+                        e.preventDefault();
+                        togglePlay();
+                        break;
+                    case 'MediaStop':
+                    case 'Stop':
+                        e.preventDefault();
+                        video.pause();
+                        updatePlayButton();
+                        break;
+                    case 'MediaFastForward':
+                    case 'FastForward':
+                        e.preventDefault();
+                        video.currentTime += 10;
+                        break;
+                    case 'MediaRewind':
+                    case 'Rewind':
+                        e.preventDefault();
+                        video.currentTime -= 10;
+                        break;
+                    case 'VolumeUp':
+                        e.preventDefault();
+                        video.volume = Math.min(1, video.volume + 0.1);
+                        break;
+                    case 'VolumeDown':
+                        e.preventDefault();
+                        video.volume = Math.max(0, video.volume - 0.1);
+                        break;
+                    case 'VolumeMute':
+                    case 'Mute':
+                        e.preventDefault();
+                        toggleMute();
+                        break;
+
+                    // Color buttons (TV remotes)
+                    case 'Red':
+                        e.preventDefault();
+                        // Red button - toggle play
+                        togglePlay();
+                        break;
+                    case 'Green':
+                        e.preventDefault();
+                        // Green button - toggle fullscreen
+                        toggleFullscreen();
+                        break;
+                    case 'Yellow':
+                        e.preventDefault();
+                        // Yellow button - toggle settings
+                        toggleSettings();
+                        break;
+                    case 'Blue':
+                        e.preventDefault();
+                        // Blue button - toggle mute
+                        toggleMute();
+                        break;
+
+                    // Number keys for channel selection
+                    case '0': case '1': case '2': case '3': case '4':
+                    case '5': case '6': case '7': case '8': case '9':
+                        const num = parseInt(e.key);
+                        if (num > 0 && num <= channels.length) {
+                            loadChannel(num - 1);
+                        }
+                        break;
+
+                    // Channel up/down
+                    case 'ChannelUp':
+                    case 'PageUp':
+                        e.preventDefault();
+                        if (currentChannelIndex < channels.length - 1) {
+                            loadChannel(currentChannelIndex + 1);
+                        }
+                        break;
+                    case 'ChannelDown':
+                    case 'PageDown':
+                        e.preventDefault();
+                        if (currentChannelIndex > 0) {
+                            loadChannel(currentChannelIndex - 1);
+                        }
+                        break;
+
+                    // Info button
+                    case 'Info':
+                        e.preventDefault();
+                        toggleSettings();
+                        break;
+
+                    // Guide / EPG
+                    case 'Guide':
+                    case 'EPG':
+                        e.preventDefault();
+                        // Could show channel guide
+                        break;
+
+                    // Menu
+                    case 'ContextMenu':
+                    case 'Menu':
+                        e.preventDefault();
+                        toggleSettings();
+                        break;
+                }
+            });
+
+            // Update focusable elements when DOM changes
+            const observer = new MutationObserver(() => {
+                this.updateFocusableElements();
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
         }
     };
 
-    function showPremiumMessage(text, type) {
-        console.log('showPremiumMessage:', text, type);
-        const msg = document.getElementById('premiumMessage');
-        if (msg) {
-            msg.style.display = 'flex';
-            msg.textContent = text;
-            msg.className = 'premium-message show ' + type;
-            msg.style.opacity = '1';
-            msg.style.visibility = 'visible';
-        } else {
-            console.error('premiumMessage element not found');
-            alert(text);
-        }
-    }
+    // ===================== GAMEPAD SYSTEM =====================
+    const GamepadSystem = {
+        gamepads: [],
+        pollInterval: null,
+        enabled: false,
 
-    function hidePremiumMessage() {
-        const msg = document.getElementById('premiumMessage');
-        if (msg) {
-            msg.classList.remove('show');
-            msg.style.display = 'none';
-            msg.style.opacity = '0';
-        }
-    }
+        init() {
+            if ('getGamepads' in navigator) {
+                this.enabled = true;
+                this.startPolling();
+                this.bindEvents();
+            }
+        },
 
-    // Enter key support
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Premium system DOMContentLoaded');
-        const input = document.getElementById('premiumCodeInput');
-        if (input) {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') window.activatePremium();
+        startPolling() {
+            this.pollInterval = setInterval(() => this.poll(), 100);
+        },
+
+        poll() {
+            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+
+            for (let i = 0; i < gamepads.length; i++) {
+                const gp = gamepads[i];
+                if (gp) {
+                    this.handleGamepad(gp);
+                }
+            }
+        },
+
+        handleGamepad(gp) {
+            // Standard gamepad mapping
+            // Buttons: 0=A/Cross, 1=B/Circle, 2=X/Square, 3=Y/Triangle
+            // 4=LB/L1, 5=RB/R1, 6=LT/L2, 7=RT/R2
+            // 8=Back/Select/Share, 9=Start/Options, 10=LStick, 11=RStick
+            // 12=D-Up, 13=D-Down, 14=D-Left, 15=D-Right
+            // Axes: 0=LStickX, 1=LStickY, 2=RStickX, 3=RStickY
+
+            const buttons = gp.buttons;
+            const axes = gp.axes;
+
+            // D-Pad or Left Stick for navigation
+            if (buttons[12]?.pressed || axes[1] < -0.5) {
+                TVRemoteSystem.focusPrev();
+                this.debounce();
+            }
+            if (buttons[13]?.pressed || axes[1] > 0.5) {
+                TVRemoteSystem.focusNext();
+                this.debounce();
+            }
+            if (buttons[14]?.pressed || axes[0] < -0.5) {
+                TVRemoteSystem.focusPrev();
+                this.debounce();
+            }
+            if (buttons[15]?.pressed || axes[0] > 0.5) {
+                TVRemoteSystem.focusNext();
+                this.debounce();
+            }
+
+            // A/Cross = Select
+            if (buttons[0]?.pressed) {
+                TVRemoteSystem.activateCurrent();
+                this.debounce();
+            }
+
+            // B/Circle = Back
+            if (buttons[1]?.pressed) {
+                TVRemoteSystem.goBack();
+                this.debounce();
+            }
+
+            // X/Square = Play/Pause
+            if (buttons[2]?.pressed) {
+                togglePlay();
+                this.debounce();
+            }
+
+            // Y/Triangle = Fullscreen
+            if (buttons[3]?.pressed) {
+                toggleFullscreen();
+                this.debounce();
+            }
+
+            // LB/L1 = Previous Channel
+            if (buttons[4]?.pressed) {
+                if (currentChannelIndex > 0) loadChannel(currentChannelIndex - 1);
+                this.debounce();
+            }
+
+            // RB/R1 = Next Channel
+            if (buttons[5]?.pressed) {
+                if (currentChannelIndex < channels.length - 1) loadChannel(currentChannelIndex + 1);
+                this.debounce();
+            }
+
+            // Start/Options = Settings
+            if (buttons[9]?.pressed) {
+                toggleSettings();
+                this.debounce();
+            }
+
+            // RT/R2 = Volume Up
+            if (buttons[7]?.pressed) {
+                video.volume = Math.min(1, video.volume + 0.1);
+                this.debounce();
+            }
+
+            // LT/L2 = Volume Down
+            if (buttons[6]?.pressed) {
+                video.volume = Math.max(0, video.volume - 0.1);
+                this.debounce();
+            }
+        },
+
+        debounce() {
+            clearInterval(this.pollInterval);
+            setTimeout(() => this.startPolling(), 300);
+        },
+
+        bindEvents() {
+            window.addEventListener('gamepadconnected', (e) => {
+                console.log('[Gamepad] Connected:', e.gamepad.id);
+                DeviceDetector.hasGamepad = true;
+            });
+
+            window.addEventListener('gamepaddisconnected', (e) => {
+                console.log('[Gamepad] Disconnected:', e.gamepad.id);
             });
         }
-        loadPremiumStatus();
+    };
+
+    // ===================== TOUCH GESTURES =====================
+    const TouchSystem = {
+        touchStartX: 0,
+        touchStartY: 0,
+        touchStartTime: 0,
+        longPressTimer: null,
+
+        init() {
+            if (!DeviceDetector.hasTouch) return;
+
+            const player = document.getElementById('playerWrapper');
+            if (!player) return;
+
+            player.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+            player.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
+            player.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
+            player.addEventListener('touchcancel', () => this.handleTouchCancel(), { passive: true });
+
+            // Double tap for fullscreen
+            let lastTap = 0;
+            player.addEventListener('touchend', (e) => {
+                const currentTime = Date.now();
+                if (currentTime - lastTap < 300) {
+                    // Double tap
+                    toggleFullscreen();
+                }
+                lastTap = currentTime;
+            }, { passive: true });
+        },
+
+        handleTouchStart(e) {
+            const touch = e.touches[0];
+            this.touchStartX = touch.clientX;
+            this.touchStartY = touch.clientY;
+            this.touchStartTime = Date.now();
+
+            // Long press for menu
+            this.longPressTimer = setTimeout(() => {
+                toggleSettings();
+            }, 800);
+        },
+
+        handleTouchMove(e) {
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
+            }
+        },
+
+        handleTouchEnd(e) {
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
+            }
+
+            const touch = e.changedTouches[0];
+            const diffX = touch.clientX - this.touchStartX;
+            const diffY = touch.clientY - this.touchStartY;
+            const diffTime = Date.now() - this.touchStartTime;
+
+            // Swipe detection
+            if (diffTime < 500 && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    // Swipe right - next channel
+                    if (currentChannelIndex < channels.length - 1) {
+                        loadChannel(currentChannelIndex + 1);
+                    }
+                } else {
+                    // Swipe left - previous channel
+                    if (currentChannelIndex > 0) {
+                        loadChannel(currentChannelIndex - 1);
+                    }
+                }
+            }
+
+            // Vertical swipe for volume
+            if (diffTime < 500 && Math.abs(diffY) > 50) {
+                if (diffY > 0) {
+                    video.volume = Math.max(0, video.volume - 0.1);
+                } else {
+                    video.volume = Math.min(1, video.volume + 0.1);
+                }
+            }
+        },
+
+        handleTouchCancel() {
+            if (this.longPressTimer) {
+                clearTimeout(this.longPressTimer);
+                this.longPressTimer = null;
+            }
+        }
+    };
+
+    // ===================== MOUSE WHEEL =====================
+    const MouseSystem = {
+        init() {
+            if (!DeviceDetector.hasMouse) return;
+
+            const player = document.getElementById('playerWrapper');
+            if (!player) return;
+
+            player.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (e.deltaY > 0) {
+                    video.volume = Math.max(0, video.volume - 0.05);
+                } else {
+                    video.volume = Math.min(1, video.volume + 0.05);
+                }
+            }, { passive: false });
+
+            // Middle click for play/pause
+            player.addEventListener('mousedown', (e) => {
+                if (e.button === 1) {
+                    e.preventDefault();
+                    togglePlay();
+                }
+            });
+        }
+    };
+
+    // ===================== VOICE CONTROL =====================
+    const VoiceSystem = {
+        recognition: null,
+        enabled: false,
+
+        init() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                this.recognition.continuous = false;
+                this.recognition.interimResults = false;
+                this.recognition.lang = 'en-US';
+
+                this.recognition.onresult = (e) => {
+                    const command = e.results[0][0].transcript.toLowerCase().trim();
+                    this.processCommand(command);
+                };
+
+                this.recognition.onerror = (e) => {
+                    console.log('[Voice] Error:', e.error);
+                };
+            }
+        },
+
+        processCommand(command) {
+            console.log('[Voice] Command:', command);
+
+            if (command.includes('play') || command.includes('start')) {
+                video.play();
+            } else if (command.includes('pause') || command.includes('stop')) {
+                video.pause();
+            } else if (command.includes('fullscreen')) {
+                toggleFullscreen();
+            } else if (command.includes('mute')) {
+                video.muted = true;
+            } else if (command.includes('unmute')) {
+                video.muted = false;
+            } else if (command.includes('next') || command.includes('channel up')) {
+                if (currentChannelIndex < channels.length - 1) {
+                    loadChannel(currentChannelIndex + 1);
+                }
+            } else if (command.includes('previous') || command.includes('channel down')) {
+                if (currentChannelIndex > 0) {
+                    loadChannel(currentChannelIndex - 1);
+                }
+            } else if (command.includes('volume up')) {
+                video.volume = Math.min(1, video.volume + 0.2);
+            } else if (command.includes('volume down')) {
+                video.volume = Math.max(0, video.volume - 0.2);
+            } else if (command.includes('settings')) {
+                toggleSettings();
+            }
+        },
+
+        start() {
+            if (this.recognition) {
+                this.recognition.start();
+            }
+        }
+    };
+
+    // ===================== SCREEN ORIENTATION =====================
+    const OrientationSystem = {
+        init() {
+            if (screen.orientation) {
+                screen.orientation.addEventListener('change', () => {
+                    console.log('[Orientation] Changed to:', screen.orientation.type);
+                    // Adjust UI based on orientation
+                    if (screen.orientation.type.includes('landscape')) {
+                        document.body.classList.add('landscape');
+                        document.body.classList.remove('portrait');
+                    } else {
+                        document.body.classList.add('portrait');
+                        document.body.classList.remove('landscape');
+                    }
+                });
+            }
+
+            // Lock orientation on mobile for video
+            if (DeviceDetector.isMobile && screen.orientation && screen.orientation.lock) {
+                // Don't auto-lock, let user decide
+            }
+        }
+    };
+
+    // ===================== PICTURE IN PICTURE =====================
+    const PIPSystem = {
+        init() {
+            if ('pictureInPictureEnabled' in document) {
+                video.addEventListener('enterpictureinpicture', () => {
+                    console.log('[PIP] Entered');
+                });
+                video.addEventListener('leavepictureinpicture', () => {
+                    console.log('[PIP] Left');
+                });
+            }
+        }
+    };
+
+    // ===================== WAKE LOCK (Keep screen on) =====================
+    const WakeLockSystem = {
+        wakeLock: null,
+
+        async init() {
+            if ('wakeLock' in navigator) {
+                try {
+                    this.wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('[WakeLock] Acquired');
+
+                    this.wakeLock.addEventListener('release', () => {
+                        console.log('[WakeLock] Released');
+                    });
+
+                    // Re-acquire when page becomes visible
+                    document.addEventListener('visibilitychange', async () => {
+                        if (document.visibilityState === 'visible' && !this.wakeLock) {
+                            this.wakeLock = await navigator.wakeLock.request('screen');
+                        }
+                    });
+                } catch (err) {
+                    console.log('[WakeLock] Failed:', err);
+                }
+            }
+        }
+    };
+
+    // ===================== FULLSCREEN API POLYFILL =====================
+    const FullscreenPolyfill = {
+        init() {
+            // Ensure fullscreen works across all browsers
+            const prefixes = ['', 'webkit', 'moz', 'ms'];
+
+            prefixes.forEach(prefix => {
+                const requestMethod = prefix + (prefix ? 'RequestFullscreen' : 'requestFullscreen');
+                const exitMethod = prefix + (prefix ? 'ExitFullscreen' : 'exitFullscreen');
+                const elementProperty = prefix + (prefix ? 'FullscreenElement' : 'fullscreenElement');
+
+                if (document[requestMethod]) {
+                    document.requestFullscreen = document[requestMethod].bind(document);
+                }
+                if (document[exitMethod]) {
+                    document.exitFullscreen = document[exitMethod].bind(document);
+                }
+            });
+        }
+    };
+
+    // ===================== INITIALIZE ALL SYSTEMS =====================
+    document.addEventListener('DOMContentLoaded', () => {
+        TVRemoteSystem.init();
+        GamepadSystem.init();
+        TouchSystem.init();
+        MouseSystem.init();
+        VoiceSystem.init();
+        OrientationSystem.init();
+        PIPSystem.init();
+        WakeLockSystem.init();
+        FullscreenPolyfill.init();
+
+        console.log('[Universal Input] All systems initialized');
+        console.log('[Device] Type:', DeviceDetector.isTV ? 'TV' : DeviceDetector.isMobile ? 'Mobile' : DeviceDetector.isTablet ? 'Tablet' : 'Desktop');
     });
+
+    // Expose to global for debugging
+    window.YaraDevice = DeviceDetector;
+    window.YaraTV = TVRemoteSystem;
+    window.YaraGamepad = GamepadSystem;
+
 })();
-</script>
+</script</body>
+</html>

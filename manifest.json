@@ -8,6 +8,10 @@
   "theme_color": "#7c3aed",
   "orientation": "any",
   "scope": "/",
+  "id": "/",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
   "icons": [
     {
       "src": "icon-72x72.png",
@@ -68,6 +72,22 @@
   "lang": "en",
   "dir": "ltr",
   "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Live TV",
+      "short_name": "Live",
+      "description": "Watch live sports channels",
+      "url": "/",
+      "icons": [{ "src": "icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Premium",
+      "short_name": "Premium",
+      "description": "Activate premium membership",
+      "url": "/?page=premium",
+      "icons": [{ "src": "icon-96x96.png", "sizes": "96x96" }]
+    }
+  ],
   "screenshots": [
     {
       "src": "screenshot-wide.png",
@@ -83,5 +103,11 @@
       "form_factor": "narrow",
       "label": "Yara Sport TV Mobile"
     }
-  ]
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "handle_links": "preferred"
 }

@@ -131,8 +131,8 @@
         }
         .main-container {
             display: flex;
-            gap: 20px;
-            padding: 20px;
+            gap: 16px;
+            padding: 12px 16px;
             max-width: 1600px;
             margin: 0 auto;
             width: 100%;
@@ -147,6 +147,7 @@
             display: flex;
             flex-direction: column;
             width: 100%;
+            gap: 0;
         }
         .player-wrapper {
             position: relative;
@@ -160,6 +161,7 @@
             justify-content: center;
             max-width: 100%;
             width: 100%;
+            margin: 0;
         }
         .player-wrapper.fullscreen {
             position: fixed !important;
@@ -379,7 +381,8 @@
             border: 1px solid var(--border);
             border-top: none;
             border-radius: 0 0 16px 16px;
-            overflow: hidden
+            overflow: hidden;
+            margin: 0;
         }
         .channel-info-top {
             display: flex;
@@ -437,11 +440,11 @@
         .stream-status.offline { background: rgba(239,68,68,0.15); color: var(--live-red); border: 1px solid rgba(239,68,68,0.3); }
         .stream-status.checking { background: rgba(245,158,11,0.15); color: var(--warning); border: 1px solid rgba(245,158,11,0.3); }
         .sidebar {
-            width: 380px;
+            width: 360px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
         .sidebar-card {
             background: var(--bg-card);
@@ -623,11 +626,11 @@
         
         .footer {
             text-align: center;
-            padding: 24px;
+            padding: 16px;
             color: var(--text-muted);
             font-size: 0.8rem;
             border-top: 1px solid var(--border);
-            margin-top: 20px;
+            margin-top: 12px;
         }
         .verified-badge {
             display: inline-flex;
@@ -1358,6 +1361,148 @@
 </style>
 </head>
 <body>
+<!-- ===== ANTI-ADBLOCK DETECTION ===== -->
+<div id="adblock-overlay" style="
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 15, 15, 0.98);
+    backdrop-filter: blur(20px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;">
+    <div style="
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 40px 32px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.6);">
+        <div style="
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(239,68,68,0.3);
+        ">
+            <i class="fas fa-shield-alt" style="font-size: 2rem; color: #fff;"></i>
+        </div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 12px;">Ad Blocker Detected</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;">
+            We've detected that you're using an ad blocker. Please disable your ad blocker to continue using Yara Sport.
+        </p>
+        <div style="
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: left;
+        ">
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0; line-height: 1.5;">
+                <i class="fas fa-info-circle" style="color: var(--live-red); margin-right: 6px;"></i>
+                Ads help us keep the streams free for everyone. Disable your ad blocker and refresh the page to continue watching.
+            </p>
+        </div>
+        <button onclick="location.reload()" style="
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+        "><i class="fas fa-sync-alt" style="margin-right: 8px;"></i>Refresh Page</button>
+    </div>
+</div>
+
+<!-- Bait elements for adblock detection -->
+<div class="adsbox banner_ads" style="height: 1px; width: 1px; position: absolute; left: -9999px;"></div>
+<div id="ad-banner" style="height: 1px; width: 1px; position: absolute; left: -9999px;"></div>
+<div class="ad-unit" style="height: 1px; width: 1px; position: absolute; left: -9999px;"></div>
+
+<script>
+(function() {
+    "use strict";
+
+    function detectAdblock() {
+        // Method 1: Check bait elements
+        const baitElements = [
+            document.querySelector('.adsbox'),
+            document.querySelector('.banner_ads'),
+            document.querySelector('#ad-banner'),
+            document.querySelector('.ad-unit')
+        ];
+
+        for (const el of baitElements) {
+            if (!el || el.offsetHeight === 0 || el.offsetParent === null || getComputedStyle(el).display === 'none') {
+                return true;
+            }
+        }
+
+        // Method 2: Check if ad scripts are blocked
+        const testScript = document.createElement('script');
+        testScript.type = 'text/javascript';
+        testScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+        testScript.onerror = function() {
+            showAdblockOverlay();
+        };
+
+        // Method 3: Check common adblock variables
+        if (window.google_ad_status === undefined && window.adsbygoogle === undefined) {
+            // This might indicate adblock, but not always - use with other checks
+        }
+
+        // Method 4: Fetch test (some adblockers block fetch to ad domains)
+        fetch('https://googleads.g.doubleclick.net/pagead/id', { 
+            method: 'HEAD',
+            mode: 'no-cors',
+            cache: 'no-store'
+        }).catch(() => {
+            // If this fails, might be adblock
+        });
+
+        return false;
+    }
+
+    function showAdblockOverlay() {
+        const overlay = document.getElementById('adblock-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // Run detection after page loads
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            if (detectAdblock()) {
+                showAdblockOverlay();
+            }
+        }, 1500);
+    });
+
+    // Also check periodically
+    setInterval(function() {
+        if (detectAdblock()) {
+            showAdblockOverlay();
+        }
+    }, 5000);
+
+})();
+</script>
+
     <header class="header">
         <div class="logo-section">
             <div class="logo-icon">
@@ -1394,7 +1539,7 @@
 <div class="main-container">
         <div class="video-section">
                             <!-- Adsterra Banner -->
-            <div class="adsterra-banner-top" style="margin-bottom: 12px; text-align: center; width: 100%;">
+            <div class="adsterra-banner-top" style="margin-bottom: 8px; text-align: center; width: 100%;">
                 <div class="adsterra-banner-desktop">
                     <script>
                       atOptions = {
@@ -3846,7 +3991,7 @@
     window.YaraGamepad = GamepadSystem;
 
 })();
-</script
+</script>
 <!-- ===== PREMIUM PAGE ===== -->
 <div id="premiumPage" style="
     position: fixed;

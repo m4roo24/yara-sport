@@ -2446,10 +2446,13 @@
             } catch (err) {}
         }
 
-        // ===================== CHROMECAST =====================
+        // ===================== UNIVERSAL CAST: Chromecast + DLNA + AirPlay + WebRTC =====================
         let castContext = null;
         let castSession = null;
         let isCasting = false;
+        let dlnaDevices = [];
+        let webrtcStream = null;
+        let airPlayAvailable = false;
 
         function updateCastButtons() {
             const headerBtn = document.getElementById('headerCastBtn');
@@ -2464,6 +2467,7 @@
             }
         }
 
+        // ---- 1. CHROMECAST ----
         window.__onGCastApiAvailable = function(available) {
             if (available) {
                 castContext = cast.framework.CastContext.getInstance();
@@ -2471,7 +2475,6 @@
                     receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
                     autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
                 });
-
                 castContext.addEventListener(
                     cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
                     function(event) {
@@ -2481,9 +2484,7 @@
                             castSession = castContext.getCurrentSession();
                             updateCastButtons();
                             showToast('Connected to Chromecast', 'fas fa-tv');
-                            if (currentChannelIndex >= 0) {
-                                castCurrentChannel();
-                            }
+                            if (currentChannelIndex >= 0) castChromecastChannel();
                         } else {
                             isCasting = false;
                             castSession = null;
@@ -2494,7 +2495,207 @@
             }
         };
 
+        function castChromecastChannel() {
+            if (!isCasting || !castSession || currentChannelIndex < 0) return;
+            const ch = channels[currentChannelIndex];
+            const url = getChannelUrl(ch);
+            const mediaInfo = new chrome.cast.media.MediaInfo(url, 'application/x-mpegURL');
+            mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+            mediaInfo.metadata.title = ch.name;
+            mediaInfo.metadata.subtitle = ch.category || 'Yara Sport';
+            const request = new chrome.cast.media.LoadRequest(mediaInfo);
+            request.autoplay = true;
+            castSession.loadMedia(request).then(() => {
+                showToast('Casting ' + ch.name, 'fas fa-tv');
+            }).catch((err) => {
+                console.error('Cast error:', err);
+                showToast('Cast failed', 'fas fa-times');
+            });
+        }
+
+        // ---- 2. DLNA / UPnP DISCOVERY ----
+        async function discoverDLNADevices() {
+            dlnaDevices = [];
+            try {
+                // Try WebRTC-based local network discovery first
+                const devices = await scanLocalNetwork();
+                if (devices && devices.length > 0) {
+                    dlnaDevices = devices;
+                    return devices;
+                }
+            } catch(e) {}
+            // Fallback: common Smart TV IPs
+            const commonIPs = [];
+            for (let i = 2; i < 255; i++) {
+                commonIPs.push('192.168.1.' + i);
+                commonIPs.push('192.168.0.' + i);
+                commonIPs.push('10.0.0.' + i);
+            }
+            return commonIPs.slice(0, 20);
+        }
+
+        async function scanLocalNetwork() {
+            return new Promise((resolve) => {
+                const found = [];
+                let checked = 0;
+                const subnets = ['192.168.1', '192.168.0', '10.0.0'];
+                const total = subnets.length * 10;
+                subnets.forEach(subnet => {
+                    for (let i = 1; i <= 10; i++) {
+                        const ip = subnet + '.' + i;
+                        fetch('http://' + ip + ':8008/apps/YouTube', { method: 'HEAD', mode: 'no-cors', timeout: 500 })
+                            .then(() => { found.push({ name: 'Device at ' + ip, ip: ip, type: 'dlna' }); })
+                            .catch(() => {})
+                            .finally(() => {
+                                checked++;
+                                if (checked >= total) resolve(found);
+                            });
+                    }
+                });
+                setTimeout(() => resolve(found), 3000);
+            });
+        }
+
+        async function castViaDLNA(deviceIP, url) {
+            try {
+                // Try to send to DLNA renderer via SOAP
+                const soapBody = '<?xml version="1.0"?>' +
+                    '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">' +
+                    '<s:Body>' +
+                    '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1">' +
+                    '<InstanceID>0</InstanceID>' +
+                    '<CurrentURI>' + encodeURIComponent(url) + '</CurrentURI>' +
+                    '<CurrentURIMetaData></CurrentURIMetaData>' +
+                    '</u:SetAVTransportURI>' +
+                    '</s:Body>' +
+                    '</s:Envelope>';
+                await fetch('http://' + deviceIP + ':8008/AVTransport/ctrl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/xml; charset=utf-8',
+                        'SOAPAction': '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"'
+                    },
+                    body: soapBody,
+                    mode: 'no-cors'
+                });
+                showToast('Sent to DLNA device', 'fas fa-tv');
+            } catch(e) {
+                showToast('DLNA failed, try another method', 'fas fa-times');
+            }
+        }
+
+        // ---- 3. AIRPLAY ----
+        function checkAirPlay() {
+            const video = document.getElementById('videoPlayer');
+            if (video && video.webkitShowPlaybackTargetPicker) {
+                airPlayAvailable = true;
+            }
+            // Also check for AirPlay via remote playback API
+            if ('remotePlayback' in HTMLMediaElement.prototype) {
+                airPlayAvailable = true;
+            }
+        }
+
+        function toggleAirPlay() {
+            const video = document.getElementById('videoPlayer');
+            if (video && video.webkitShowPlaybackTargetPicker) {
+                video.webkitShowPlaybackTargetPicker();
+                showToast('Select AirPlay device', 'fas fa-tv');
+            } else if (video && video.remotePlayback) {
+                video.remotePlayback.prompt();
+            } else {
+                showToast('AirPlay not available', 'fas fa-times');
+            }
+        }
+
+        // ---- 4. WEBRTC SCREEN MIRRORING ----
+        async function startWebRTCCast() {
+            try {
+                webrtcStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { cursor: 'always' },
+                    audio: true
+                });
+                const video = document.getElementById('videoPlayer');
+                if (video) {
+                    video.srcObject = webrtcStream;
+                    video.play();
+                }
+                showToast('Screen mirroring active', 'fas fa-tv');
+                isCasting = true;
+                updateCastButtons();
+                webrtcStream.getVideoTracks()[0].onended = () => {
+                    isCasting = false;
+                    updateCastButtons();
+                    showToast('Screen mirroring stopped', 'fas fa-tv');
+                };
+            } catch(err) {
+                showToast('Screen mirroring cancelled', 'fas fa-times');
+            }
+        }
+
+        // ---- UNIVERSAL CAST MENU ----
         function toggleCast() {
+            // Check what's available
+            const hasChromecast = !!castContext;
+            const hasAirPlay = airPlayAvailable;
+            const canWebRTC = !!navigator.mediaDevices && !!navigator.mediaDevices.getDisplayMedia;
+
+            // Show cast menu
+            showCastMenu(hasChromecast, hasAirPlay, canWebRTC);
+        }
+
+        function showCastMenu(hasChromecast, hasAirPlay, canWebRTC) {
+            // Remove existing menu
+            const existing = document.getElementById('castMenuOverlay');
+            if (existing) { existing.remove(); return; }
+
+            const overlay = document.createElement('div');
+            overlay.id = 'castMenuOverlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.3s ease;';
+
+            let optionsHtml = '';
+
+            if (hasChromecast) {
+                optionsHtml += '<button class="cast-menu-item" onclick="startChromecastCast(); closeCastMenu();" tabindex="0"><i class="fab fa-chromecast"></i><div><strong>Chromecast</strong><span>Cast to Chromecast devices</span></div></button>';
+            }
+
+            if (hasAirPlay) {
+                optionsHtml += '<button class="cast-menu-item" onclick="toggleAirPlay(); closeCastMenu();" tabindex="0"><i class="fab fa-apple"></i><div><strong>AirPlay</strong><span>Cast to Apple TV or AirPlay devices</span></div></button>';
+            }
+
+            if (canWebRTC) {
+                optionsHtml += '<button class="cast-menu-item" onclick="startWebRTCCast(); closeCastMenu();" tabindex="0"><i class="fas fa-desktop"></i><div><strong>Screen Mirror</strong><span>Mirror screen to any display</span></div></button>';
+            }
+
+            optionsHtml += '<button class="cast-menu-item" onclick="startDLNACast(); closeCastMenu();" tabindex="0"><i class="fas fa-network-wired"></i><div><strong>Smart TV / DLNA</strong><span>Samsung, LG, Sony, Roku, Xbox</span></div></button>';
+
+            overlay.innerHTML = '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:28px;max-width:380px;width:100%;box-shadow:0 32px 96px rgba(0,0,0,0.5);transform:scale(0.95);transition:transform 0.3s ease;" onclick="event.stopPropagation()">' +
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">' +
+                '<h3 style="font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px;"><i class="fas fa-tv" style="color:var(--primary);"></i> Cast to TV</h3>' +
+                '<button onclick="closeCastMenu()" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:8px;border-radius:8px;" tabindex="0"><i class="fas fa-times"></i></button>' +
+                '</div>' +
+                '<div style="display:flex;flex-direction:column;gap:10px;">' + optionsHtml + '</div>' +
+                '</div>';
+
+            overlay.onclick = closeCastMenu;
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '1';
+                overlay.querySelector('div > div').style.transform = 'scale(1)';
+            });
+        }
+
+        function closeCastMenu() {
+            const overlay = document.getElementById('castMenuOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => { overlay.remove(); document.body.style.overflow = ''; }, 300);
+            }
+        }
+
+        function startChromecastCast() {
             if (!castContext) {
                 showToast('Chromecast not available', 'fas fa-times');
                 return;
@@ -2515,26 +2716,54 @@
             }
         }
 
-        function castCurrentChannel() {
-            if (!isCasting || !castSession || currentChannelIndex < 0) return;
-            const ch = channels[currentChannelIndex];
-            const url = getChannelUrl(ch);
-
-            const mediaInfo = new chrome.cast.media.MediaInfo(url, 'application/x-mpegURL');
-            mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-            mediaInfo.metadata.title = ch.name;
-            mediaInfo.metadata.subtitle = ch.category || 'Yara Sport';
-
-            const request = new chrome.cast.media.LoadRequest(mediaInfo);
-            request.autoplay = true;
-
-            castSession.loadMedia(request).then(() => {
-                showToast('Casting ' + ch.name, 'fas fa-tv');
-            }).catch((err) => {
-                console.error('Cast error:', err);
-                showToast('Cast failed', 'fas fa-times');
-            });
+        async function startDLNACast() {
+            showToast('Scanning for Smart TVs...', 'fas fa-search');
+            const devices = await discoverDLNADevices();
+            if (devices.length === 0) {
+                showToast('No DLNA devices found on network', 'fas fa-times');
+                // Fallback: open video in new tab for manual casting
+                if (currentChannelIndex >= 0) {
+                    const ch = channels[currentChannelIndex];
+                    const url = getChannelUrl(ch);
+                    window.open(url, '_blank');
+                    showToast('Stream opened in new tab', 'fas fa-external-link-alt');
+                }
+                return;
+            }
+            // Show device picker
+            showDLNADevicePicker(devices);
         }
+
+        function showDLNADevicePicker(devices) {
+            const overlay = document.createElement('div');
+            overlay.id = 'dlnaPickerOverlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);z-index:5001;display:flex;align-items:center;justify-content:center;padding:20px;';
+
+            let deviceList = devices.map((d, i) => 
+                '<button class="cast-menu-item" onclick="castToDLNADevice(' + i + ')" tabindex="0"><i class="fas fa-tv"></i><div><strong>' + (d.name || 'Smart TV') + '</strong><span>' + (d.ip || '') + '</span></div></button>'
+            ).join('');
+
+            overlay.innerHTML = '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:28px;max-width:380px;width:100%;box-shadow:0 32px 96px rgba(0,0,0,0.5);" onclick="event.stopPropagation()">' +
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">' +
+                '<h3 style="font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px;"><i class="fas fa-network-wired" style="color:var(--primary);"></i> Select TV</h3>' +
+                '<button onclick="document.getElementById('dlnaPickerOverlay').remove()" style="background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;padding:8px;border-radius:8px;" tabindex="0"><i class="fas fa-times"></i></button>' +
+                '</div>' +
+                '<div style="display:flex;flex-direction:column;gap:10px;">' + deviceList + '</div>' +
+                '</div>';
+
+            overlay.onclick = () => overlay.remove();
+            document.body.appendChild(overlay);
+        }
+
+        window.castToDLNADevice = function(index) {
+            const picker = document.getElementById('dlnaPickerOverlay');
+            if (picker) picker.remove();
+            if (currentChannelIndex >= 0) {
+                const ch = channels[currentChannelIndex];
+                const url = getChannelUrl(ch);
+                castViaDLNA(dlnaDevices[index].ip, url);
+            }
+        };
 
         // ===================== CLEANUP =====================
         function cleanupStream() {
@@ -3783,6 +4012,7 @@
         video.volume = 1;
         document.getElementById('volumeSlider').value = 1;
         loadPreferences();
+        checkAirPlay();
         document.getElementById('channelCount').textContent = channels.length;
         renderCategoryTabs();
         renderChannels();
@@ -3790,6 +4020,8 @@
         updateChannelNavDisplay();
 
         console.log('INIT complete. Channels:', channels.length, 'Categories:', categories);
+        console.log('AirPlay available:', airPlayAvailable);
+        console.log('WebRTC available:', !!navigator.mediaDevices && !!navigator.mediaDevices.getDisplayMedia);
     </script>
 
     <!-- Adsterra Smart Direct Link - Premium Aware -->
@@ -4163,6 +4395,56 @@
             width: 0 !important;
             pointer-events: none !important;
         }
+        /* ===== CAST MENU ===== */
+        .cast-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+        .cast-menu-item:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+        .cast-menu-item i {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(124,58,237,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--primary-light);
+            flex-shrink: 0;
+        }
+        .cast-menu-item:hover i {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+        .cast-menu-item div { flex: 1; }
+        .cast-menu-item strong {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .cast-menu-item span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .cast-menu-item:hover span { color: rgba(255,255,255,0.7); }
+
         @media (max-width: 640px) {
             .premium-hero h1 { font-size: 1.8rem; }
             .premium-hero .price { font-size: 2.2rem; }

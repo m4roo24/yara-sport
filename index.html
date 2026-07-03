@@ -67,7 +67,9 @@
         .pwa-install-btn:focus-visible,
         .pwa-dismiss-btn:focus-visible,
         .visitor-badge:focus-visible,
-        .controls-help-btn:focus-visible {
+        .controls-help-btn:focus-visible,
+        .virtual-remote-btn:focus-visible,
+        .ch-nav-btn:focus-visible {
             outline: 3px solid var(--primary-light);
             outline-offset: 3px;
             box-shadow: 0 0 0 6px var(--focus-ring);
@@ -80,6 +82,7 @@
         .control-btn:focus-visible { border-radius: 8px; }
         .color-option:focus-visible { border-radius: 50%; }
         .visitor-badge:focus-visible { border-radius: 50px; }
+        .virtual-remote-btn:focus-visible { border-radius: 12px; }
 
         /* TV Overscan Safe Areas */
         @supports (padding: max(0px)) {
@@ -103,7 +106,7 @@
             .control-btn { font-size: 1.4rem; padding: 12px; }
         }
 
-        button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .visitor-badge {
+        button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .visitor-badge, .virtual-remote-btn, .ch-nav-btn {
             -webkit-tap-highlight-color: transparent !important;
             outline: none !important;
             -webkit-touch-callout: none !important;
@@ -695,6 +698,231 @@
             border: 1px solid rgba(34,197,94,0.3);
         }
 
+        /* ===== CHANNEL NAV BUTTONS (NEW) ===== */
+        .ch-nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+        }
+        .ch-nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            max-width: 140px;
+        }
+        .ch-nav-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .ch-nav-btn:active {
+            transform: scale(0.95);
+        }
+        .ch-nav-btn i {
+            font-size: 0.9rem;
+        }
+        .ch-nav-number {
+            font-family: 'Inter', monospace;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--primary-light);
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* ===== VIRTUAL REMOTE OVERLAY (NEW) ===== */
+        .virtual-remote-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            z-index: 2600;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .virtual-remote-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .virtual-remote {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 340px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .virtual-remote-overlay.show .virtual-remote {
+            transform: scale(1);
+        }
+        .virtual-remote-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .virtual-remote-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .virtual-remote-header h3 i { color: var(--primary); }
+        .virtual-remote-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .virtual-remote-close:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .virtual-remote-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .virtual-remote-btn {
+            aspect-ratio: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .virtual-remote-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .virtual-remote-btn:active {
+            transform: scale(0.95);
+        }
+        .virtual-remote-btn .vr-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .virtual-remote-btn:hover .vr-label { color: rgba(255,255,255,0.7); }
+        .virtual-remote-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .virtual-remote-color {
+            padding: 14px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .virtual-remote-color.red { background: #ef4444; color: #fff; }
+        .virtual-remote-color.green { background: #22c55e; color: #fff; }
+        .virtual-remote-color.yellow { background: #eab308; color: #1a1a1a; }
+        .virtual-remote-color.blue { background: #3b82f6; color: #fff; }
+        .virtual-remote-color:hover { transform: translateY(-2px); filter: brightness(1.2); }
+        .virtual-remote-color:active { transform: translateY(0); }
+        .virtual-remote-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .virtual-remote-action {
+            padding: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .virtual-remote-action:hover { background: var(--primary); border-color: var(--primary); }
+        .virtual-remote-action:active { transform: scale(0.95); }
+
+        /* ===== ON-SCREEN CONTROL TOAST (NEW) ===== */
+        .control-toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(20,20,20,0.95);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            z-index: 5000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .control-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .control-toast i {
+            color: var(--primary-light);
+            font-size: 1rem;
+        }
+
         /* ===== SETTINGS PANEL ===== */
         .settings-btn { 
             background: rgba(124,58,237,0.15); 
@@ -1201,6 +1429,27 @@
         body.light-theme .controls-help-section {
             background: rgba(0,0,0,0.03);
         }
+        body.light-theme .virtual-remote {
+            background: #ffffff;
+        }
+        body.light-theme .virtual-remote-btn {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            border-color: #e4e4e7;
+        }
+        body.light-theme .virtual-remote-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        body.light-theme .virtual-remote-action {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            border-color: #e4e4e7;
+        }
+        body.light-theme .virtual-remote-action:hover {
+            background: var(--primary);
+            color: #fff;
+        }
 
         /* Adsterra Banner Responsive */
         .adsterra-banner-top { width: 100%; position: relative; z-index: 1; }
@@ -1247,9 +1496,9 @@
             .logo-text { font-size: 1.1rem; }
             .main-container { padding: 12px; gap: 12px; }
             .controls-overlay { padding: 30px 12px 12px; }
+            .ch-nav-row { padding: 8px 12px; }
+            .ch-nav-btn { padding: 6px 10px; font-size: 0.75rem; }
         }
-
-
 
         /* ===== MODERN PWA INSTALL BANNER ===== */
         .pwa-banner-modern {
@@ -1282,8 +1531,8 @@
             to { transform: translateX(-50%) translateY(0); opacity: 1; }
         }
         .pwa-banner-icon {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 12px;
             background: linear-gradient(135deg, #7c3aed, #6d28d9);
             display: flex;
@@ -1291,11 +1540,12 @@
             justify-content: center;
             flex-shrink: 0;
             box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+            overflow: hidden;
         }
         .pwa-banner-icon img {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .pwa-banner-text {
             flex: 1;
@@ -1304,52 +1554,39 @@
         .pwa-banner-title {
             font-weight: 700;
             color: #fff;
-            font-size: 0.9rem;
-            margin-bottom: 2px;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
         }
         .pwa-banner-sub {
             color: #a1a1aa;
-            font-size: 0.75rem;
-            line-height: 1.3;
+            font-size: 0.78rem;
+            line-height: 1.4;
         }
         .pwa-banner-actions {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             flex-shrink: 0;
-        }
-        .pwa-banner-close {
-            background: none;
-            border: none;
-            color: #71717a;
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .pwa-banner-close:hover {
-            background: rgba(255,255,255,0.05);
-            color: #fff;
+            min-width: 80px;
         }
         .pwa-banner-install {
             background: linear-gradient(135deg, #7c3aed, #6d28d9);
             border: none;
             color: #fff;
-            padding: 8px 16px;
-            border-radius: 10px;
+            padding: 10px 20px;
+            border-radius: 12px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
             white-space: nowrap;
             box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+            width: 100%;
         }
         .pwa-banner-install:hover {
             transform: translateY(-1px);
@@ -1357,6 +1594,18 @@
         }
         .pwa-banner-install:active {
             transform: translateY(0);
+        }
+        .pwa-banner-close {
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.2s;
+        }
+        .pwa-banner-close:hover {
+            color: #fff;
         }
         .pwa-ios-guide {
             display: none;
@@ -1435,15 +1684,16 @@
         }
         @media (max-width: 480px) {
             .pwa-banner-modern {
-                padding: 12px 16px;
-                gap: 10px;
-                bottom: 12px;
+                padding: 14px 16px;
+                gap: 12px;
+                bottom: 16px;
+                max-width: calc(100% - 32px);
             }
-            .pwa-banner-icon { width: 38px; height: 38px; }
-            .pwa-banner-icon img { width: 24px; height: 24px; }
-            .pwa-banner-title { font-size: 0.85rem; }
-            .pwa-banner-sub { font-size: 0.7rem; }
-            .pwa-banner-install { padding: 7px 12px; font-size: 0.75rem; }
+            .pwa-banner-icon { width: 44px; height: 44px; border-radius: 10px; }
+            .pwa-banner-title { font-size: 0.9rem; }
+            .pwa-banner-sub { font-size: 0.75rem; }
+            .pwa-banner-install { padding: 8px 16px; font-size: 0.8rem; }
+            .pwa-banner-actions { min-width: 70px; }
         }
     </style>
 </head>
@@ -1459,6 +1709,7 @@
             </div>
         </div>
         <div class="header-right">
+
             <button class="controls-help-btn" onclick="showControlsHelp()" title="Controls Help" tabindex="0" style="background:rgba(124,58,237,0.15);color:var(--primary-light);width:34px;height:34px;border-radius:8px;cursor:pointer;border:none;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;flex-shrink:0;-webkit-tap-highlight-color:transparent;outline:none;-webkit-touch-callout:none;user-select:none;">
                 <i class="fas fa-gamepad"></i>
             </button>
@@ -1482,6 +1733,12 @@
             <span class="premium-value">Premium Active</span>
             <span class="premium-expires" id="premiumExpiresText">Expires: --</span>
         </div>
+    </div>
+
+    <!-- Control Toast -->
+    <div class="control-toast" id="controlToast">
+        <i class="fas fa-info-circle"></i>
+        <span id="controlToastText">Control activated</span>
     </div>
 
     <div class="main-container">
@@ -1530,7 +1787,7 @@
                         <div class="controls-left">
                             <button class="control-btn" id="playBtn" onclick="togglePlay()" tabindex="0"><i class="fas fa-play"></i></button>
                             <button class="control-btn" onclick="toggleMute()" tabindex="0"><i class="fas fa-volume-up" id="volumeIcon"></i></button>
-                            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1" oninput="setVolume(this.value)">
+                            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1" oninput="setVolume(this.value)" style="opacity:0.6; pointer-events:none;">
                         </div>
                         <div class="controls-center">
                             <span class="time-display" id="timeDisplay">LIVE</span>
@@ -1559,6 +1816,16 @@
                     <span class="connection-label"><i class="fas fa-route"></i> Connection:</span>
                     <span class="connection-value" id="autoConnectionLabel">Auto</span>
                 </div>
+            </div>
+            <!-- Channel Navigation Row -->
+            <div class="ch-nav-row" id="chNavRow">
+                <button class="ch-nav-btn" onclick="channelDown()" tabindex="0" title="Previous Channel (P/CH-)">
+                    <i class="fas fa-step-backward"></i> Prev
+                </button>
+                <div class="ch-nav-number" id="chNavNumber">--</div>
+                <button class="ch-nav-btn" onclick="channelUp()" tabindex="0" title="Next Channel (N/CH+)">
+                    <i class="fas fa-step-forward"></i> Next
+                </button>
             </div>
             <!-- Adsterra Banner 728x90 (Desktop) -->
             <div class="adsterra-banner-728" style="margin-top: 12px; text-align: center; overflow: hidden;">
@@ -1719,11 +1986,13 @@
                     <div class="controls-help-item"><span>Fullscreen</span><span class="controls-help-key">F</span></div>
                     <div class="controls-help-item"><span>Mute / Unmute</span><span class="controls-help-key">M</span></div>
                     <div class="controls-help-item"><span>Picture in Picture</span><span class="controls-help-key">P</span></div>
-                    <div class="controls-help-item"><span>Volume Up</span><span class="controls-help-key">+</span></div>
-                    <div class="controls-help-item"><span>Volume Down</span><span class="controls-help-key">-</span></div>
-                    <div class="controls-help-item"><span>Next Channel</span><span class="controls-help-key">&rarr;</span></div>
-                    <div class="controls-help-item"><span>Prev Channel</span><span class="controls-help-key">&larr;</span></div>
+                    <div class="controls-help-item"><span>Volume</span><span class="controls-help-key">Always Full</span></div>
+                    <div class="controls-help-item"><span>Next Channel</span><span class="controls-help-key">N / &rarr;</span></div>
+                    <div class="controls-help-item"><span>Prev Channel</span><span class="controls-help-key">P / &larr;</span></div>
+                    <div class="controls-help-item"><span>Channel 1-9</span><span class="controls-help-key">1 - 9</span></div>
+                    <div class="controls-help-item"><span>Channel 10+</span><span class="controls-help-key">0 + 1 + 0</span></div>
                     <div class="controls-help-item"><span>Settings</span><span class="controls-help-key">S</span></div>
+                    <div class="controls-help-item"><span>Virtual Remote</span><span class="controls-help-key">R</span></div>
                     <div class="controls-help-item"><span>Close / Back</span><span class="controls-help-key">Esc</span></div>
                     <div class="controls-help-item"><span>Navigate</span><span class="controls-help-key">Tab / Arrows</span></div>
                     <div class="controls-help-item"><span>Select / Click</span><span class="controls-help-key">Enter</span></div>
@@ -1734,17 +2003,16 @@
                     <div class="controls-help-item"><span>Select / OK</span><span class="controls-help-key">OK / Enter</span></div>
                     <div class="controls-help-item"><span>Back / Close</span><span class="controls-help-key">Back</span></div>
                     <div class="controls-help-item"><span>Play / Pause</span><span class="controls-help-key">Play</span></div>
-                    <div class="controls-help-item"><span>Stop</span><span class="controls-help-key">Stop</span></div>
-                    <div class="controls-help-item"><span>Fast Forward</span><span class="controls-help-key">FF &rarr;</span></div>
-                    <div class="controls-help-item"><span>Rewind</span><span class="controls-help-key">RW &larr;</span></div>
-                    <div class="controls-help-item"><span>Channel Up</span><span class="controls-help-key">CH+</span></div>
-                    <div class="controls-help-item"><span>Channel Down</span><span class="controls-help-key">CH-</span></div>
-                    <div class="controls-help-item"><span>Volume</span><span class="controls-help-key">Vol +/-</span></div>
+                    <div class="controls-help-item"><span>Stop / Power</span><span class="controls-help-key">Power</span></div>
+                    <div class="controls-help-item"><span>Channel Up</span><span class="controls-help-key">CH+ / PageUp</span></div>
+                    <div class="controls-help-item"><span>Channel Down</span><span class="controls-help-key">CH- / PageDown</span></div>
+                    <div class="controls-help-item"><span>Home</span><span class="controls-help-key">Home</span></div>
                     <div class="controls-help-item"><span>Info / Guide</span><span class="controls-help-key">Info</span></div>
-                    <div class="controls-help-item"><span>Red Button</span><span class="controls-help-key">Settings</span></div>
-                    <div class="controls-help-item"><span>Green Button</span><span class="controls-help-key">Fullscreen</span></div>
-                    <div class="controls-help-item"><span>Yellow Button</span><span class="controls-help-key">Mute</span></div>
-                    <div class="controls-help-item"><span>Blue Button</span><span class="controls-help-key">Controls</span></div>
+                    <div class="controls-help-item"><span>Number Keys</span><span class="controls-help-key">0-9</span></div>
+                    <div class="controls-help-item"><span style="color:#ef4444;font-weight:700;">Red Button</span><span class="controls-help-key" style="background:#ef4444;color:#fff;">Settings</span></div>
+                    <div class="controls-help-item"><span style="color:#22c55e;font-weight:700;">Green Button</span><span class="controls-help-key" style="background:#22c55e;color:#fff;">Fullscreen</span></div>
+                    <div class="controls-help-item"><span style="color:#eab308;font-weight:700;">Yellow Button</span><span class="controls-help-key" style="background:#eab308;color:#1a1a1a;">Mute</span></div>
+                    <div class="controls-help-item"><span style="color:#3b82f6;font-weight:700;">Blue Button</span><span class="controls-help-key" style="background:#3b82f6;color:#fff;">Controls</span></div>
                 </div>
                 <div class="controls-help-section">
                     <h4><i class="fas fa-gamepad"></i> Gamepad / Controller</h4>
@@ -1757,8 +2025,7 @@
                     <div class="controls-help-item"><span>Next Channel</span><span class="controls-help-key">RB / R1</span></div>
                     <div class="controls-help-item"><span>Picture in Picture</span><span class="controls-help-key">Menu / Start</span></div>
                     <div class="controls-help-item"><span>Mute</span><span class="controls-help-key">View / Select</span></div>
-                    <div class="controls-help-item"><span>Volume Up</span><span class="controls-help-key">RT / R2</span></div>
-                    <div class="controls-help-item"><span>Volume Down</span><span class="controls-help-key">LT / L2</span></div>
+                    <div class="controls-help-item"><span>Volume</span><span class="controls-help-key">Always Full</span></div>
                 </div>
                 <div class="controls-help-section">
                     <h4><i class="fas fa-hand-pointer"></i> Touch / Mobile</h4>
@@ -1769,12 +2036,74 @@
                     <div class="controls-help-item"><span>Swipe Right</span><span class="controls-help-key">Prev Channel</span></div>
                     <div class="controls-help-item"><span>Pinch</span><span class="controls-help-key">Zoom</span></div>
                     <div class="controls-help-item"><span>Long Press</span><span class="controls-help-key">Settings</span></div>
+                    <div class="controls-help-item"><span>Virtual Remote</span><span class="controls-help-key">Remote Icon</span></div>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <!-- Virtual Remote Overlay -->
+    <div class="virtual-remote-overlay" id="virtualRemoteOverlay" onclick="hideVirtualRemote(event)">
+        <div class="virtual-remote" onclick="event.stopPropagation()">
+            <div class="virtual-remote-header">
+                <h3><i class="fas fa-mobile-alt"></i> Virtual Remote</h3>
+                <button class="virtual-remote-close" onclick="hideVirtualRemote()" tabindex="0"><i class="fas fa-times"></i></button>
+            </div>
+            <!-- Power & Home Row -->
+            <div class="virtual-remote-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 12px;">
+                <button class="virtual-remote-action" style="background: #ef4444; color: #fff; border: none;" onclick="tvPowerButton()" tabindex="0">
+                    <i class="fas fa-power-off"></i> Power
+                </button>
+                <button class="virtual-remote-action" onclick="tvHomeButton()" tabindex="0">
+                    <i class="fas fa-home"></i> Home
+                </button>
+            </div>
+            <!-- Color Buttons (TV Remote Style) -->
+            <div class="virtual-remote-row">
+                <button class="virtual-remote-color red" onclick="tvRedButton()" tabindex="0">R</button>
+                <button class="virtual-remote-color green" onclick="tvGreenButton()" tabindex="0">G</button>
+                <button class="virtual-remote-color yellow" onclick="tvYellowButton()" tabindex="0">Y</button>
+                <button class="virtual-remote-color blue" onclick="tvBlueButton()" tabindex="0">B</button>
+            </div>
+            <!-- Directional Pad -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; max-width: 220px; margin-left: auto; margin-right: auto;">
+                <div></div>
+                <button class="virtual-remote-btn" style="aspect-ratio: 1.3;" onclick="navigateFocus('up')" tabindex="0"><i class="fas fa-chevron-up"></i></button>
+                <div></div>
+                <button class="virtual-remote-btn" style="aspect-ratio: 1.3;" onclick="navigateFocus('left')" tabindex="0"><i class="fas fa-chevron-left"></i></button>
+                <button class="virtual-remote-btn" style="background: var(--primary); color: #fff; font-weight: 800;" onclick="virtualEnter()" tabindex="0">OK</button>
+                <button class="virtual-remote-btn" style="aspect-ratio: 1.3;" onclick="navigateFocus('right')" tabindex="0"><i class="fas fa-chevron-right"></i></button>
+                <div></div>
+                <button class="virtual-remote-btn" style="aspect-ratio: 1.3;" onclick="navigateFocus('down')" tabindex="0"><i class="fas fa-chevron-down"></i></button>
+                <div></div>
+            </div>
+            <!-- Number Pad -->
+            <div class="virtual-remote-grid">
+                <button class="virtual-remote-btn" onclick="virtualNum(1)" tabindex="0">1<span class="vr-label">.</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(2)" tabindex="0">2<span class="vr-label">ABC</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(3)" tabindex="0">3<span class="vr-label">DEF</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(4)" tabindex="0">4<span class="vr-label">GHI</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(5)" tabindex="0">5<span class="vr-label">JKL</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(6)" tabindex="0">6<span class="vr-label">MNO</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(7)" tabindex="0">7<span class="vr-label">PQRS</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(8)" tabindex="0">8<span class="vr-label">TUV</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(9)" tabindex="0">9<span class="vr-label">WXYZ</span></button>
+                <button class="virtual-remote-btn" onclick="virtualNum(0)" tabindex="0">0<span class="vr-label">+</span></button>
+                <button class="virtual-remote-btn" onclick="virtualBackspace()" tabindex="0"><i class="fas fa-backspace"></i><span class="vr-label">CLR</span></button>
+                <button class="virtual-remote-btn" onclick="virtualEnter()" tabindex="0"><i class="fas fa-check"></i><span class="vr-label">OK</span></button>
+            </div>
+            <!-- CH, Mute, Back, Play -->
+            <div class="virtual-remote-row" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 10px;">
+                <button class="virtual-remote-action" onclick="channelDown()" tabindex="0"><i class="fas fa-step-backward"></i> CH-</button>
+                <button class="virtual-remote-action" onclick="toggleMute()" tabindex="0"><i class="fas fa-volume-up"></i> Mute</button>
+                <button class="virtual-remote-action" onclick="channelUp()" tabindex="0"><i class="fas fa-step-forward"></i> CH+</button>
+            </div>
+            <div class="virtual-remote-row" style="grid-template-columns: repeat(2, 1fr);">
+                <button class="virtual-remote-action" onclick="tvBackButton()" tabindex="0"><i class="fas fa-undo"></i> Back</button>
+                <button class="virtual-remote-action" onclick="togglePlay()" tabindex="0"><i class="fas fa-play" id="vrPlayIcon"></i> Play</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Premium Page -->
     <div class="premium-page" id="premiumPage">
@@ -1877,7 +2206,7 @@
             </div>
             <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-primary,#fff);margin-bottom:8px;">Ad Blocker Detected</h2>
             <p style="font-size:0.9rem;color:var(--text-secondary,#a1a1aa);line-height:1.6;margin-bottom:24px;">
-                We noticed you're using an ad blocker. Yara Sport is a free service supported by ads. 
+                We noticed you may be using an ad blocker. Yara Sport is a free service supported by ads. 
                 Please disable your ad blocker to continue watching live sports.
             </p>
             <div style="display:flex;flex-direction:column;gap:12px;">
@@ -1899,6 +2228,15 @@
                     cursor:pointer;transition:all 0.2s;
                 ">
                     <i class="fas fa-question-circle"></i> How to Disable?
+                </button>
+                <button onclick="adblockContinueAnyway()" style="
+                    background:transparent;
+                    color:var(--text-muted,#71717a);border:1px solid var(--border,#27272a);
+                    padding:10px 24px;border-radius:12px;
+                    font-weight:500;font-size:0.85rem;
+                    cursor:pointer;transition:all 0.2s;
+                ">
+                    Continue Anyway
                 </button>
             </div>
             <div id="adblock-howto" style="
@@ -1970,6 +2308,18 @@
         const qualityMenu = document.getElementById('qualityMenu');
         const qualityBtn = document.getElementById('qualityBtn');
 
+        // ===================== CONTROL TOAST =====================
+        function showToast(msg, icon) {
+            const toast = document.getElementById('controlToast');
+            const text = document.getElementById('controlToastText');
+            if (!toast || !text) return;
+            text.textContent = msg;
+            const iconEl = toast.querySelector('i');
+            if (iconEl && icon) iconEl.className = icon;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
         // ===================== VISITOR COUNTER =====================
         (function() {
             const COUNTER_KEY = 'yara_visitor_count_v2';
@@ -1990,7 +2340,6 @@
                 count = parseInt(stored) || 2000;
             }
 
-            // Only increment once per session
             if (!sessionCounted) {
                 count++;
                 localStorage.setItem(COUNTER_KEY, count.toString());
@@ -2003,7 +2352,6 @@
             };
             updateDisplay();
 
-            // Auto increment occasionally to simulate live visitors
             setInterval(() => {
                 if (Math.random() > 0.6) {
                     count++;
@@ -2012,7 +2360,6 @@
                 }
             }, 12000);
 
-            // Also update when tab becomes visible
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden) updateDisplay();
             });
@@ -2084,6 +2431,91 @@
                 };
                 tabsEl.appendChild(btn);
             });
+        }
+
+        // ===================== CHANNEL NAVIGATION =====================
+        function channelUp() {
+            if (currentChannelIndex < channels.length - 1) {
+                var nextIndex = currentChannelIndex + 1;
+                loadChannel(nextIndex);
+                showToast('Channel ' + (nextIndex + 1), 'fas fa-tv');
+            } else {
+                loadChannel(0);
+                showToast('Channel 1', 'fas fa-tv');
+            }
+        }
+
+        function channelDown() {
+            if (currentChannelIndex > 0) {
+                var prevIndex = currentChannelIndex - 1;
+                loadChannel(prevIndex);
+                showToast('Channel ' + (prevIndex + 1), 'fas fa-tv');
+            } else {
+                loadChannel(channels.length - 1);
+                showToast('Channel ' + channels.length, 'fas fa-tv');
+            }
+        }
+
+        function updateChannelNavDisplay() {
+            const el = document.getElementById('chNavNumber');
+            if (el) {
+                el.textContent = currentChannelIndex >= 0 ? (currentChannelIndex + 1) : '--';
+            }
+        }
+
+        // ===================== MULTI-DIGIT CHANNEL ENTRY =====================
+        let digitBuffer = '';
+        let digitTimeout = null;
+        const DIGIT_TIMEOUT_MS = 1500;
+
+        function handleDigitInput(digit) {
+            if (digitTimeout) clearTimeout(digitTimeout);
+            digitBuffer += digit;
+            showToast('CH ' + digitBuffer, 'fas fa-tv');
+
+            digitTimeout = setTimeout(() => {
+                const chNum = parseInt(digitBuffer);
+                if (!isNaN(chNum) && chNum >= 1 && chNum <= channels.length) {
+                    loadChannel(chNum - 1);
+                    showToast('Channel ' + chNum, 'fas fa-check');
+                } else if (digitBuffer.length > 0) {
+                    showToast('Invalid channel', 'fas fa-times');
+                }
+                digitBuffer = '';
+            }, DIGIT_TIMEOUT_MS);
+        }
+
+        function virtualNum(n) {
+            handleDigitInput(n.toString());
+        }
+
+        function virtualBackspace() {
+            if (digitTimeout) clearTimeout(digitTimeout);
+            digitBuffer = digitBuffer.slice(0, -1);
+            if (digitBuffer.length > 0) {
+                showToast('CH ' + digitBuffer, 'fas fa-tv');
+                digitTimeout = setTimeout(() => {
+                    const chNum = parseInt(digitBuffer);
+                    if (!isNaN(chNum) && chNum >= 1 && chNum <= channels.length) {
+                        loadChannel(chNum - 1);
+                    }
+                    digitBuffer = '';
+                }, DIGIT_TIMEOUT_MS);
+            } else {
+                showToast('Cleared', 'fas fa-eraser');
+            }
+        }
+
+        function virtualEnter() {
+            if (digitTimeout) clearTimeout(digitTimeout);
+            const chNum = parseInt(digitBuffer);
+            if (!isNaN(chNum) && chNum >= 1 && chNum <= channels.length) {
+                loadChannel(chNum - 1);
+                showToast('Channel ' + chNum, 'fas fa-check');
+            } else {
+                showToast('Invalid channel', 'fas fa-times');
+            }
+            digitBuffer = '';
         }
 
         // ===================== QUALITY =====================
@@ -2223,6 +2655,7 @@
             cleanupStream();
             loadState = 'loading';
             showControls();
+            updateChannelNavDisplay();
 
             const loadToken = streamLoadToken;
             proxyAttemptIndex = 0; setTimeout(() => initHls(getChannelUrl(ch), ch, connectionMode === 'proxy', loadToken), 200);
@@ -2404,11 +2837,24 @@
             } 
             updatePlayButton(); 
         }
-        function updatePlayButton() { playBtn.innerHTML = '<i class="fas ' + (video.paused ? 'fa-play' : 'fa-pause') + '"></i>'; }
+        function updatePlayButton() { 
+            playBtn.innerHTML = '<i class="fas ' + (video.paused ? 'fa-play' : 'fa-pause') + '"></i>'; 
+            const vrIcon = document.getElementById('vrPlayIcon');
+            if (vrIcon) vrIcon.className = 'fas ' + (video.paused ? 'fa-play' : 'fa-pause');
+        }
         video.addEventListener('play', () => { updatePlayButton(); showControls(); });
         video.addEventListener('pause', () => { updatePlayButton(); showControls(); });
-        function toggleMute() { video.muted = !video.muted; volumeIcon.className = video.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up'; }
-        function setVolume(val) { video.volume = val; if (val > 0 && video.muted) video.muted = false; volumeIcon.className = video.muted ? 'fas fa-volume-mute' : (val < 0.5 ? 'fas fa-volume-down' : 'fas fa-volume-up'); }
+        function toggleMute() {
+            video.muted = !video.muted;
+            if (!video.muted) { video.volume = 1; document.getElementById('volumeSlider').value = 1; }
+            volumeIcon.className = video.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        }
+        function setVolume(val) {
+            video.volume = 1;
+            video.muted = false;
+            document.getElementById('volumeSlider').value = 1;
+            volumeIcon.className = 'fas fa-volume-up';
+        }
         function toggleFullscreen() {
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 const el = playerWrapper;
@@ -2496,6 +2942,79 @@
         function closeControlsHelp(e) {
             const overlay = document.getElementById('controlsHelpOverlay');
             if (e && e.target === overlay) hideControlsHelp();
+        }
+
+        // ----- Virtual Remote -----
+        function showVirtualRemote() {
+            const overlay = document.getElementById('virtualRemoteOverlay');
+            if (overlay) {
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function hideVirtualRemote(e) {
+            if (e && e.target !== e.currentTarget && e.target !== document.getElementById('virtualRemoteOverlay')) return;
+            const overlay = document.getElementById('virtualRemoteOverlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // TV Color Buttons
+        function tvRedButton() {
+            showToast('Red: Settings', 'fas fa-cog');
+            toggleSettings();
+        }
+        function tvGreenButton() {
+            showToast('Green: Fullscreen', 'fas fa-expand');
+            toggleFullscreen();
+        }
+        function tvYellowButton() {
+            showToast('Yellow: Mute', 'fas fa-volume-mute');
+            toggleMute();
+        }
+        function tvBlueButton() {
+            showToast('Blue: Controls Help', 'fas fa-gamepad');
+            showControlsHelp();
+        }
+        function tvPowerButton() {
+            showToast('Power: Stop Stream', 'fas fa-power-off');
+            cleanupStream();
+            video.pause();
+            video.style.opacity = '0';
+            document.getElementById('currentChannelName').textContent = 'Select Football Channel';
+            document.getElementById('currentChannelCategory').textContent = 'Direct Stream — No Proxy / No VPN';
+            document.getElementById('currentChannelIcon').textContent = '--';
+            streamStatus.className = 'stream-status checking';
+            streamStatus.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Ready';
+            currentChannelIndex = -1;
+            updateChannelNavDisplay();
+            renderChannels();
+        }
+        function tvHomeButton() {
+            showToast('Home: Scroll to Top', 'fas fa-home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const firstChannel = document.querySelector('.channel-item');
+            if (firstChannel) firstChannel.focus();
+        }
+        function tvBackButton() {
+            showToast('Back: Close Panel', 'fas fa-undo');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const premiumPage = document.getElementById('premiumPage');
+            const controlsHelp = document.getElementById('controlsHelpOverlay');
+            const virtualRemote = document.getElementById('virtualRemoteOverlay');
+            if (virtualRemote && virtualRemote.classList.contains('show')) {
+                hideVirtualRemote();
+            } else if (controlsHelp && controlsHelp.classList.contains('show')) {
+                hideControlsHelp();
+            } else if (settingsPanel && settingsPanel.classList.contains('open')) {
+                toggleSettings();
+            } else if (premiumPage && premiumPage.classList.contains('show')) {
+                closePremiumPage();
+            } else if (playerWrapper.classList.contains('fullscreen')) {
+                toggleFullscreen();
+            }
         }
 
         // ----- Custom Channels -----
@@ -2702,14 +3221,11 @@
         playerWrapper.addEventListener('touchstart', showControls);
         playerWrapper.addEventListener('mouseleave', hideControlsNow);
 
-
-
-
         // ===================== MODERN PWA INSTALL =====================
         (function() {
             let deferredPrompt = null;
             let bannerDismissed = false;
-            const BANNER_KEY = 'yara_pwa_dismissed_v2';
+            let installInProgress = false;
 
             function isStandalone() {
                 return window.matchMedia('(display-mode: standalone)').matches ||
@@ -2721,102 +3237,117 @@
                 return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             }
 
-            function isSamsung() {
-                return /SamsungBrowser/.test(navigator.userAgent);
+            function isAndroid() {
+                return /Android/.test(navigator.userAgent);
             }
 
             function isChrome() {
                 return /Chrome/.test(navigator.userAgent) && !/Edg|OPR|SamsungBrowser/.test(navigator.userAgent);
             }
 
-            function wasDismissed() {
-                try {
-                    return localStorage.getItem(BANNER_KEY) === 'true';
-                } catch(e) { return false; }
+            function isSamsung() {
+                return /SamsungBrowser/.test(navigator.userAgent);
             }
 
-            function markDismissed() {
-                try { localStorage.setItem(BANNER_KEY, 'true'); } catch(e) {}
+            function isEdge() {
+                return /Edg/.test(navigator.userAgent);
+            }
+
+            function isSmartTV() {
+                return /SmartTV|TV|Android TV|webOS|HbbTV|NetCast|Tizen|Web0S|CrKey|Roku|AppleTV|PlayStation|Xbox|Nintendo/.test(navigator.userAgent) ||
+                       window.outerWidth >= 1920;
             }
 
             function showBanner() {
-                if (isStandalone() || bannerDismissed || wasDismissed()) return;
+                if (isStandalone() || bannerDismissed || installInProgress) return;
                 const banner = document.getElementById('pwaBannerModern');
                 if (!banner) return;
 
                 banner.classList.add('show');
+                banner.style.transform = 'translateX(-50%) translateY(0)';
+                banner.style.opacity = '1';
+                banner.style.animation = 'pwaBannerSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
 
-                // Update text based on device
                 const sub = document.getElementById('pwaBannerSub');
                 const installBtn = document.getElementById('pwaInstallBtnModern');
 
                 if (isIOS()) {
-                    if (sub) sub.textContent = 'Tap Install for iOS instructions';
+                    if (sub) sub.textContent = 'Add to home screen for a native, full-screen experience.';
                     if (installBtn) installBtn.innerHTML = '<i class="fab fa-apple"></i> Install';
-                } else if (isSamsung()) {
-                    if (sub) sub.textContent = 'Add to Home Screen for best experience';
-                    if (installBtn) installBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Install';
+                } else if (isSmartTV()) {
+                    if (sub) sub.textContent = 'Install Yara Sport on your TV for the best experience.';
+                    if (installBtn) installBtn.innerHTML = '<i class="fas fa-tv"></i> Install';
                 } else {
-                    if (sub) sub.textContent = 'Install as app for best experience';
+                    if (sub) sub.textContent = 'Add to home screen for a native, full-screen experience.';
                     if (installBtn) installBtn.innerHTML = '<i class="fas fa-download"></i> Install';
                 }
-
-                // Auto-hide after 15 seconds if not interacted
-                setTimeout(() => {
-                    if (banner.classList.contains('show')) {
-                        dismissPwaModern();
-                    }
-                }, 15000);
             }
 
+            // Capture the beforeinstallprompt event
             window.addEventListener('beforeinstallprompt', (e) => {
+                console.log('beforeinstallprompt captured');
                 e.preventDefault();
                 deferredPrompt = e;
-                // Show banner after a short delay for better UX
-                setTimeout(showBanner, 2000);
-                console.log('beforeinstallprompt captured');
+                setTimeout(showBanner, 1000);
             });
 
-            // For browsers that don't fire beforeinstallprompt (iOS, some Android)
+            // Also show banner on load even if beforeinstallprompt hasn't fired yet
             window.addEventListener('load', () => {
                 setTimeout(() => {
-                    if (!deferredPrompt && !isStandalone() && !wasDismissed()) {
+                    if (!isStandalone() && !installInProgress) {
                         showBanner();
                     }
-                }, 3000);
+                }, 2000);
             });
 
-            window.installPwaModern = function() {
+            window.installPwaModern = async function() {
                 if (isIOS()) {
                     document.getElementById('pwaIosGuide').classList.add('show');
                     return;
                 }
 
-                if (!deferredPrompt) {
-                    // Try manual install for Samsung/Chrome
-                    if (isSamsung()) {
-                        alert('Tap the menu button (⋮) and select "Add to Home Screen"');
-                    } else if (isChrome()) {
-                        alert('Tap the menu (⋮) → "Install Yara Sport" or "Add to Home Screen"');
-                    } else {
-                        alert('Open your browser menu and select "Add to Home Screen" to install');
-                    }
-                    return;
-                }
+                // If we have the deferred prompt, use it (this triggers the system install dialog)
+                if (deferredPrompt) {
+                    installInProgress = true;
 
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('PWA installed');
+                    // Show installing toast
+                    showToast('Installing Yara Sport...', 'fas fa-spinner fa-spin');
+
+                    deferredPrompt.prompt();
+
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log('User choice:', outcome);
+
+                    if (outcome === 'accepted') {
+                        showToast('Yara Sport installed!', 'fas fa-check');
                         dismissPwaModern();
+                    } else {
+                        showToast('Install cancelled', 'fas fa-times');
+                        installInProgress = false;
+                        // Show banner again after a delay
+                        setTimeout(() => {
+                            if (!isStandalone()) showBanner();
+                        }, 3000);
                     }
                     deferredPrompt = null;
-                });
+                } else {
+                    // Fallback: try to trigger install via menu instructions
+                    if (isChrome() && isAndroid()) {
+                        showToast('Tap menu (⋮) → "Install app"', 'fas fa-info-circle');
+                    } else if (isSamsung()) {
+                        showToast('Tap menu (⋮) → "Add to Home Screen"', 'fas fa-info-circle');
+                    } else if (isEdge()) {
+                        showToast('Tap menu (⋯) → "Apps" → "Install"', 'fas fa-info-circle');
+                    } else if (isSmartTV()) {
+                        showToast('Use your TV remote to bookmark this page', 'fas fa-info-circle');
+                    } else {
+                        showToast('Open menu → "Add to Home Screen"', 'fas fa-info-circle');
+                    }
+                }
             };
 
             window.dismissPwaModern = function() {
                 bannerDismissed = true;
-                markDismissed();
                 const banner = document.getElementById('pwaBannerModern');
                 if (banner) {
                     banner.style.animation = 'none';
@@ -2825,6 +3356,7 @@
                     banner.style.transition = 'all 0.4s ease';
                     setTimeout(() => banner.classList.remove('show'), 400);
                 }
+                // Banner will show again on next page load (no localStorage)
             };
 
             window.closeIosGuide = function(e) {
@@ -2832,13 +3364,16 @@
                 document.getElementById('pwaIosGuide').classList.remove('show');
             };
 
+            // Listen for appinstalled event
             window.addEventListener('appinstalled', () => {
-                console.log('PWA installed event');
+                console.log('PWA installed successfully');
+                showToast('Yara Sport installed!', 'fas fa-check');
                 dismissPwaModern();
                 deferredPrompt = null;
+                installInProgress = false;
             });
 
-            // Service Worker
+            // Register service worker
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('sw.js')
@@ -2852,7 +3387,7 @@
         (function() {
             // Make all interactive elements focusable
             const makeFocusable = () => {
-                const selectors = '.channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn';
+                const selectors = '.channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn, .virtual-remote-btn, .ch-nav-btn';
                 document.querySelectorAll(selectors).forEach(el => {
                     if (!el.hasAttribute('tabindex')) {
                         el.setAttribute('tabindex', '0');
@@ -2863,7 +3398,7 @@
                 });
             };
 
-            // Keyboard navigation
+            // ===================== KEYBOARD =====================
             document.addEventListener('keydown', (e) => {
                 const focused = document.activeElement;
 
@@ -2872,6 +3407,13 @@
                     if (e.key === 'Escape') {
                         e.target.blur();
                     }
+                    return;
+                }
+
+                // Number keys for channel entry (0-9)
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    handleDigitInput(e.key);
                     return;
                 }
 
@@ -2904,7 +3446,10 @@
                             const settingsPanel = document.getElementById('settingsPanel');
                             const premiumPage = document.getElementById('premiumPage');
                             const controlsHelp = document.getElementById('controlsHelpOverlay');
-                            if (controlsHelp && controlsHelp.classList.contains('show')) {
+                            const virtualRemote = document.getElementById('virtualRemoteOverlay');
+                            if (virtualRemote && virtualRemote.classList.contains('show')) {
+                                hideVirtualRemote();
+                            } else if (controlsHelp && controlsHelp.classList.contains('show')) {
                                 hideControlsHelp();
                             } else if (settingsPanel && settingsPanel.classList.contains('open')) {
                                 toggleSettings();
@@ -2929,16 +3474,20 @@
                     case 'MediaFastForward':
                     case 'MediaTrackNext':
                         e.preventDefault();
-                        if (currentChannelIndex < channels.length - 1) {
-                            loadChannel(currentChannelIndex + 1);
-                        }
+                        channelUp();
                         break;
                     case 'MediaRewind':
                     case 'MediaTrackPrevious':
                         e.preventDefault();
-                        if (currentChannelIndex > 0) {
-                            loadChannel(currentChannelIndex - 1);
-                        }
+                        channelDown();
+                        break;
+                    case 'PageUp':
+                        e.preventDefault();
+                        channelUp();
+                        break;
+                    case 'PageDown':
+                        e.preventDefault();
+                        channelDown();
                         break;
                     case 'f':
                     case 'F':
@@ -2960,76 +3509,119 @@
                         e.preventDefault();
                         toggleSettings();
                         break;
+                    case 'r':
+                    case 'R':
+                        e.preventDefault();
+                        showVirtualRemote();
+                        break;
                     case 'h':
                     case 'H':
                         e.preventDefault();
                         showControlsHelp();
                         break;
+                    case 'n':
+                    case 'N':
+                        e.preventDefault();
+                        channelUp();
+                        break;
+                    case 'b':
+                    case 'B':
+                        e.preventDefault();
+                        channelDown();
+                        break;
                     case '+':
                     case '=':
                         e.preventDefault();
-                        video.volume = Math.min(1, video.volume + 0.1);
-                        setVolume(video.volume);
+                        setVolume(1);
+                        showToast('Volume Always Full', 'fas fa-volume-up');
                         break;
                     case '-':
                     case '_':
                         e.preventDefault();
-                        video.volume = Math.max(0, video.volume - 0.1);
-                        setVolume(video.volume);
+                        setVolume(1);
+                        showToast('Volume Always Full', 'fas fa-volume-up');
                         break;
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        // Number keys for direct channel selection
-                        e.preventDefault();
-                        const num = parseInt(e.key);
-                        if (num >= 1 && num <= channels.length) {
-                            loadChannel(num - 1);
-                        }
-                        break;
-                    // TV colored buttons
+                    // TV colored buttons via keyboard shortcuts
+                    case 'F1':
                     case 'Red':
-                    case 'r':
-                        if (e.key === 'Red') {
-                            e.preventDefault();
-                            toggleSettings();
-                        }
+                        e.preventDefault();
+                        tvRedButton();
                         break;
+                    case 'F2':
                     case 'Green':
-                    case 'g':
-                        if (e.key === 'Green') {
-                            e.preventDefault();
-                            toggleFullscreen();
-                        }
+                        e.preventDefault();
+                        tvGreenButton();
                         break;
+                    case 'F3':
                     case 'Yellow':
-                    case 'y':
-                        if (e.key === 'Yellow') {
-                            e.preventDefault();
-                            toggleMute();
-                        }
+                        e.preventDefault();
+                        tvYellowButton();
                         break;
+                    case 'F4':
                     case 'Blue':
-                    case 'b':
-                        if (e.key === 'Blue') {
-                            e.preventDefault();
-                            showControlsHelp();
-                        }
+                        e.preventDefault();
+                        tvBlueButton();
+                        break;
+                    case 'Info':
+                    case 'Guide':
+                        e.preventDefault();
+                        showControlsHelp();
                         break;
                 }
             });
 
-            function navigateFocus(direction) {
-                const selectors = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn';
+            // Also handle keyCode for older TV browsers
+            document.addEventListener('keydown', (e) => {
+                // TV remote keyCodes (Samsung, LG, Sony, etc.)
+                const keyCode = e.keyCode || e.which;
+                switch(keyCode) {
+                    case 403: // Red
+                        e.preventDefault();
+                        tvRedButton();
+                        break;
+                    case 404: // Green
+                        e.preventDefault();
+                        tvGreenButton();
+                        break;
+                    case 405: // Yellow
+                        e.preventDefault();
+                        tvYellowButton();
+                        break;
+                    case 406: // Blue
+                        e.preventDefault();
+                        tvBlueButton();
+                        break;
+                    case 457: // Info
+                        e.preventDefault();
+                        showControlsHelp();
+                        break;
+                    case 428: // Channel Up (some remotes)
+                        e.preventDefault();
+                        channelUp();
+                        break;
+                    case 427: // Channel Down (some remotes)
+                        e.preventDefault();
+                        channelDown();
+                        break;
+                    case 33: // PageUp
+                        e.preventDefault();
+                        channelUp();
+                        break;
+                    case 34: // PageDown
+                        e.preventDefault();
+                        channelDown();
+                        break;
+                    case 48: case 49: case 50: case 51: case 52:
+                    case 53: case 54: case 55: case 56: case 57:
+                        // keyCode 48-57 = digits 0-9 (already handled by e.key, but backup for old TVs)
+                        break;
+                }
+            });
+
+            window.navigateFocus = function(direction) {
+                const selectors = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn, .ch-nav-btn';
                 const focusable = Array.from(document.querySelectorAll(selectors)).filter(el => {
-                    return el.offsetParent !== null && !el.disabled && !el.classList.contains('settings-overlay') && !el.classList.contains('controls-help-overlay');
+                    return el.offsetParent !== null && !el.disabled && !el.classList.contains('settings-overlay') && !el.classList.contains('controls-help-overlay') && !el.classList.contains('virtual-remote-overlay');
                 });
                 const current = document.activeElement;
                 const currentIdx = focusable.indexOf(current);
@@ -3040,7 +3632,6 @@
                 }
 
                 let nextIdx = currentIdx;
-                const cols = window.innerWidth > 1024 ? 2 : 1;
 
                 if (direction === 'down') nextIdx = Math.min(currentIdx + 1, focusable.length - 1);
                 if (direction === 'up') nextIdx = Math.max(currentIdx - 1, 0);
@@ -3053,7 +3644,7 @@
                 }
             }
 
-            // Gamepad support
+            // ===================== GAMEPAD =====================
             let gamepadIndex = null;
             let lastGamepadTime = 0;
             const GAMEPAD_DEBOUNCE = 250;
@@ -3104,7 +3695,10 @@
                     const settingsPanel = document.getElementById('settingsPanel');
                     const premiumPage = document.getElementById('premiumPage');
                     const controlsHelp = document.getElementById('controlsHelpOverlay');
-                    if (controlsHelp && controlsHelp.classList.contains('show')) {
+                    const virtualRemote = document.getElementById('virtualRemoteOverlay');
+                    if (virtualRemote && virtualRemote.classList.contains('show')) {
+                        hideVirtualRemote();
+                    } else if (controlsHelp && controlsHelp.classList.contains('show')) {
                         hideControlsHelp();
                     } else if (settingsPanel && settingsPanel.classList.contains('open')) {
                         toggleSettings();
@@ -3149,27 +3743,25 @@
                 // LB/L1 - Prev Channel
                 if (buttons[4].pressed) { 
                     lastGamepadTime = now;
-                    if (currentChannelIndex > 0) loadChannel(currentChannelIndex - 1);
+                    channelDown();
                 }
 
                 // RB/R1 - Next Channel
                 if (buttons[5].pressed) { 
                     lastGamepadTime = now;
-                    if (currentChannelIndex < channels.length - 1) loadChannel(currentChannelIndex + 1);
+                    channelUp();
                 }
 
-                // LT/L2 - Volume Down
+                // LT/L2 - Volume Down (disabled, volume always full)
                 if (buttons[6] && buttons[6].pressed) {
                     lastGamepadTime = now;
-                    video.volume = Math.max(0, video.volume - 0.1);
-                    setVolume(video.volume);
+                    showToast('Volume Always Full', 'fas fa-volume-up');
                 }
 
-                // RT/R2 - Volume Up
+                // RT/R2 - Volume Up (disabled, volume always full)
                 if (buttons[7] && buttons[7].pressed) {
                     lastGamepadTime = now;
-                    video.volume = Math.min(1, video.volume + 0.1);
-                    setVolume(video.volume);
+                    showToast('Volume Always Full', 'fas fa-volume-up');
                 }
 
                 // Menu/Start - PIP
@@ -3193,7 +3785,7 @@
                 requestAnimationFrame(pollGamepad);
             }
 
-            // Touch / Swipe support
+            // ===================== TOUCH / SWIPE =====================
             let touchStartX = 0;
             let touchStartY = 0;
             let touchStartTime = 0;
@@ -3214,11 +3806,9 @@
                 // Swipe detection
                 if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50 && touchDuration < 300) {
                     if (diffX > 0) {
-                        // Swipe left - next channel
-                        if (currentChannelIndex < channels.length - 1) loadChannel(currentChannelIndex + 1);
+                        channelUp();
                     } else {
-                        // Swipe right - prev channel
-                        if (currentChannelIndex > 0) loadChannel(currentChannelIndex - 1);
+                        channelDown();
                     }
                 }
 
@@ -3258,11 +3848,14 @@
         })();
 
         // ===================== INIT =====================
+        video.volume = 1;
+        document.getElementById('volumeSlider').value = 1;
         loadPreferences();
         document.getElementById('channelCount').textContent = channels.length;
         renderCategoryTabs();
         renderChannels();
         updatePlayButton();
+        updateChannelNavDisplay();
 
         console.log('INIT complete. Channels:', channels.length, 'Categories:', categories);
     </script>
@@ -3863,6 +4456,134 @@
         }
     </style>
 
+    <!-- Anti-Adblock Detection Script -->
+    <script>
+    (function() {
+        var adblockCheckCount = 0;
+        var MAX_CHECKS = 3;
+        var checkInterval = null;
+
+        // Check if actual ad iframes/elements are being blocked
+        function checkRealAdsBlocked() {
+            return new Promise(function(resolve) {
+                var blockedCount = 0;
+                var totalChecks = 0;
+
+                // Check 1: Look for known ad elements that should exist
+                var adElements = document.querySelectorAll('iframe[src*="highperformanceformat"], iframe[src*="effectivecpmnetwork"], script[src*="highperformanceformat"], script[src*="effectivecpmnetwork"]');
+                if (adElements.length === 0) {
+                    // No ad elements found at all (might be blocked or just not loaded yet)
+                    blockedCount++;
+                }
+
+                // Check 2: Create a bait element with common ad class names
+                var bait = document.createElement('div');
+                bait.className = 'adsbox ad-banner pub_300x250 pub_728x90 text-ad textAd text_ad text_ads';
+                bait.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;';
+                document.body.appendChild(bait);
+
+                setTimeout(function() {
+                    var baitStyle = window.getComputedStyle(bait);
+                    // Only count as blocked if element is ACTUALLY hidden (not just offscreen)
+                    if (baitStyle.display === 'none' || baitStyle.visibility === 'hidden') {
+                        blockedCount++;
+                    }
+                    document.body.removeChild(bait);
+
+                    // Check 3: Try to fetch a known ad script (with timeout)
+                    var scriptTest = new Image();
+                    var scriptBlocked = false;
+                    scriptTest.onerror = function() { scriptBlocked = true; };
+                    scriptTest.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?' + Date.now();
+
+                    setTimeout(function() {
+                        if (scriptBlocked) {
+                            blockedCount++;
+                        }
+                        // Only consider adblock detected if MULTIPLE checks fail
+                        resolve(blockedCount >= 2);
+                    }, 800);
+                }, 200);
+            });
+        }
+
+        function showAdblockOverlay() {
+            var overlay = document.getElementById('adblock-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.style.alignItems = 'center';
+                overlay.style.justifyContent = 'center';
+            }
+        }
+
+        function hideAdblockOverlay() {
+            var overlay = document.getElementById('adblock-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+
+        window.adblockCheckRetry = function() {
+            hideAdblockOverlay();
+            // Re-run check after a delay
+            setTimeout(function() {
+                runDetection();
+            }, 2000);
+        };
+
+        window.adblockHowTo = function() {
+            var el = document.getElementById('adblock-howto');
+            if (el) {
+                el.style.display = el.style.display === 'block' ? 'none' : 'block';
+            }
+        };
+
+        window.adblockContinueAnyway = function() {
+            hideAdblockOverlay();
+            // Stop all future checks
+            if (checkInterval) {
+                clearInterval(checkInterval);
+                checkInterval = null;
+            }
+            // Mark as dismissed for this session
+            window.__adblockDismissed = true;
+        };
+
+        function runDetection() {
+            if (window.__adblockDismissed) return;
+
+            checkRealAdsBlocked().then(function(blocked) {
+                if (blocked) {
+                    adblockCheckCount++;
+                    // Only show overlay after multiple consecutive detections
+                    if (adblockCheckCount >= 2) {
+                        showAdblockOverlay();
+                    }
+                } else {
+                    adblockCheckCount = 0;
+                    hideAdblockOverlay();
+                }
+            });
+        }
+
+        // Run detection after page load
+        if (document.readyState === 'complete') {
+            setTimeout(runDetection, 2000);
+        } else {
+            window.addEventListener('load', function() {
+                setTimeout(runDetection, 3000);
+            });
+        }
+
+        // Periodic check (less aggressive)
+        checkInterval = setInterval(function() {
+            if (!window.__adblockDismissed) {
+                runDetection();
+            }
+        }, 60000); // Check every 60 seconds instead of 30
+    })();
+    </script>
+
     <!-- Modern PWA Install Banner -->
     <div id="pwaBannerModern" class="pwa-banner-modern">
         <div class="pwa-banner-icon">
@@ -3870,14 +4591,14 @@
         </div>
         <div class="pwa-banner-text">
             <div class="pwa-banner-title">Install Yara Sport</div>
-            <div class="pwa-banner-sub" id="pwaBannerSub">Add to Home Screen for app experience</div>
+            <div class="pwa-banner-sub" id="pwaBannerSub">Add to home screen for a native, full-screen experience.</div>
         </div>
         <div class="pwa-banner-actions">
-            <button class="pwa-banner-close" onclick="dismissPwaModern()" tabindex="0" aria-label="Dismiss">
-                <i class="fas fa-times"></i>
-            </button>
             <button class="pwa-banner-install" onclick="installPwaModern()" id="pwaInstallBtnModern" tabindex="0">
                 <i class="fas fa-download"></i> Install
+            </button>
+            <button class="pwa-banner-close" onclick="dismissPwaModern()" tabindex="0" aria-label="Dismiss" style="background:none;border:none;color:#71717a;font-size:0.85rem;cursor:pointer;margin-top:6px;">
+                Later
             </button>
         </div>
     </div>

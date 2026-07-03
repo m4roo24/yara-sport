@@ -21,6 +21,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Google Cast Sender SDK -->
+    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
     <style>
         :root {
             --primary: #7c3aed;
@@ -64,12 +66,10 @@
         .social-btn:focus-visible,
         .faq-question:focus-visible,
         .custom-channel-item button:focus-visible,
-        .pwa-install-btn:focus-visible,
-        .pwa-dismiss-btn:focus-visible,
         .visitor-badge:focus-visible,
-        .controls-help-btn:focus-visible,
         .virtual-remote-btn:focus-visible,
-        .ch-nav-btn:focus-visible {
+        .ch-nav-btn:focus-visible,
+        .cast-btn:focus-visible {
             outline: 3px solid var(--primary-light);
             outline-offset: 3px;
             box-shadow: 0 0 0 6px var(--focus-ring);
@@ -106,7 +106,7 @@
             .control-btn { font-size: 1.4rem; padding: 12px; }
         }
 
-        button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .visitor-badge, .virtual-remote-btn, .ch-nav-btn {
+        button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .visitor-badge, .virtual-remote-btn, .ch-nav-btn, .cast-btn {
             -webkit-tap-highlight-color: transparent !important;
             outline: none !important;
             -webkit-touch-callout: none !important;
@@ -163,6 +163,41 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* ===== CAST BUTTON ===== */
+        .cast-btn {
+            background: rgba(66, 133, 244, 0.15);
+            color: #4285f4;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .cast-btn:hover {
+            background: rgba(66, 133, 244, 0.3);
+            color: #fff;
+        }
+        .cast-btn.active {
+            background: rgba(66, 133, 244, 0.4);
+            color: #fff;
+            animation: castPulse 2s ease-in-out infinite;
+        }
+        @keyframes castPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(66, 133, 244, 0); }
+        }
+        .cast-btn.connected {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
         }
 
         /* ===== VISITOR COUNTER BADGE ===== */
@@ -698,7 +733,7 @@
             border: 1px solid rgba(34,197,94,0.3);
         }
 
-        /* ===== CHANNEL NAV BUTTONS (NEW) ===== */
+        /* ===== CHANNEL NAV BUTTONS ===== */
         .ch-nav-row {
             display: flex;
             align-items: center;
@@ -747,7 +782,7 @@
             text-align: center;
         }
 
-        /* ===== VIRTUAL REMOTE OVERLAY (NEW) ===== */
+        /* ===== VIRTUAL REMOTE OVERLAY ===== */
         .virtual-remote-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -892,7 +927,7 @@
         .virtual-remote-action:hover { background: var(--primary); border-color: var(--primary); }
         .virtual-remote-action:active { transform: scale(0.95); }
 
-        /* ===== ON-SCREEN CONTROL TOAST (NEW) ===== */
+        /* ===== ON-SCREEN CONTROL TOAST ===== */
         .control-toast {
             position: fixed;
             top: 80px;
@@ -1492,208 +1527,12 @@
             .visitor-badge .visitor-label { display: none; }
             .settings-btn { width: 32px; height: 32px; font-size: 0.9rem; }
             .premium-header-btn { padding: 4px 10px; font-size: 0.7rem; }
-            .controls-help-btn { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; }
+            .cast-btn { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; }
             .logo-text { font-size: 1.1rem; }
             .main-container { padding: 12px; gap: 12px; }
             .controls-overlay { padding: 30px 12px 12px; }
             .ch-nav-row { padding: 8px 12px; }
             .ch-nav-btn { padding: 6px 10px; font-size: 0.75rem; }
-        }
-
-        /* ===== MODERN PWA INSTALL BANNER ===== */
-        .pwa-banner-modern {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(120%);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            gap: 14px;
-            background: linear-gradient(135deg, rgba(26,26,46,0.98), rgba(22,33,62,0.98));
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(124,58,237,0.3);
-            border-radius: 20px;
-            padding: 14px 20px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.1);
-            max-width: 420px;
-            width: calc(100% - 40px);
-            animation: pwaBannerSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        .pwa-banner-modern.show {
-            display: flex;
-        }
-        .pwa-banner-modern.pwa-visible {
-            transform: translateX(-50%) translateY(0);
-        }
-        @keyframes pwaBannerSlideUp {
-            from { transform: translateX(-50%) translateY(120%); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-        .pwa-banner-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #7c3aed, #6d28d9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
-            overflow: hidden;
-        }
-        .pwa-banner-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .pwa-banner-text {
-            flex: 1;
-            min-width: 0;
-        }
-        .pwa-banner-title {
-            font-weight: 700;
-            color: #fff;
-            font-size: 0.95rem;
-            margin-bottom: 3px;
-        }
-        .pwa-banner-sub {
-            color: #a1a1aa;
-            font-size: 0.78rem;
-            line-height: 1.4;
-        }
-        .pwa-banner-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            flex-shrink: 0;
-            min-width: 80px;
-        }
-        .pwa-banner-install {
-            background: linear-gradient(135deg, #7c3aed, #6d28d9);
-            border: none;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            white-space: nowrap;
-            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
-            width: 100%;
-        }
-        .pwa-banner-install:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 24px rgba(124,58,237,0.4);
-        }
-        .pwa-banner-install:active {
-            transform: translateY(0);
-        }
-        .pwa-banner-close {
-            background: none;
-            border: none;
-            color: #71717a;
-            font-size: 0.8rem;
-            cursor: pointer;
-            padding: 4px;
-            transition: all 0.2s;
-        }
-        .pwa-banner-close:hover {
-            color: #fff;
-        }
-        .pwa-ios-guide {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .pwa-ios-guide.show {
-            display: flex;
-        }
-        .pwa-ios-guide-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 32px;
-            max-width: 360px;
-            width: 100%;
-            text-align: center;
-            animation: pwaGuidePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes pwaGuidePop {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .pwa-ios-guide-box h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-        }
-        .pwa-ios-guide-box p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .pwa-ios-guide-box .share-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-            font-size: 1.3rem;
-            color: #fff;
-        }
-        .pwa-ios-guide-close {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 10px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            width: 100%;
-        }
-        .pwa-ios-guide-close:hover {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-        }
-
-        /* Standalone hide */
-        @media all and (display-mode: standalone) {
-            .pwa-banner-modern, .pwa-ios-guide { display: none !important; }
-        }
-        @media all and (display-mode: fullscreen) {
-            .pwa-banner-modern, .pwa-ios-guide { display: none !important; }
-        }
-        @media (max-width: 480px) {
-            .pwa-banner-modern {
-                padding: 14px 16px;
-                gap: 12px;
-                bottom: 16px;
-                max-width: calc(100% - 32px);
-            }
-            .pwa-banner-icon { width: 44px; height: 44px; border-radius: 10px; }
-            .pwa-banner-title { font-size: 0.9rem; }
-            .pwa-banner-sub { font-size: 0.75rem; }
-            .pwa-banner-install { padding: 8px 16px; font-size: 0.8rem; }
-            .pwa-banner-actions { min-width: 70px; }
         }
     </style>
 </head>
@@ -1709,9 +1548,9 @@
             </div>
         </div>
         <div class="header-right">
-
-            <button class="controls-help-btn" onclick="showControlsHelp()" title="Controls Help" tabindex="0" style="background:rgba(124,58,237,0.15);color:var(--primary-light);width:34px;height:34px;border-radius:8px;cursor:pointer;border:none;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;flex-shrink:0;-webkit-tap-highlight-color:transparent;outline:none;-webkit-touch-callout:none;user-select:none;">
-                <i class="fas fa-gamepad"></i>
+            <!-- CAST BUTTON (replaced gamepad icon) -->
+            <button class="cast-btn" id="castBtn" onclick="toggleCast()" title="Cast to TV" tabindex="0">
+                <i class="fas fa-tv" id="castIcon"></i>
             </button>
             <button class="settings-btn" onclick="toggleSettings()" title="Settings" tabindex="0"><i class="fas fa-cog"></i></button>
             <button class="premium-header-btn" onclick="openPremiumPage()" title="Premium" tabindex="0" style="padding:5px 10px;">
@@ -1795,6 +1634,8 @@
                         <div class="controls-right">
                             <button class="control-btn quality-btn" id="qualityBtn" onclick="toggleQualityMenu()" title="Quality" tabindex="0">AUTO</button>
                             <div class="quality-menu" id="qualityMenu"></div>
+                            <!-- Cast button in video controls -->
+                            <button class="control-btn" id="videoCastBtn" onclick="toggleCast()" title="Cast to TV" tabindex="0" style="display:none;"><i class="fas fa-tv"></i></button>
                             <button class="control-btn" onclick="togglePip()" title="Picture in Picture" tabindex="0"><i class="fas fa-clone"></i></button>
                             <button class="control-btn" onclick="toggleFullscreen()" title="Fullscreen" tabindex="0"><i class="fas fa-expand" id="fullscreenIcon"></i></button>
                         </div>
@@ -1883,6 +1724,15 @@
             <button class="settings-close" onclick="toggleSettings()" tabindex="0"><i class="fas fa-times"></i></button>
         </div>
         <div class="settings-content">
+            <!-- Controls Guide in Settings -->
+            <div class="settings-section">
+                <h3><i class="fas fa-gamepad"></i> Controls Guide</h3>
+                <p class="settings-desc">Learn all keyboard, TV remote, gamepad, and touch controls.</p>
+                <button class="settings-btn-primary" onclick="showControlsHelp()" tabindex="0">
+                    <i class="fas fa-gamepad"></i> Open Controls Guide
+                </button>
+            </div>
+
             <!-- Add M3U8 -->
             <div class="settings-section">
                 <h3><i class="fas fa-plus-circle"></i> Add Your Channel</h3>
@@ -1893,8 +1743,8 @@
                     <select id="customCategory" class="settings-input">
                         <option value="Custom">Custom</option>
                         <option value="beIN Sport">beIN Sport</option>
-                        <option value="FIFA">FIFA</option>
-                        <option value="WORLD CUP">WORLD CUP</option>
+                        <option value="Arena">Arena</option>
+                        <option value="D Sport">D Sport</option>
                     </select>
                     <label class="checkbox-label">
                         <input type="checkbox" id="customNeedsProxy"> Needs Proxy (CORS/Mixed Content)
@@ -2169,7 +2019,7 @@
         </div>
     </div>
 
-    <!-- ===== COMPACT ANTI ADBLOCK OVERLAY ===== -->
+    <!-- ===== COMPACT ANTI ADBLOCK OVERLAY WITH INFO CARDS ===== -->
     <div id="adblock-overlay" style="
         position:fixed;
         top:0;left:0;right:0;bottom:0;
@@ -2187,85 +2037,153 @@
             padding:16px;
         ">
             <div style="
-                background:linear-gradient(145deg, rgba(26,26,46,0.95), rgba(15,15,35,0.95));
-                border:1px solid rgba(124,58,237,0.25);
-                border-radius:20px;
-                padding:24px 20px;
-                max-width:380px;
+                max-width:420px;
                 width:100%;
-                box-shadow:0 32px 96px rgba(0,0,0,0.7), 0 0 60px rgba(124,58,237,0.15);
-                animation:adblockSlideUp 0.6s cubic-bezier(0.4,0,0.2,1);
-                text-align:center;
-                font-family:'Inter',sans-serif;
+                display:flex;
+                flex-direction:column;
+                gap:14px;
             ">
-                <!-- Shield icon -->
+                <!-- Main Adblock Card -->
                 <div style="
-                    width:64px;height:64px;
-                    border-radius:50%;
-                    background:linear-gradient(135deg, #ef4444, #dc2626);
-                    display:flex;align-items:center;justify-content:center;
-                    margin:0 auto 16px;
-                    box-shadow:0 8px 24px rgba(239,68,68,0.4);
+                    background:linear-gradient(145deg, rgba(26,26,46,0.95), rgba(15,15,35,0.95));
+                    border:1px solid rgba(124,58,237,0.25);
+                    border-radius:20px;
+                    padding:24px 20px;
+                    box-shadow:0 32px 96px rgba(0,0,0,0.7), 0 0 60px rgba(124,58,237,0.15);
+                    animation:adblockSlideUp 0.6s cubic-bezier(0.4,0,0.2,1);
+                    text-align:center;
+                    font-family:'Inter',sans-serif;
                 ">
-                    <i class="fas fa-shield-alt" style="font-size:28px;color:#fff;"></i>
-                </div>
+                    <!-- Shield icon -->
+                    <div style="
+                        width:64px;height:64px;
+                        border-radius:50%;
+                        background:linear-gradient(135deg, #ef4444, #dc2626);
+                        display:flex;align-items:center;justify-content:center;
+                        margin:0 auto 16px;
+                        box-shadow:0 8px 24px rgba(239,68,68,0.4);
+                    ">
+                        <i class="fas fa-shield-alt" style="font-size:28px;color:#fff;"></i>
+                    </div>
 
-                <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:8px;">
-                    Ad Blocker Detected
-                </h2>
+                    <h2 style="font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:8px;">
+                        Ad Blocker Detected
+                    </h2>
 
-                <p style="font-size:0.85rem;color:#a1a1aa;line-height:1.5;margin-bottom:20px;">
-                    Disable your ad blocker to watch live sports.
-                </p>
+                    <p style="font-size:0.85rem;color:#a1a1aa;line-height:1.5;margin-bottom:20px;">
+                        Disable your ad blocker to watch live sports.
+                    </p>
 
-                <!-- Main action button -->
-                <button onclick="adblockCheckRetry()" style="
-                    background:linear-gradient(135deg, #7c3aed, #6d28d9);
-                    color:#fff;border:none;
-                    padding:14px 24px;border-radius:12px;
-                    font-weight:700;font-size:0.95rem;
-                    cursor:pointer;
-                    width:100%;
-                    margin-bottom:10px;
-                    box-shadow:0 4px 16px rgba(124,58,237,0.3);
-                ">
-                    <i class="fas fa-sync-alt"></i> I've Disabled It
-                </button>
+                    <!-- Main action button -->
+                    <button onclick="adblockCheckRetry()" style="
+                        background:linear-gradient(135deg, #7c3aed, #6d28d9);
+                        color:#fff;border:none;
+                        padding:14px 24px;border-radius:12px;
+                        font-weight:700;font-size:0.95rem;
+                        cursor:pointer;
+                        width:100%;
+                        margin-bottom:10px;
+                        box-shadow:0 4px 16px rgba(124,58,237,0.3);
+                    ">
+                        <i class="fas fa-sync-alt"></i> I've Disabled It
+                    </button>
 
-                <button onclick="adblockHowTo()" style="
-                    background:transparent;
-                    color:#71717a;border:1px solid rgba(255,255,255,0.1);
-                    padding:10px 20px;border-radius:10px;
-                    font-weight:500;font-size:0.85rem;
-                    cursor:pointer;
-                    width:100%;
-                    margin-bottom:12px;
-                ">
-                    <i class="fas fa-question-circle"></i> How to Disable?
-                </button>
+                    <button onclick="adblockHowTo()" style="
+                        background:transparent;
+                        color:#71717a;border:1px solid rgba(255,255,255,0.1);
+                        padding:10px 20px;border-radius:10px;
+                        font-weight:500;font-size:0.85rem;
+                        cursor:pointer;
+                        width:100%;
+                        margin-bottom:12px;
+                    ">
+                        <i class="fas fa-question-circle"></i> How to Disable?
+                    </button>
 
-                <!-- How to section (collapsible) -->
-                <div id="adblock-howto" style="
-                    display:none;
-                    background:rgba(0,0,0,0.3);
-                    border-radius:12px;
-                    padding:14px;
-                    text-align:left;
-                    margin-bottom:12px;
-                ">
-                    <p style="font-size:0.75rem;color:#a1a1aa;line-height:1.6;margin:0;">
-                        <strong style="color:#fff;">Chrome:</strong> Shield icon → "Turn off"<br>
-                        <strong style="color:#fff;">Firefox:</strong> Shield → "Disable for this site"<br>
-                        <strong style="color:#fff;">Safari:</strong> Settings → Content Blockers → Off<br>
-                        <strong style="color:#fff;">Android DNS:</strong> Settings → Private DNS → "Off"<br>
-                        <strong style="color:#fff;">uBlock:</strong> Extension icon → Power button
+                    <!-- How to section (collapsible) -->
+                    <div id="adblock-howto" style="
+                        display:none;
+                        background:rgba(0,0,0,0.3);
+                        border-radius:12px;
+                        padding:14px;
+                        text-align:left;
+                        margin-bottom:12px;
+                    ">
+                        <p style="font-size:0.75rem;color:#a1a1aa;line-height:1.6;margin:0;">
+                            <strong style="color:#fff;">Chrome:</strong> Shield icon → "Turn off"<br>
+                            <strong style="color:#fff;">Firefox:</strong> Shield → "Disable for this site"<br>
+                            <strong style="color:#fff;">Safari:</strong> Settings → Content Blockers → Off<br>
+                            <strong style="color:#fff;">Android DNS:</strong> Settings → Private DNS → "Off"<br>
+                            <strong style="color:#fff;">uBlock:</strong> Extension icon → Power button
+                        </p>
+                    </div>
+
+                    <p style="font-size:0.7rem;color:#52525b;margin:0;">
+                        <i class="fas fa-lock" style="margin-right:4px;"></i>
+                        Ads keep Yara Sport free. No data collected.
                     </p>
                 </div>
 
-                <p style="font-size:0.7rem;color:#52525b;margin:0;">
-                    <i class="fas fa-lock" style="margin-right:4px;"></i>
-                    Ads keep Yara Sport free. No data collected.
-                </p>
+                <!-- INFO CARD 1: Why Ads -->
+                <div style="
+                    background:linear-gradient(145deg, rgba(26,26,46,0.9), rgba(15,15,35,0.9));
+                    border:1px solid rgba(34,197,94,0.2);
+                    border-radius:16px;
+                    padding:18px;
+                    display:flex;
+                    align-items:flex-start;
+                    gap:14px;
+                    animation:adblockSlideUp 0.7s cubic-bezier(0.4,0,0.2,1);
+                ">
+                    <div style="
+                        width:44px;height:44px;
+                        border-radius:12px;
+                        background:linear-gradient(135deg, #22c55e, #16a34a);
+                        display:flex;align-items:center;justify-content:center;
+                        flex-shrink:0;
+                        box-shadow:0 4px 16px rgba(34,197,94,0.3);
+                    ">
+                        <i class="fas fa-heart" style="font-size:1.1rem;color:#fff;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:6px;">Why We Show Ads</h4>
+                        <p style="font-size:0.8rem;color:#a1a1aa;line-height:1.5;margin:0;">
+                            Ad revenue helps us keep Yara Sport free for everyone. We never collect personal data or track your browsing.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- INFO CARD 2: Go Premium -->
+                <div style="
+                    background:linear-gradient(145deg, rgba(26,26,46,0.9), rgba(15,15,35,0.9));
+                    border:1px solid rgba(251,191,36,0.2);
+                    border-radius:16px;
+                    padding:18px;
+                    display:flex;
+                    align-items:flex-start;
+                    gap:14px;
+                    animation:adblockSlideUp 0.8s cubic-bezier(0.4,0,0.2,1);
+                    cursor:pointer;
+                    transition:all 0.2s ease;
+                " onclick="adblockGoPremium()">
+                    <div style="
+                        width:44px;height:44px;
+                        border-radius:12px;
+                        background:linear-gradient(135deg, #fbbf24, #f59e0b);
+                        display:flex;align-items:center;justify-content:center;
+                        flex-shrink:0;
+                        box-shadow:0 4px 16px rgba(251,191,36,0.3);
+                    ">
+                        <i class="fas fa-crown" style="font-size:1.1rem;color:#1a1a1a;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.95rem;font-weight:700;color:#fbbf24;margin-bottom:6px;">Go Premium — Ad-Free</h4>
+                        <p style="font-size:0.8rem;color:#a1a1aa;line-height:1.5;margin:0;">
+                            Get an ad-free experience for just <strong style="color:#fbbf24;">$1/month</strong>. No ads, faster streams, and premium badge.
+                        </p>
+                    </div>
+                    <i class="fas fa-chevron-right" style="color:#fbbf24;font-size:0.9rem;align-self:center;flex-shrink:0;"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -2273,16 +2191,16 @@
     <script>
         // ===================== ONLY VERIFIED WORKING CHANNELS =====================
         let channels = [
-            { name: "beIN Sport Max 1", url: "https://stm.linkip.org/live/1957_.m3u8", category: "beIN Sport", needsProxy: true },
-            { name: "beIN Sport Max 2", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
+            { name: "beIN Sport Max 1", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
             { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true },
-            { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
-            { name: "Bioscope+ (FIFA)", url: "https://hls.diptom3ow.workers.dev/r/https%3A%2F%2Ffifa-stream-01.bioscopelive.com%2Fout%2Fv1%2F60e7608404004b1186261497b404630b%2Findex_1.m3u8", category: "FIFA" },
+            { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/21/index.m3u8", category: "beIN Sport", needsProxy: true },
+            { name: "beIN Sport direct 2", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
+            { name: "Bioscope+ (FIFA)", url: "https://d1kep4defqj6r1.cloudfront.net/out/v1/4e21d5a122c549289dd6feab259266e8/index_1.m3u8", category: "FIFA" },
             { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "FIFA", needsProxy: true },
             { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true },
-            { name: "Willow Sport", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8", category: "FIFA", needsProxy: true },
+            { name: "TSN Sport", url: "https://pub-85819be5176c4d29bb0ce67fa13e15ab.r2.dev/en/index.m3u8", category: "FIFA", needsProxy: true },
             { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "FIFA", needsProxy: true },
-            { name: "ITC Canada ", url: "https://live.666666.zip/migu/1.m3u8", category: "FIFA", needsProxy: true },
+            { name: "Fifa Sport WM", url: "https://s6.hopslan.com/ardX/tracks-v1a1/mono.m3u8", category: "FIFA", needsProxy: true },
             { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "FIFA", needsProxy: true },
             { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true },
             { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "Coming Soon", needsProxy: true },
@@ -2320,6 +2238,123 @@
         const playerWrapper = document.getElementById('playerWrapper');
         const qualityMenu = document.getElementById('qualityMenu');
         const qualityBtn = document.getElementById('qualityBtn');
+
+        // ===================== CHROMECAST =====================
+        let castContext = null;
+        let castSession = null;
+        let isCasting = false;
+
+        function initCast() {
+            if (!window.chrome || !chrome.cast || !chrome.cast.isAvailable) {
+                console.log('Cast API not available yet');
+                return;
+            }
+            try {
+                castContext = cast.framework.CastContext.getInstance();
+                castContext.setOptions({
+                    receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+                    autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+                });
+                castContext.addEventListener(
+                    cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+                    onCastSessionChange
+                );
+                console.log('Cast initialized successfully');
+                updateCastUI();
+            } catch (e) {
+                console.warn('Cast init error:', e);
+            }
+        }
+
+        function onCastSessionChange(event) {
+            const session = castContext.getCurrentSession();
+            if (event.sessionState === cast.framework.SessionState.SESSION_STARTED ||
+                event.sessionState === cast.framework.SessionState.SESSION_RESUMED) {
+                isCasting = true;
+                castSession = session;
+                showToast('Connected to TV', 'fas fa-tv');
+                if (currentChannelIndex >= 0) {
+                    castCurrentChannel();
+                }
+            } else if (event.sessionState === cast.framework.SessionState.SESSION_ENDED) {
+                isCasting = false;
+                castSession = null;
+                showToast('Disconnected from TV', 'fas fa-tv');
+            }
+            updateCastUI();
+        }
+
+        function updateCastUI() {
+            const btn = document.getElementById('castBtn');
+            const icon = document.getElementById('castIcon');
+            const videoCastBtn = document.getElementById('videoCastBtn');
+            if (!btn || !icon) return;
+
+            if (isCasting) {
+                btn.classList.add('connected');
+                icon.className = 'fas fa-tv';
+                showToast('Casting to TV', 'fas fa-tv');
+            } else {
+                btn.classList.remove('connected');
+                icon.className = 'fas fa-tv';
+            }
+
+            if (videoCastBtn) {
+                videoCastBtn.style.display = isCasting ? 'inline-flex' : 'inline-flex';
+            }
+        }
+
+        function toggleCast() {
+            if (!castContext) {
+                showToast('Cast not available. Use Chrome/Edge on same WiFi.', 'fas fa-exclamation-circle');
+                return;
+            }
+            try {
+                const session = castContext.getCurrentSession();
+                if (session) {
+                    session.endSession(true);
+                } else {
+                    castContext.requestSession().then(() => {
+                        console.log('Cast session requested');
+                    }).catch((err) => {
+                        console.log('Cast request cancelled or failed:', err);
+                    });
+                }
+            } catch (e) {
+                console.warn('Cast toggle error:', e);
+                showToast('Cast error. Make sure your TV is on same WiFi.', 'fas fa-exclamation-circle');
+            }
+        }
+
+        function castCurrentChannel() {
+            if (!castSession || currentChannelIndex < 0) return;
+            const ch = channels[currentChannelIndex];
+            const mediaInfo = new chrome.cast.media.MediaInfo(
+                getChannelUrl(ch),
+                'application/x-mpegURL'
+            );
+            mediaInfo.streamType = chrome.cast.media.StreamType.LIVE;
+            mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+            mediaInfo.metadata.title = ch.name;
+            mediaInfo.metadata.subtitle = 'Yara Sport - Football Live';
+
+            const request = new chrome.cast.media.LoadRequest(mediaInfo);
+            request.autoplay = true;
+
+            castSession.loadMedia(request).then(() => {
+                showToast('Casting: ' + ch.name, 'fas fa-tv');
+            }).catch((err) => {
+                console.error('Cast load error:', err);
+                showToast('Cast failed for this channel', 'fas fa-exclamation-circle');
+            });
+        }
+
+        // Wait for Cast API
+        window.__onGCastApiAvailable = function(isAvailable) {
+            if (isAvailable) {
+                initCast();
+            }
+        };
 
         // ===================== CONTROL TOAST =====================
         function showToast(msg, icon) {
@@ -2763,6 +2798,11 @@
                 proxyAttemptIndex = 0;
                 startFrameCheck();
                 setTimeout(() => { if (video.muted) video.muted = false; }, 500);
+
+                // Auto cast if casting is active
+                if (isCasting && castSession) {
+                    castCurrentChannel();
+                }
             };
             video.addEventListener('playing', onPlaying, { once: true });
 
@@ -3115,20 +3155,20 @@
                 console.log("mergeCustomChannels starting...");
                 const custom = getCustomChannels();
                 const baseChannels = [
-                    { name: "beIN Sport Max 1", url: "https://stm.linkip.org/live/1957_.m3u8", category: "beIN Sport", needsProxy: true },
-                    { name: "beIN Sport Max 2", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
+                    { name: "beIN Sport Max 1", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
                     { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true },
-                    { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
-                    { name: "Bioscope+ (FIFA)", url: "https://hls.diptom3ow.workers.dev/r/https%3A%2F%2Ffifa-stream-01.bioscopelive.com%2Fout%2Fv1%2F60e7608404004b1186261497b404630b%2Findex_1.m3u8", category: "FIFA" },
+                    { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/21/index.m3u8", category: "beIN Sport", needsProxy: true },
+                    { name: "beIN Sport direct 2", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
+                    { name: "Bioscope+ (FIFA)", url: "https://d1kep4defqj6r1.cloudfront.net/out/v1/4e21d5a122c549289dd6feab259266e8/index_1.m3u8", category: "FIFA" },
                     { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "FIFA", needsProxy: true },
                     { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true },
-                    { name: "Willow Sport", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8", category: "FIFA", needsProxy: true },
+                    { name: "TSN Sport", url: "https://pub-85819be5176c4d29bb0ce67fa13e15ab.r2.dev/en/index.m3u8", category: "FIFA", needsProxy: true },
                     { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "FIFA", needsProxy: true },
-                    { name: "ITC Canada ", url: "https://live.666666.zip/migu/1.m3u8", category: "FIFA", needsProxy: true },
+                    { name: "Fifa Sport WM", url: "https://s6.hopslan.com/ardX/tracks-v1a1/mono.m3u8", category: "FIFA", needsProxy: true },
                     { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "FIFA", needsProxy: true },
                     { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true },
                     { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "Coming Soon", needsProxy: true },
-                   ];
+                ];
                 custom.forEach(c => {
                     baseChannels.push({
                         name: c.name,
@@ -3247,173 +3287,11 @@
         playerWrapper.addEventListener('touchstart', showControls);
         playerWrapper.addEventListener('mouseleave', hideControlsNow);
 
-        // ===================== MODERN PWA INSTALL =====================
-        (function() {
-            let deferredPrompt = null;
-            let bannerDismissed = false;
-            let installInProgress = false;
-
-            function isStandalone() {
-                return window.matchMedia('(display-mode: standalone)').matches ||
-                       window.matchMedia('(display-mode: fullscreen)').matches ||
-                       window.navigator.standalone === true;
-            }
-
-            function isIOS() {
-                return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            }
-
-            function isAndroid() {
-                return /Android/.test(navigator.userAgent);
-            }
-
-            function isChrome() {
-                return /Chrome/.test(navigator.userAgent) && !/Edg|OPR|SamsungBrowser/.test(navigator.userAgent);
-            }
-
-            function isSamsung() {
-                return /SamsungBrowser/.test(navigator.userAgent);
-            }
-
-            function isEdge() {
-                return /Edg/.test(navigator.userAgent);
-            }
-
-            function isSmartTV() {
-                return /SmartTV|TV|Android TV|webOS|HbbTV|NetCast|Tizen|Web0S|CrKey|Roku|AppleTV|PlayStation|Xbox|Nintendo/.test(navigator.userAgent) ||
-                       window.outerWidth >= 1920;
-            }
-
-            function showBanner() {
-                if (isStandalone() || bannerDismissed || installInProgress) return;
-                const banner = document.getElementById('pwaBannerModern');
-                if (!banner) return;
-
-                banner.classList.add('show');
-                banner.style.transform = 'translateX(-50%) translateY(0)';
-                banner.style.opacity = '1';
-                banner.style.animation = 'pwaBannerSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
-
-                const sub = document.getElementById('pwaBannerSub');
-                const installBtn = document.getElementById('pwaInstallBtnModern');
-
-                if (isIOS()) {
-                    if (sub) sub.textContent = 'Add to home screen for a native, full-screen experience.';
-                    if (installBtn) installBtn.innerHTML = '<i class="fab fa-apple"></i> Install';
-                } else if (isSmartTV()) {
-                    if (sub) sub.textContent = 'Install Yara Sport on your TV for the best experience.';
-                    if (installBtn) installBtn.innerHTML = '<i class="fas fa-tv"></i> Install';
-                } else {
-                    if (sub) sub.textContent = 'Add to home screen for a native, full-screen experience.';
-                    if (installBtn) installBtn.innerHTML = '<i class="fas fa-download"></i> Install';
-                }
-            }
-
-            // Capture the beforeinstallprompt event
-            window.addEventListener('beforeinstallprompt', (e) => {
-                console.log('beforeinstallprompt captured');
-                e.preventDefault();
-                deferredPrompt = e;
-                setTimeout(showBanner, 1000);
-            });
-
-            // Also show banner on load even if beforeinstallprompt hasn't fired yet
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    if (!isStandalone() && !installInProgress) {
-                        showBanner();
-                    }
-                }, 2000);
-            });
-
-            window.installPwaModern = async function() {
-                if (isIOS()) {
-                    document.getElementById('pwaIosGuide').classList.add('show');
-                    return;
-                }
-
-                // If we have the deferred prompt, use it (this triggers the system install dialog)
-                if (deferredPrompt) {
-                    installInProgress = true;
-
-                    // Show installing toast
-                    showToast('Installing Yara Sport...', 'fas fa-spinner fa-spin');
-
-                    deferredPrompt.prompt();
-
-                    const { outcome } = await deferredPrompt.userChoice;
-                    console.log('User choice:', outcome);
-
-                    if (outcome === 'accepted') {
-                        showToast('Yara Sport installed!', 'fas fa-check');
-                        dismissPwaModern();
-                    } else {
-                        showToast('Install cancelled', 'fas fa-times');
-                        installInProgress = false;
-                        // Show banner again after a delay
-                        setTimeout(() => {
-                            if (!isStandalone()) showBanner();
-                        }, 3000);
-                    }
-                    deferredPrompt = null;
-                } else {
-                    // Fallback: try to trigger install via menu instructions
-                    if (isChrome() && isAndroid()) {
-                        showToast('Tap menu (⋮) → "Install app"', 'fas fa-info-circle');
-                    } else if (isSamsung()) {
-                        showToast('Tap menu (⋮) → "Add to Home Screen"', 'fas fa-info-circle');
-                    } else if (isEdge()) {
-                        showToast('Tap menu (⋯) → "Apps" → "Install"', 'fas fa-info-circle');
-                    } else if (isSmartTV()) {
-                        showToast('Use your TV remote to bookmark this page', 'fas fa-info-circle');
-                    } else {
-                        showToast('Open menu → "Add to Home Screen"', 'fas fa-info-circle');
-                    }
-                }
-            };
-
-            window.dismissPwaModern = function() {
-                bannerDismissed = true;
-                const banner = document.getElementById('pwaBannerModern');
-                if (banner) {
-                    banner.style.animation = 'none';
-                    banner.style.transform = 'translateX(-50%) translateY(120%)';
-                    banner.style.opacity = '0';
-                    banner.style.transition = 'all 0.4s ease';
-                    setTimeout(() => banner.classList.remove('show'), 400);
-                }
-                // Banner will show again on next page load (no localStorage)
-            };
-
-            window.closeIosGuide = function(e) {
-                if (e && e.target !== e.currentTarget) return;
-                document.getElementById('pwaIosGuide').classList.remove('show');
-            };
-
-            // Listen for appinstalled event
-            window.addEventListener('appinstalled', () => {
-                console.log('PWA installed successfully');
-                showToast('Yara Sport installed!', 'fas fa-check');
-                dismissPwaModern();
-                deferredPrompt = null;
-                installInProgress = false;
-            });
-
-            // Register service worker
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('sw.js')
-                        .then((reg) => console.log('SW registered:', reg.scope))
-                        .catch((err) => console.log('SW failed:', err));
-                });
-            }
-        })();
-
         // ===================== UNIVERSAL INPUT SUPPORT =====================
         (function() {
             // Make all interactive elements focusable
             const makeFocusable = () => {
-                const selectors = '.channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn, .virtual-remote-btn, .ch-nav-btn';
+                const selectors = '.channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .visitor-badge, .virtual-remote-btn, .ch-nav-btn, .cast-btn';
                 document.querySelectorAll(selectors).forEach(el => {
                     if (!el.hasAttribute('tabindex')) {
                         el.setAttribute('tabindex', '0');
@@ -3461,7 +3339,7 @@
                         navigateFocus('down');
                         break;
                     case 'Enter':
-                    case ' ': // Space also acts as select for TV/gamepad
+                    case ' ':
                         if (focused && focused !== document.body) {
                             e.preventDefault();
                             focused.click();
@@ -3567,7 +3445,6 @@
                         setVolume(1);
                         showToast('Volume Always Full', 'fas fa-volume-up');
                         break;
-                    // TV colored buttons via keyboard shortcuts
                     case 'F1':
                     case 'Red':
                     case 'ColorF0Red':
@@ -3607,70 +3484,65 @@
 
             // Also handle keyCode for older TV browsers
             document.addEventListener('keydown', (e) => {
-                // TV remote keyCodes (Samsung, LG, Sony, etc.)
                 const keyCode = e.keyCode || e.which;
-                console.log('TV KeyCode pressed:', keyCode, 'key:', e.key);
-
                 switch(keyCode) {
-                    case 403: // Red
-                    case 112: // F1 as Red backup
+                    case 403:
+                    case 112:
                         e.preventDefault();
                         e.stopPropagation();
                         tvRedButton();
                         return false;
-                    case 404: // Green
-                    case 113: // F2 as Green backup
+                    case 404:
+                    case 113:
                         e.preventDefault();
                         e.stopPropagation();
                         tvGreenButton();
                         return false;
-                    case 405: // Yellow
-                    case 114: // F3 as Yellow backup
+                    case 405:
+                    case 114:
                         e.preventDefault();
                         e.stopPropagation();
                         tvYellowButton();
                         return false;
-                    case 406: // Blue
-                    case 115: // F4 as Blue backup
+                    case 406:
+                    case 115:
                         e.preventDefault();
                         e.stopPropagation();
                         tvBlueButton();
                         return false;
-                    case 457: // Info
+                    case 457:
                         e.preventDefault();
                         e.stopPropagation();
                         showControlsHelp();
                         return false;
-                    case 428: // Channel Up (some remotes)
+                    case 428:
                         e.preventDefault();
                         e.stopPropagation();
                         channelUp();
                         return false;
-                    case 427: // Channel Down (some remotes)
+                    case 427:
                         e.preventDefault();
                         e.stopPropagation();
                         channelDown();
                         return false;
-                    case 33: // PageUp
+                    case 33:
                         e.preventDefault();
                         e.stopPropagation();
                         channelUp();
                         return false;
-                    case 34: // PageDown
+                    case 34:
                         e.preventDefault();
                         e.stopPropagation();
                         channelDown();
                         return false;
                 }
-            }, true); // Use capture phase for TV remotes
+            }, true);
 
             window.navigateFocus = function(direction) {
-                const selectors = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn, .ch-nav-btn, .virtual-remote-btn, .virtual-remote-action';
+                const selectors = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .visitor-badge, .virtual-remote-btn, .ch-nav-btn, .cast-btn';
                 let focusable = Array.from(document.querySelectorAll(selectors)).filter(el => {
-                    return el.offsetParent !== null && !el.disabled && !el.classList.contains('settings-overlay') && !el.classList.contains('controls-help-overlay') && !el.classList.contains('virtual-remote-overlay');
+                    return el.offsetParent !== null && !el.disabled;
                 });
-
-                // Filter out hidden elements
                 focusable = focusable.filter(el => {
                     const rect = el.getBoundingClientRect();
                     return rect.width > 0 && rect.height > 0;
@@ -3680,7 +3552,6 @@
                 const currentIdx = focusable.indexOf(current);
 
                 if (currentIdx === -1) {
-                    // If nothing focused, focus first visible element
                     if (focusable.length > 0) {
                         focusable[0].focus();
                         focusable[0].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
@@ -3698,7 +3569,6 @@
 
                 for (let i = 0; i < focusable.length; i++) {
                     if (i === currentIdx) continue;
-
                     const el = focusable[i];
                     const rect = el.getBoundingClientRect();
                     const centerX = rect.left + rect.width / 2;
@@ -3756,23 +3626,19 @@
 
             function pollGamepad() {
                 if (gamepadIndex === null) return;
-
                 const now = Date.now();
                 if (now - lastGamepadTime < GAMEPAD_DEBOUNCE) {
                     requestAnimationFrame(pollGamepad);
                     return;
                 }
-
                 const gp = navigator.getGamepads()[gamepadIndex];
                 if (!gp) {
                     requestAnimationFrame(pollGamepad);
                     return;
                 }
-
                 const buttons = gp.buttons;
                 const axes = gp.axes;
 
-                // A/Cross - Select / Play
                 if (buttons[0].pressed) {
                     lastGamepadTime = now;
                     const focused = document.activeElement;
@@ -3782,8 +3648,6 @@
                         togglePlay();
                     }
                 }
-
-                // B/Circle - Back
                 if (buttons[1].pressed) {
                     lastGamepadTime = now;
                     const settingsPanel = document.getElementById('settingsPanel');
@@ -3802,20 +3666,15 @@
                         toggleFullscreen();
                     }
                 }
-
-                // X/Square - Settings
                 if (buttons[2].pressed) {
                     lastGamepadTime = now;
                     toggleSettings();
                 }
-
-                // Y/Triangle - Fullscreen
                 if (buttons[3].pressed) {
                     lastGamepadTime = now;
                     toggleFullscreen();
                 }
 
-                // D-pad / Left stick navigation
                 const deadzone = 0.5;
                 if (axes[1] < -deadzone || (buttons[12] && buttons[12].pressed)) { 
                     lastGamepadTime = now; 
@@ -3834,43 +3693,30 @@
                     navigateFocus('right'); 
                 }
 
-                // LB/L1 - Prev Channel
                 if (buttons[4].pressed) { 
                     lastGamepadTime = now;
                     channelDown();
                 }
-
-                // RB/R1 - Next Channel
                 if (buttons[5].pressed) { 
                     lastGamepadTime = now;
                     channelUp();
                 }
-
-                // LT/L2 - Volume Down (disabled, volume always full)
                 if (buttons[6] && buttons[6].pressed) {
                     lastGamepadTime = now;
                     showToast('Volume Always Full', 'fas fa-volume-up');
                 }
-
-                // RT/R2 - Volume Up (disabled, volume always full)
                 if (buttons[7] && buttons[7].pressed) {
                     lastGamepadTime = now;
                     showToast('Volume Always Full', 'fas fa-volume-up');
                 }
-
-                // Menu/Start - PIP
                 if (buttons[9].pressed) {
                     lastGamepadTime = now;
                     togglePip();
                 }
-
-                // View/Select - Mute
                 if (buttons[8].pressed) {
                     lastGamepadTime = now;
                     toggleMute();
                 }
-
-                // Right stick click - Controls Help
                 if (buttons[11] && buttons[11].pressed) {
                     lastGamepadTime = now;
                     showControlsHelp();
@@ -3891,16 +3737,13 @@
             }, { passive: true });
 
             document.addEventListener('touchend', (e) => {
-                // Skip if touch started on controls
                 if (touchStartX === 0 && touchStartY === 0) return;
-
                 const touchEndX = e.changedTouches[0].screenX;
                 const touchEndY = e.changedTouches[0].screenY;
                 const touchDuration = Date.now() - touchStartTime;
                 const diffX = touchStartX - touchEndX;
                 const diffY = touchStartY - touchEndY;
 
-                // Swipe detection - only if not a double tap (duration check)
                 if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50 && touchDuration < 300 && touchDuration > 80) {
                     if (diffX > 0) {
                         channelUp();
@@ -3908,55 +3751,41 @@
                         channelDown();
                     }
                 }
-
-                // Long press on video for settings
                 if (touchDuration > 800 && e.target.closest('.player-wrapper')) {
                     toggleSettings();
                 }
-
-                // Reset touch tracking
                 touchStartX = 0;
                 touchStartY = 0;
             }, { passive: true });
 
-            // Double tap for fullscreen (only on video area, not on controls)
             let lastTap = 0;
             let tapCount = 0;
             let tapTimer = null;
             playerWrapper.addEventListener('touchend', (e) => {
-                // Only handle double tap on the video element itself, not controls
                 if (e.target.closest('.controls-overlay') || e.target.closest('.control-btn')) {
                     return;
                 }
-
                 const now = Date.now();
                 tapCount++;
-
                 if (tapCount === 2 && (now - lastTap) < 400) {
-                    // Double tap detected - toggle fullscreen only
                     tapCount = 0;
                     if (tapTimer) { clearTimeout(tapTimer); tapTimer = null; }
                     toggleFullscreen();
-                    // Prevent swipe channel change on double tap
                     touchStartX = 0;
                     touchStartY = 0;
                     return;
                 }
-
                 lastTap = now;
-
                 if (tapTimer) clearTimeout(tapTimer);
                 tapTimer = setTimeout(() => {
                     tapCount = 0;
                 }, 400);
             }, { passive: true });
 
-            // Make elements focusable on load and DOM changes
             makeFocusable();
             const observer = new MutationObserver(makeFocusable);
             observer.observe(document.body, { childList: true, subtree: true });
 
-            // TV-specific: Auto focus first element and auto fullscreen
             const isTV = /SmartTV|TV|Android TV|webOS|Chromecast|Roku|AppleTV|HbbTV|NetCast|Tizen|Web0S|CrKey/.test(navigator.userAgent);
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
             if (isTV || isStandalone) {
@@ -4596,12 +4425,10 @@
         var adblockDetected = false;
         var checkInterval = null;
 
-        // STRICT: Block body interaction when overlay is shown
         function blockWebsite() {
             var overlay = document.getElementById('adblock-overlay');
             if (overlay) {
                 overlay.style.display = 'flex';
-                // Small delay to ensure overlay renders before blocking body
                 setTimeout(function() {
                     document.body.style.overflow = 'hidden';
                     document.body.style.pointerEvents = 'none';
@@ -4619,7 +4446,6 @@
             }
         }
 
-        // Method 1: CSS Bait Element Detection
         function checkBaitElement() {
             return new Promise(function(resolve) {
                 var bait = document.createElement('div');
@@ -4646,7 +4472,6 @@
             });
         }
 
-        // Method 2: Fetch-based detection
         function checkFetchBlocked() {
             return new Promise(function(resolve) {
                 var blocked = false;
@@ -4672,7 +4497,6 @@
             });
         }
 
-        // Method 3: Check actual ad containers
         function checkAdContainers() {
             return new Promise(function(resolve) {
                 var adSelectors = [
@@ -4703,8 +4527,12 @@
             });
         }
 
-        // Run detection - STRICT MODE
         function runDetection() {
+            // Skip detection if user is premium
+            if (isPremiumUser()) {
+                console.log('[Adblock] Premium user detected, skipping adblock check');
+                return;
+            }
             if (!adblockDetected) {
                 Promise.all([
                     checkBaitElement(),
@@ -4724,7 +4552,6 @@
             }
         }
 
-        // Retry button - re-checks and only unblocks if ads are NOT blocked
         window.adblockCheckRetry = function() {
             adblockDetected = false;
 
@@ -4738,7 +4565,6 @@
 
                 if (blockedMethods >= 2) {
                     adblockDetected = true;
-                    // Still blocked - shake the overlay to show it's still active
                     var overlay = document.getElementById('adblock-overlay');
                     if (overlay) {
                         overlay.style.animation = 'none';
@@ -4746,7 +4572,6 @@
                             overlay.style.animation = 'adblockShake 0.5s ease';
                         }, 10);
                     }
-                    // Show a message
                     var btn = document.querySelector('#adblock-overlay button[onclick="adblockCheckRetry()"]');
                     if (btn) {
                         var originalText = btn.innerHTML;
@@ -4771,51 +4596,70 @@
             }
         };
 
-        // Run detection after page load
+        window.adblockGoPremium = function() {
+            openPremiumPage();
+            // Start watching for premium activation
+            startPremiumWatch();
+        };
+
+        function startPremiumWatch() {
+            var watchInterval = setInterval(function() {
+                if (isPremiumUser()) {
+                    clearInterval(watchInterval);
+                    adblockDetected = false;
+                    unblockWebsite();
+                    showToast('Premium activated! Enjoy ad-free streaming.', 'fas fa-crown');
+                }
+                // Also check if premium page was closed without activation
+                var premiumPage = document.getElementById('premiumPage');
+                if (!premiumPage || !premiumPage.classList.contains('show')) {
+                    // Page closed, check one more time then stop watching
+                    clearInterval(watchInterval);
+                    if (isPremiumUser()) {
+                        adblockDetected = false;
+                        unblockWebsite();
+                        showToast('Premium activated! Enjoy ad-free streaming.', 'fas fa-crown');
+                    }
+                }
+            }, 1000);
+        }
+
+        function isPremiumUser() {
+            try {
+                var saved = localStorage.getItem('yara_premium');
+                if (saved) {
+                    var data = JSON.parse(saved);
+                    return data.active === true;
+                }
+            } catch(e) {}
+            return false;
+        }
+
         if (document.readyState === 'complete') {
-            setTimeout(runDetection, 1500);
+            setTimeout(function() {
+                if (!isPremiumUser()) runDetection();
+            }, 1500);
         } else {
             window.addEventListener('load', function() {
-                setTimeout(runDetection, 2000);
+                setTimeout(function() {
+                    if (!isPremiumUser()) runDetection();
+                }, 2000);
             });
         }
 
-        // Periodic re-check every 30 seconds while blocked
         checkInterval = setInterval(function() {
+            if (isPremiumUser()) {
+                if (adblockDetected) {
+                    adblockDetected = false;
+                    unblockWebsite();
+                }
+                return;
+            }
             if (adblockDetected) {
                 runDetection();
             }
         }, 30000);
     })();
     </script>
-
-    <!-- Modern PWA Install Banner -->
-    <div id="pwaBannerModern" class="pwa-banner-modern">
-        <div class="pwa-banner-icon">
-            <img src="icon-512x512.png" alt="Yara Sport">
-        </div>
-        <div class="pwa-banner-text">
-            <div class="pwa-banner-title">Install Yara Sport</div>
-            <div class="pwa-banner-sub" id="pwaBannerSub">Add to home screen for a native, full-screen experience.</div>
-        </div>
-        <div class="pwa-banner-actions">
-            <button class="pwa-banner-install" onclick="installPwaModern()" id="pwaInstallBtnModern" tabindex="0">
-                <i class="fas fa-download"></i> Install
-            </button>
-            <button class="pwa-banner-close" onclick="dismissPwaModern()" tabindex="0" aria-label="Dismiss" style="background:none;border:none;color:#71717a;font-size:0.85rem;cursor:pointer;margin-top:6px;">
-                Later
-            </button>
-        </div>
-    </div>
-
-    <!-- iOS Install Guide -->
-    <div id="pwaIosGuide" class="pwa-ios-guide" onclick="closeIosGuide(event)">
-        <div class="pwa-ios-guide-box" onclick="event.stopPropagation()">
-            <div class="share-icon"><i class="fas fa-share-square"></i></div>
-            <h3>Install on iOS</h3>
-            <p>Tap the <strong>Share</strong> button in Safari's toolbar, then select <strong>"Add to Home Screen"</strong> to install Yara Sport as an app.</p>
-            <button class="pwa-ios-guide-close" onclick="closeIosGuide()" tabindex="0">Got it</button>
-        </div>
-    </div>
 </body>
 </html>

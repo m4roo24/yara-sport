@@ -2966,18 +2966,26 @@
             showToast('Red: Settings', 'fas fa-cog');
             toggleSettings();
         }
+        window.tvRedButton = tvRedButton;
+
         function tvGreenButton() {
             showToast('Green: Fullscreen', 'fas fa-expand');
             toggleFullscreen();
         }
+        window.tvGreenButton = tvGreenButton;
+
         function tvYellowButton() {
             showToast('Yellow: Mute', 'fas fa-volume-mute');
             toggleMute();
         }
+        window.tvYellowButton = tvYellowButton;
+
         function tvBlueButton() {
             showToast('Blue: Controls Help', 'fas fa-gamepad');
             showControlsHelp();
         }
+        window.tvBlueButton = tvBlueButton;
+
         function tvPowerButton() {
             showToast('Power: Stop Stream', 'fas fa-power-off');
             cleanupStream();
@@ -2992,12 +3000,16 @@
             updateChannelNavDisplay();
             renderChannels();
         }
+        window.tvPowerButton = tvPowerButton;
+
         function tvHomeButton() {
             showToast('Home: Scroll to Top', 'fas fa-home');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             const firstChannel = document.querySelector('.channel-item');
             if (firstChannel) firstChannel.focus();
         }
+        window.tvHomeButton = tvHomeButton;
+
         function tvBackButton() {
             showToast('Back: Close Panel', 'fas fa-undo');
             const settingsPanel = document.getElementById('settingsPanel');
@@ -3016,6 +3028,7 @@
                 toggleFullscreen();
             }
         }
+        window.tvBackButton = tvBackButton;
 
         // ----- Custom Channels -----
         function getCustomChannels() {
@@ -3544,29 +3557,38 @@
                     // TV colored buttons via keyboard shortcuts
                     case 'F1':
                     case 'Red':
+                    case 'ColorF0Red':
                         e.preventDefault();
+                        e.stopPropagation();
                         tvRedButton();
-                        break;
+                        return false;
                     case 'F2':
                     case 'Green':
+                    case 'ColorF1Green':
                         e.preventDefault();
+                        e.stopPropagation();
                         tvGreenButton();
-                        break;
+                        return false;
                     case 'F3':
                     case 'Yellow':
+                    case 'ColorF2Yellow':
                         e.preventDefault();
+                        e.stopPropagation();
                         tvYellowButton();
-                        break;
+                        return false;
                     case 'F4':
                     case 'Blue':
+                    case 'ColorF3Blue':
                         e.preventDefault();
+                        e.stopPropagation();
                         tvBlueButton();
-                        break;
+                        return false;
                     case 'Info':
                     case 'Guide':
                         e.preventDefault();
+                        e.stopPropagation();
                         showControlsHelp();
-                        break;
+                        return false;
                 }
             });
 
@@ -3574,52 +3596,63 @@
             document.addEventListener('keydown', (e) => {
                 // TV remote keyCodes (Samsung, LG, Sony, etc.)
                 const keyCode = e.keyCode || e.which;
+                console.log('TV KeyCode pressed:', keyCode, 'key:', e.key);
+
                 switch(keyCode) {
                     case 403: // Red
+                    case 112: // F1 as Red backup
                         e.preventDefault();
+                        e.stopPropagation();
                         tvRedButton();
-                        break;
+                        return false;
                     case 404: // Green
+                    case 113: // F2 as Green backup
                         e.preventDefault();
+                        e.stopPropagation();
                         tvGreenButton();
-                        break;
+                        return false;
                     case 405: // Yellow
+                    case 114: // F3 as Yellow backup
                         e.preventDefault();
+                        e.stopPropagation();
                         tvYellowButton();
-                        break;
+                        return false;
                     case 406: // Blue
+                    case 115: // F4 as Blue backup
                         e.preventDefault();
+                        e.stopPropagation();
                         tvBlueButton();
-                        break;
+                        return false;
                     case 457: // Info
                         e.preventDefault();
+                        e.stopPropagation();
                         showControlsHelp();
-                        break;
+                        return false;
                     case 428: // Channel Up (some remotes)
                         e.preventDefault();
+                        e.stopPropagation();
                         channelUp();
-                        break;
+                        return false;
                     case 427: // Channel Down (some remotes)
                         e.preventDefault();
+                        e.stopPropagation();
                         channelDown();
-                        break;
+                        return false;
                     case 33: // PageUp
                         e.preventDefault();
+                        e.stopPropagation();
                         channelUp();
-                        break;
+                        return false;
                     case 34: // PageDown
                         e.preventDefault();
+                        e.stopPropagation();
                         channelDown();
-                        break;
-                    case 48: case 49: case 50: case 51: case 52:
-                    case 53: case 54: case 55: case 56: case 57:
-                        // keyCode 48-57 = digits 0-9 (already handled by e.key, but backup for old TVs)
-                        break;
+                        return false;
                 }
-            });
+            }, true); // Use capture phase for TV remotes
 
             window.navigateFocus = function(direction) {
-                const selectors = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn, .ch-nav-btn';
+                const selectors = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .pwa-install-btn, .pwa-dismiss-btn, .visitor-badge, .controls-help-btn, .ch-nav-btn, .virtual-remote-btn, .virtual-remote-action';
                 const focusable = Array.from(document.querySelectorAll(selectors)).filter(el => {
                     return el.offsetParent !== null && !el.disabled && !el.classList.contains('settings-overlay') && !el.classList.contains('controls-help-overlay') && !el.classList.contains('virtual-remote-overlay');
                 });
@@ -3797,14 +3830,17 @@
             }, { passive: true });
 
             document.addEventListener('touchend', (e) => {
+                // Skip if touch started on controls
+                if (touchStartX === 0 && touchStartY === 0) return;
+
                 const touchEndX = e.changedTouches[0].screenX;
                 const touchEndY = e.changedTouches[0].screenY;
                 const touchDuration = Date.now() - touchStartTime;
                 const diffX = touchStartX - touchEndX;
                 const diffY = touchStartY - touchEndY;
 
-                // Swipe detection
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50 && touchDuration < 300) {
+                // Swipe detection - only if not a double tap (duration check)
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50 && touchDuration < 300 && touchDuration > 80) {
                     if (diffX > 0) {
                         channelUp();
                     } else {
@@ -3816,16 +3852,42 @@
                 if (touchDuration > 800 && e.target.closest('.player-wrapper')) {
                     toggleSettings();
                 }
+
+                // Reset touch tracking
+                touchStartX = 0;
+                touchStartY = 0;
             }, { passive: true });
 
-            // Double tap for fullscreen
+            // Double tap for fullscreen (only on video area, not on controls)
             let lastTap = 0;
+            let tapCount = 0;
+            let tapTimer = null;
             playerWrapper.addEventListener('touchend', (e) => {
-                const now = Date.now();
-                if (now - lastTap < 300) {
-                    toggleFullscreen();
+                // Only handle double tap on the video element itself, not controls
+                if (e.target.closest('.controls-overlay') || e.target.closest('.control-btn')) {
+                    return;
                 }
+
+                const now = Date.now();
+                tapCount++;
+
+                if (tapCount === 2 && (now - lastTap) < 400) {
+                    // Double tap detected - toggle fullscreen only
+                    tapCount = 0;
+                    if (tapTimer) { clearTimeout(tapTimer); tapTimer = null; }
+                    toggleFullscreen();
+                    // Prevent swipe channel change on double tap
+                    touchStartX = 0;
+                    touchStartY = 0;
+                    return;
+                }
+
                 lastTap = now;
+
+                if (tapTimer) clearTimeout(tapTimer);
+                tapTimer = setTimeout(() => {
+                    tapCount = 0;
+                }, 400);
             }, { passive: true });
 
             // Make elements focusable on load and DOM changes

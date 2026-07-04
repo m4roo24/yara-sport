@@ -1535,6 +1535,9 @@
             .ch-nav-btn { padding: 6px 10px; font-size: 0.75rem; }
         }
     </style>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 </head>
 <body>
     <header class="header">
@@ -1634,8 +1637,6 @@
                         <div class="controls-right">
                             <button class="control-btn quality-btn" id="qualityBtn" onclick="toggleQualityMenu()" title="Quality" tabindex="0">AUTO</button>
                             <div class="quality-menu" id="qualityMenu"></div>
-                            <!-- Cast button in video controls -->
-                            <button class="control-btn" id="videoCastBtn" onclick="toggleCast()" title="Cast to TV" tabindex="0" style="display:none;"><i class="fas fa-tv"></i></button>
                             <button class="control-btn" onclick="togglePip()" title="Picture in Picture" tabindex="0"><i class="fas fa-clone"></i></button>
                             <button class="control-btn" onclick="toggleFullscreen()" title="Fullscreen" tabindex="0"><i class="fas fa-expand" id="fullscreenIcon"></i></button>
                         </div>
@@ -2191,26 +2192,25 @@
     <script>
         // ===================== ONLY VERIFIED WORKING CHANNELS =====================
         let channels = [
-           { name: "beIN Sport Max 1", url: "https://stm.linkip.org/live/1957_.m3u8", category: "beIN Sport", needsProxy: true },
-            { name: "beIN Sport Max 2", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
-            { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true },
-            { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
-            { name: "Bioscope+ (FIFA)", url: "https://hls.diptom3ow.workers.dev/r/https%3A%2F%2Ffifa-stream-01.bioscopelive.com%2Fout%2Fv1%2F60e7608404004b1186261497b404630b%2Findex_1.m3u8", category: "FIFA" },
-            { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "FIFA", needsProxy: true },
-            { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true },
-            { name: "Willow Sport", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8", category: "FIFA", needsProxy: true },
-            { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "FIFA", needsProxy: true },
-            { name: "ITC Canada ", url: "https://live.666666.zip/migu/1.m3u8", category: "FIFA", needsProxy: true },
-            { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "FIFA", needsProxy: true },
-            { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true },
-            { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "Coming Soon", needsProxy: true },
-        ];
+    { name: "beIN Sport Max 1", url: "https://stm.linkip.org/live/1957_.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "Bioscope+ (FIFA)", url: "https://hls.diptom3ow.workers.dev/r/https%3A%2F%2Ffifa-stream-01.bioscopelive.com%2Fout%2Fv1%2F60e7608404004b1186261497b404630b%2Findex_1.m3u8", category: "Sports", needsProxy: false, logo: "⚽️" },
+    { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "Willow Sport", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "ITC Canada", url: "https://live.666666.zip/migu/1.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+    { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "Sports", needsProxy: true, logo: "⚽️" },
+];
 
         const proxyList = [
             { name: "Cloudflare", url: "https://yara-proxy.maroduhoki6.workers.dev/?url=" }
         ];
 
-        let categories = ["All", "beIN Sport", "FIFA", "Coming Soon", "Sports"];
+        let categories = ["All", "Sports", "beIN Sport", "FIFA"];
         let activeCategory = "All";
 
         // ===================== STATE =====================
@@ -2287,8 +2287,7 @@
         function updateCastUI() {
             const btn = document.getElementById('castBtn');
             const icon = document.getElementById('castIcon');
-            const videoCastBtn = document.getElementById('videoCastBtn');
-            if (!btn || !icon) return;
+                        if (!btn || !icon) return;
 
             if (isCasting) {
                 btn.classList.add('connected');
@@ -2299,9 +2298,7 @@
                 icon.className = 'fas fa-tv';
             }
 
-            if (videoCastBtn) {
-                videoCastBtn.style.display = isCasting ? 'inline-flex' : 'inline-flex';
-            }
+            
         }
 
         function toggleCast() {
@@ -2454,7 +2451,8 @@
                     } 
                 };
                 const proxyBadge = ch.needsProxy ? '<span class="proxy-badge"><i class="fas fa-bolt"></i> PROXY</span>' : '<span class="verified-badge"><i class="fas fa-check"></i> DIRECT</span>';
-                item.innerHTML = '<div class="ch-number">' + (idx + 1) + '</div><div class="ch-info"><div class="ch-name">' + ch.name + proxyBadge + '</div><div class="ch-category">' + (ch.category || 'Football') + '</div></div><div class="ch-status" id="ch-status-' + idx + '"></div>';
+                const logoHtml = '<div class="ch-number" style="font-size:1.3rem;background:rgba(124,58,237,0.15);">⚽️</div>';
+                item.innerHTML = logoHtml + '<div class="ch-info"><div class="ch-name">' + ch.name + proxyBadge + '</div><div class="ch-category">' + (ch.category || 'Football') + '</div></div><div class="ch-status" id="ch-status-' + idx + '"></div>';
                 listEl.appendChild(item);
             });
         }
@@ -2689,7 +2687,7 @@
             const toggleBar = document.getElementById('proxyToggleBar');
             toggleBar.style.display = 'flex';
             autoSetConnectionMode(ch);
-            document.getElementById('currentChannelIcon').textContent = ch.name.substring(0, 2).toUpperCase();
+            document.getElementById('currentChannelIcon').innerHTML = '<span style="font-size:1.4rem;">⚽️</span>';
             streamStatus.className = 'stream-status checking';
             streamStatus.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
             retryBtn.style.display = 'none';
@@ -3046,7 +3044,7 @@
             video.style.opacity = '0';
             document.getElementById('currentChannelName').textContent = 'Select Football Channel';
             document.getElementById('currentChannelCategory').textContent = 'Direct Stream — No Proxy / No VPN';
-            document.getElementById('currentChannelIcon').textContent = '--';
+            document.getElementById('currentChannelIcon').innerHTML = '<span style="font-size:1.4rem;">⚽️</span>';
             streamStatus.className = 'stream-status checking';
             streamStatus.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Ready';
             currentChannelIndex = -1;
@@ -3154,21 +3152,22 @@
             try {
                 console.log("mergeCustomChannels starting...");
                 const custom = getCustomChannels();
+                // Start with current channels (already has all base + custom from previous session)
+                // But we need to filter out old custom channels and re-add current ones
                 const baseChannels = [
-                   { name: "beIN Sport Max 1", url: "https://stm.linkip.org/live/1957_.m3u8", category: "beIN Sport", needsProxy: true },
-                   { name: "beIN Sport Max 2", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true },
-                   { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true },
-                   { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true },
-                   { name: "Bioscope+ (FIFA)", url: "https://hls.diptom3ow.workers.dev/r/https%3A%2F%2Ffifa-stream-01.bioscopelive.com%2Fout%2Fv1%2F60e7608404004b1186261497b404630b%2Findex_1.m3u8", category: "FIFA" },
-                   { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "FIFA", needsProxy: true },
-                   { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true },
-                   { name: "Willow Sport", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8", category: "FIFA", needsProxy: true },
-                   { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "FIFA", needsProxy: true },
-                   { name: "ITC Canada ", url: "https://live.666666.zip/migu/1.m3u8", category: "FIFA", needsProxy: true },
-                   { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "FIFA", needsProxy: true },
-                   { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true },
-                   { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "Coming Soon", needsProxy: true },
-                           ];
+                    { name: "beIN Sport Max 1", url: "https://stm.linkip.org/live/1957_.m3u8", category: "beIN Sport", needsProxy: true , logo: "⚽️" },
+                    { name: "beIN Sport Max 2", url: "https://edge22.776740.ir.cdn.ir/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true , logo: "⚽️" },
+                    { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true , logo: "⚽️" },
+                    { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true , logo: "⚽️" },
+                    { name: "Bioscope+ (FIFA)", url: "https://hls.diptom3ow.workers.dev/r/https%3A%2F%2Ffifa-stream-01.bioscopelive.com%2Fout%2Fv1%2F60e7608404004b1186261497b404630b%2Findex_1.m3u8", category: "FIFA" , logo: "⚽️" },
+                    { name: "Fox Sport 4k", url: "https://cdn011.viaplus.site/fox-usa.m3u8", category: "FIFA", needsProxy: true , logo: "⚽️" },
+                    { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true , logo: "⚽️" },
+                    { name: "Willow Sport", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8", category: "FIFA", needsProxy: true , logo: "⚽️" },
+                    { name: "Korax 90 Sport", url: "https://1.simoplay.com/my-hls/h9asfma10d5.m3u8", category: "FIFA", needsProxy: true , logo: "⚽️" },
+                    { name: "ITC Canada", url: "https://live.666666.zip/migu/1.m3u8", category: "FIFA", needsProxy: true , logo: "⚽️" },
+                    { name: "Soco Sport", url: "https://pull.niues.live/live/stream-9912108_lhd.m3u8?auth_key=1782234982-0-0-2455aafc2b9f6b9d2cd3228dabb3d198", category: "FIFA", needsProxy: true , logo: "⚽️" },
+                    { name: "Mahsun Sport", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true , logo: "⚽️" },
+                ];
                 custom.forEach(c => {
                     baseChannels.push({
                         name: c.name,
@@ -3744,13 +3743,7 @@
                 const diffX = touchStartX - touchEndX;
                 const diffY = touchStartY - touchEndY;
 
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50 && touchDuration < 300 && touchDuration > 80) {
-                    if (diffX > 0) {
-                        channelUp();
-                    } else {
-                        channelDown();
-                    }
-                }
+                // SWIPE CHANNEL CHANGE REMOVED
                 if (touchDuration > 800 && e.target.closest('.player-wrapper')) {
                     toggleSettings();
                 }
@@ -3799,7 +3792,8 @@
             }
         })();
 
-        // ===================== INIT =====================
+                console.log('Yara Sport v2.0 - Sports Only - All channels use ⚽️ logo');
+// ===================== INIT =====================
         video.volume = 1;
         document.getElementById('volumeSlider').value = 1;
         loadPreferences();

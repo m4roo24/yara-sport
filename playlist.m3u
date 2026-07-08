@@ -1,0 +1,31 @@
+#EXTM3U
+
+#EXTINF:-1 tvg-name="beIN Sport Max 1" tvg-logo="⚽️" group-title="beIN Sport",beIN Sport Max 1
+https://cp11.adabmedia.com/hls2/sport.m3u8
+
+#EXTINF:-1 tvg-name="beIN Sport Max 2" tvg-logo="⚽️" group-title="beIN Sport",beIN Sport Max 2
+https://pub-64bd1ce0f83f478096e21a0d8483b3f3.r2.dev/BMax2-4/index.m3u8
+
+#EXTINF:-1 tvg-name="beIN Sport Max 4" tvg-logo="⚽️" group-title="beIN Sport",beIN Sport Max 4
+https://pub-64bd1ce0f83f478096e21a0d8483b3f3.r2.dev/BMax4-2/index.m3u8
+
+#EXTINF:-1 tvg-name="beIN Sport Max 5" tvg-logo="⚽️" group-title="beIN Sport",beIN Sport Max 5
+https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index
+
+#EXTINF:-1 tvg-name="beIN Sport direct 1" tvg-logo="⚽️" group-title="beIN Sport",beIN Sport direct 1
+https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8
+
+#EXTINF:-1 tvg-name="AVA Sport" tvg-logo="⚽️" group-title="Kurdish Sports",AVA Sport
+https://183.bozztv.com/giatv/giatv-avasoport/avasoport/playlist.m3u8
+
+#EXTINF:-1 tvg-name="Tpv Sport" tvg-logo="⚽️" group-title="FIFA",Tpv Sport
+https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8
+
+#EXTINF:-1 tvg-name="Willow Sport" tvg-logo="⚽️" group-title="FIFA",Willow Sport
+https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8
+
+#EXTINF:-1 tvg-name="T Sports" tvg-logo="⚽️" group-title="FIFA",T Sports
+https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8
+
+#EXTINF:-1 tvg-name="Coming Soon" tvg-logo="⚽️" group-title="FIFA",Coming Soon
+https://e.776740.n.ir/hls2/dhdj.m3u8

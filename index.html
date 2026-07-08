@@ -1576,26 +1576,26 @@
                 <div class="adsterra-banner-desktop">
                     <script>
                       atOptions = {
-                        'key' : '42714673474779a3f89d39d5182d4ed9',
+                        'key' : '90db5cef6329ff1501b45edf0218bf13',
                         'format' : 'iframe',
-                        'height' : 250,
-                        'width' : 300,
+                        'height' : 90,
+                        'width' : 728,
                         'params' : {}
                       };
                     </script>
-                    <script src="https://expulsiondatabaseinnocent.com/42714673474779a3f89d39d5182d4ed9/invoke.js"></script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
                 </div>
                 <div class="adsterra-banner-mobile">
                     <script>
                       atOptions = {
-                        'key' : '42714673474779a3f89d39d5182d4ed9',
+                        'key' : '90db5cef6329ff1501b45edf0218bf13',
                         'format' : 'iframe',
-                        'height' : 250,
-                        'width' : 300,
+                        'height' : 50,
+                        'width' : 320,
                         'params' : {}
                       };
                     </script>
-                    <script src="https://expulsiondatabaseinnocent.com/42714673474779a3f89d39d5182d4ed9/invoke.js"></script>
+                    <script src="https://www.highperformanceformat.com/90db5cef6329ff1501b45edf0218bf13/invoke.js"></script>
                 </div>
             </div>
             <div class="player-wrapper" id="playerWrapper">
@@ -1665,11 +1665,20 @@
                 </div>
                 <div class="category-tabs" id="categoryTabs"></div>
                 <div class="channel-list" id="channelList"></div>
-                <!-- Adsterra Native Banner -->
-                <div style="padding: 12px 8px;">
-                    <script async="async" data-cfasync="false" src="https://pl30132916.effectivecpmnetwork.com/7993136198efe6167a1e33c297e1d2b5/invoke.js"></script>
-                    <div id="container-7993136198efe6167a1e33c297e1d2b5"></div>
+                <!-- Ad Banner 300x250 -->
+                <div style="padding: 12px 8px; text-align: center;">
+                    <script>
+                      atOptions = {
+                        'key' : '42714673474779a3f89d39d5182d4ed9',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                      };
+                    </script>
+                    <script src="https://expulsiondatabaseinnocent.com/42714673474779a3f89d39d5182d4ed9/invoke.js"></script>
                 </div>
+
             </div>
         </div>
     </div>
@@ -2159,7 +2168,22 @@ let activeCategory = "All";
 // ===== LOAD CHANNELS FROM channels.json =====
 async function loadChannelsFromJSON() {
     try {
-        const response = await fetch('channels.json?v=' + Date.now());
+        // Try multiple paths for different hosting setups
+        let response = null;
+        const paths = [
+            'channels.json?v=' + Date.now(),
+            './channels.json?v=' + Date.now(),
+            window.location.pathname.replace(/\/[^\/]*$/, '/') + 'channels.json?v=' + Date.now()
+        ];
+
+        for (const path of paths) {
+            try {
+                response = await fetch(path);
+                if (response.ok) break;
+            } catch(e) {}
+        }
+
+        if (!response || !response.ok) throw new Error('Failed to load channels.json');
         if (!response.ok) throw new Error('Failed to load channels.json');
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -2410,8 +2434,10 @@ setInterval(function() {
                 }
             }
 
-            // Initial display
-            setTimeout(updateDisplay, 50);
+            // Initial display - try immediately, then retry
+            updateDisplay();
+            setTimeout(updateDisplay, 100);
+            setTimeout(updateDisplay, 500);
 
             // Simulate other real visitors joining every 3-8 seconds
             // This makes it look like a live, busy site
@@ -3872,7 +3898,21 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
             console.log('INIT complete. Channels:', channels.length, 'Categories:', categories);
         }).catch(function(err) {
             console.error('Failed to load channels:', err);
-            // Fallback render
+            // Fallback: use hardcoded channels and render immediately
+            if (channels.length === 0) {
+                channels = [
+                    { name: "beIN Sport Max 1", url: "https://cp11.adabmedia.com/hls2/sport.m3u8", category: "beIN Sport", needsProxy: true, logo: "⚽️" },
+                    { name: "beIN Sport Max 2", url: "https://pub-64bd1ce0f83f478096e21a0d8483b3f3.r2.dev/BMax2-4/index.m3u8", category: "beIN Sport", needsProxy: true, logo: "⚽️" },
+                    { name: "beIN Sport Max 4", url: "https://pub-64bd1ce0f83f478096e21a0d8483b3f3.r2.dev/BMax4-2/index.m3u8", category: "beIN Sport", needsProxy: false, logo: "⚽️" },
+                    { name: "beIN Sport Max 5", url: "https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index", category: "beIN Sport", needsProxy: true, logo: "⚽️" },
+                    { name: "beIN Sport direct 1", url: "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8", category: "beIN Sport", needsProxy: true, logo: "⚽️" },
+                    { name: "AVA Sport", url: "https://183.bozztv.com/giatv/giatv-avasoport/avasoport/playlist.m3u8", category: "Kurdish Sports", needsProxy: true, logo: "⚽️" },
+                    { name: "Tpv Sport", url: "https://1nyaler.streamhostingcdn.top/stream/89/index.m3u8", category: "FIFA", needsProxy: true, logo: "⚽️" },
+                    { name: "Willow Sport", url: "https://warm-caverns-48629-92fab798385f.herokuapp.com/https://d36r8jifhgsk5j.cloudfront.net/Willow_TV540p.m3u8", category: "FIFA", needsProxy: true, logo: "⚽️" },
+                    { name: "T Sports", url: "https://andro.226503.xyz/checklist/androstreamlivebs1.m3u8", category: "FIFA", needsProxy: true, logo: "⚽️" },
+                    { name: "Coming Soon", url: "https://e.776740.n.ir/hls2/dhdj.m3u8", category: "FIFA", needsProxy: true, logo: "⚽️" },
+                ];
+            }
             const uniqueCats = [...new Set(channels.map(c => c.category))];
             categories = ['All', ...uniqueCats.filter(c => c !== 'All')];
             renderCategoryTabs();

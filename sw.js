@@ -1,110 +1,134 @@
-// Yara Sport - Service Worker
-// Handles caching, offline support, and app installation
+// Kurd TV Service Worker — Real App PWA
+// Version: v1
 
-const CACHE_NAME = 'yara-sport-v1';
+const CACHE_NAME = 'kurd-tv-v1';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
-  '/favicon.ico'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192x192.png',
+  './icon-512x512.png',
+  './favicon.ico'
 ];
 
-// Install event - cache static assets
+// ===================== INSTALL =====================
 self.addEventListener('install', (event) => {
-  console.log('[SW] Install event');
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Caching static assets');
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('[SW] Some assets failed to cache:', err);
-      });
-    }).then(() => {
-      return self.skipWaiting();
+      console.log('[Kurd TV SW] Caching app shell...');
+      return cache.addAll(STATIC_ASSETS);
+    }).catch((err) => {
+      console.warn('[Kurd TV SW] Precache failed:', err);
     })
   );
 });
 
-// Activate event - clean up old caches
+// ===================== ACTIVATE =====================
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activate event');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[SW] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => {
+            console.log('[Kurd TV SW] Deleting old cache:', name);
+            return caches.delete(name);
+          })
       );
     }).then(() => {
+      console.log('[Kurd TV SW] Activated and controlling clients');
       return self.clients.claim();
     })
   );
 });
 
-// Fetch event - serve from cache or network
+// ===================== STREAMING BYPASS =====================
+function isStreamingRequest(request, url) {
+  const pathname = url.pathname.toLowerCase();
+  const accept = request.headers.get('Accept') || '';
+
+  // File extensions used for live streaming
+  const streamExtensions = /\.(m3u8|ts|mp4|m4s|aac|ac3|webm|mkv|mov|mp2t|m4a|m4v|f4v|f4a|f4m|3gp|3g2|ogv|ogg)$/i;
+
+  // Check extension
+  if (streamExtensions.test(pathname)) return true;
+
+  // Check MIME type hints
+  if (accept.includes('application/vnd.apple.mpegurl')) return true;
+  if (accept.includes('application/x-mpegurl')) return true;
+  if (accept.includes('video/mp2t')) return true;
+  if (accept.includes('video/')) return true;
+  if (accept.includes('audio/')) return true;
+
+  // Check destination
+  if (request.destination === 'media') return true;
+  if (request.destination === 'video') return true;
+  if (request.destination === 'audio') return true;
+
+  // Check for known streaming / proxy / CDN host patterns
+  const host = url.hostname.toLowerCase();
+  const streamHosts = [
+    'stream', 'cdn', 'hls', 'live', 'video', 'media', 'chunk',
+    'm3u8', 'ts', 'playlist', 'segment', 'manifest',
+    'workers.dev', 'cloudfront', 'cloudflare', 'herokuapp',
+    'streamhostingcdn', 'bozztv', 'adabmedia'
+  ];
+  if (streamHosts.some(h => host.includes(h))) return true;
+
+  // Check for HLS.js internal fetch patterns (level/fragment requests)
+  if (pathname.includes('/level') || pathname.includes('/fragment')) return true;
+
+  return false;
+}
+
+// ===================== FETCH =====================
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET requests
-  if (request.method !== 'GET') {
+  // ---- BYPASS: Live streaming traffic NEVER cached ----
+  if (isStreamingRequest(request, url)) {
+    // Network-only: do not intercept at all
     return;
   }
 
-  // Skip chrome-extension and other non-http(s) requests
-  if (!url.protocol.startsWith('http')) {
-    return;
-  }
+  // ---- STRATEGY: Stale-While-Revalidate for static assets ----
+  const isStaticAsset = (
+    request.mode === 'navigate' ||
+    request.destination === 'document' ||
+    request.destination === 'style' ||
+    request.destination === 'script' ||
+    request.destination === 'font' ||
+    request.destination === 'image' ||
+    request.destination === 'manifest'
+  );
 
-  // Strategy: Network First for API calls, Cache First for static assets
-  if (request.url.includes('.m3u8') || request.url.includes('.ts') || request.url.includes('stream')) {
-    // Don't cache video streams
-    return;
-  }
-
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Return cached response and update cache in background
-        fetch(request).then((networkResponse) => {
+  if (isStaticAsset) {
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        const networkFetch = fetch(request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, networkResponse.clone());
+              cache.put(request, clone);
             });
           }
-        }).catch(() => {});
-        return cachedResponse;
-      }
-
-      // Not in cache, fetch from network
-      return fetch(request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200) {
           return networkResponse;
-        }
-
-        // Cache the new response
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(request, responseToCache);
+        }).catch((err) => {
+          console.warn('[Kurd TV SW] Network fetch failed, serving cache:', err);
+          return cachedResponse;
         });
 
-        return networkResponse;
-      }).catch((error) => {
-        console.warn('[SW] Fetch failed:', error);
-        // Return offline page if available
-        return caches.match('/index.html');
-      });
-    })
-  );
-});
-
-// Handle messages from the main thread
-self.addEventListener('message', (event) => {
-  if (event.data === 'skipWaiting') {
-    self.skipWaiting();
+        // Return cached immediately, update in background
+        return cachedResponse || networkFetch;
+      })
+    );
+    return;
   }
+
+  // ---- DEFAULT: Network first, cache fallback ----
+  event.respondWith(
+    fetch(request).catch(() => caches.match(request))
+  );
 });

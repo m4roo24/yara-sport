@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yara-sport-v3';
+const CACHE_NAME = 'yara-sport-v4';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -11,13 +11,13 @@ const STATIC_ASSETS = [
     '/icon-192x192.png',
     '/icon-384x384.png',
     '/icon-512x512.png',
-    '/screenshot-narrow.png',
     '/screenshot-wide.png',
+    '/screenshot-narrow.png',
     '/favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
-    console.log('[SW] Installing v3...');
+    console.log('[SW] Installing v4...');
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             return cache.addAll(STATIC_ASSETS);

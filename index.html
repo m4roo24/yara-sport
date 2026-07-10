@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, interactive-widget=resizes-content">
-    <meta name="theme-color" content="#7c3aed">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Yara Sport">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Yara Sport">
     <meta name="msapplication-TileColor" content="#7c3aed">
-    <meta name="msapplication-tap-highlight" content="no">
     <meta name="tv" content="true">
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
     <title>Yara Sport - Football Live</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -1527,6 +1518,63 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+
+    <!-- ===== PWA: Additional Meta Tags for All Platforms ===== -->
+    <meta name="description" content="Yara Sport - Watch Football Live. beIN Sport, FIFA, and Kurdish Sports channels streaming.">
+    <meta name="keywords" content="football, live, streaming, beIN Sport, FIFA, sports, TV">
+    <meta name="author" content="Yara Sport">
+    <meta name="robots" content="index, follow">
+
+    <!-- iOS PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Yara Sport">
+
+    <!-- Windows PWA -->
+    <meta name="msapplication-TileColor" content="#7c3aed">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <meta name="msapplication-config" content="browserconfig.xml">
+
+    <!-- Theme Color for All Browsers -->
+    <meta name="theme-color" content="#7c3aed" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#7c3aed" media="(prefers-color-scheme: light)">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="icon-128x128.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="384x384" href="icon-384x384.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512x512.png">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon-72x72.png">
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <!-- Splash Screen for iOS -->
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" href="icon-512x512.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
 </head>
 <body>
     <header class="header">
@@ -4742,5 +4790,193 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
         }
     })();
     </script>
+
+
+<!-- ===== PWA INSTALLATION SYSTEM ===== -->
+<script>
+// PWA: Real App Install for Android, iOS, Desktop
+(function() {
+    'use strict';
+
+    let deferredPrompt = null;
+    let isInstallable = false;
+    let installDismissed = false;
+    let bannerShown = false;
+
+    function isAppInstalled() {
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        const isIOSStandalone = window.navigator.standalone === true;
+        return isStandalone || isIOSStandalone;
+    }
+
+    function detectPlatform() {
+        const ua = navigator.userAgent;
+        return {
+            isIOS: /iPad|iPhone|iPod/.test(ua),
+            isAndroid: /Android/.test(ua),
+            isSafari: /^((?!chrome|android).)*safari/i.test(ua),
+            isChrome: /Chrome/.test(ua) && !/Edge|Edg/.test(ua),
+            isEdge: /Edge|Edg/.test(ua),
+            isDesktop: !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)),
+            isFirefox: /Firefox/.test(ua),
+            isSamsung: /SamsungBrowser/.test(ua)
+        };
+    }
+
+    // Register Service Worker
+    function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(function(registration) {
+                    console.log('[PWA] SW registered:', registration.scope);
+                    registration.addEventListener('updatefound', function() {
+                        const newWorker = registration.installing;
+                        if (newWorker) {
+                            newWorker.addEventListener('statechange', function() {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    showUpdateNotification();
+                                }
+                            });
+                        }
+                    });
+                })
+                .catch(function(err) {
+                    console.warn('[PWA] SW registration failed:', err);
+                });
+        }
+    }
+
+    function showUpdateNotification() {
+        if (document.getElementById('pwa-update-toast')) return;
+        const toast = document.createElement('div');
+        toast.id = 'pwa-update-toast';
+        toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;padding:14px 24px;border-radius:12px;font-weight:600;font-size:0.9rem;z-index:10000;box-shadow:0 8px 32px rgba(124,58,237,0.4);display:flex;align-items:center;gap:12px;animation:slideUp 0.4s ease;';
+        toast.innerHTML = '<i class="fas fa-sync-alt"></i> Update available! <button style="background:rgba(255,255,255,0.2);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:600;margin-left:8px;">Reload</button>';
+        toast.querySelector('button').onclick = function() { window.location.reload(); };
+        document.body.appendChild(toast);
+        setTimeout(function() { if (toast.parentNode) toast.remove(); }, 8000);
+    }
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        console.log('[PWA] beforeinstallprompt fired');
+        e.preventDefault();
+        deferredPrompt = e;
+        isInstallable = true;
+        if (!installDismissed && !isAppInstalled() && !bannerShown) {
+            showInstallBanner();
+        }
+    });
+
+    window.addEventListener('appinstalled', function() {
+        console.log('[PWA] App installed');
+        hideInstallBanner();
+        deferredPrompt = null;
+        isInstallable = false;
+        showToast('Yara Sport installed successfully!', 'fas fa-check-circle');
+    });
+
+    function showInstallBanner() {
+        if (bannerShown || isAppInstalled()) return;
+        bannerShown = true;
+
+        const platform = detectPlatform();
+        const banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+
+        let html = '';
+        if (platform.isIOS) {
+            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport</div><div style="color:#a1a1aa;font-size:0.8rem;line-height:1.4;">Tap <i class="fas fa-share-square" style="color:#3b82f6;"></i> then <strong style="color:#fbbf24;">'Add to Home Screen'</strong></div></div></div><button onclick="window.hidePWABanner()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">Got it</button></div>';
+        } else if (platform.isAndroid || platform.isChrome || platform.isEdge || platform.isSamsung) {
+            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport App</div><div style="color:#a1a1aa;font-size:0.8rem;">Add to home screen for instant access</div></div></div><div style="display:flex;gap:8px;"><button onclick="window.hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="window.triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install</button></div></div>';
+        } else if (platform.isDesktop) {
+            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport on Desktop</div><div style="color:#a1a1aa;font-size:0.8rem;">Launch like a real app from your taskbar</div></div></div><div style="display:flex;gap:8px;"><button onclick="window.hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="window.triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install App</button></div></div>';
+        } else {
+            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport</div><div style="color:#a1a1aa;font-size:0.8rem;">Add this app to your device</div></div></div><button onclick="window.hidePWABanner()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">Dismiss</button></div>';
+        }
+
+        banner.innerHTML = html;
+        document.body.appendChild(banner);
+    }
+
+    window.hidePWABanner = function() {
+        installDismissed = true;
+        bannerShown = false;
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) {
+            banner.style.animation = 'slideDown 0.3s ease forwards';
+            setTimeout(function() { if (banner.parentNode) banner.remove(); }, 300);
+        }
+        try { localStorage.setItem('yara_install_dismissed', Date.now().toString()); } catch(e) {}
+    };
+
+    window.triggerPWAInstall = function() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function(choiceResult) {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('[PWA] User accepted install');
+                } else {
+                    console.log('[PWA] User dismissed install');
+                    installDismissed = true;
+                }
+                deferredPrompt = null;
+            });
+        } else {
+            const platform = detectPlatform();
+            if (platform.isIOS) {
+                showToast('Tap Share button, then "Add to Home Screen"', 'fas fa-share-square');
+            } else {
+                showToast('Use your browser menu to install this app', 'fas fa-info-circle');
+            }
+        }
+        window.hidePWABanner();
+    };
+
+    function shouldShowBanner() {
+        try {
+            const dismissed = localStorage.getItem('yara_install_dismissed');
+            if (!dismissed) return true;
+            const daysSince = (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24);
+            return daysSince > 7;
+        } catch(e) { return true; }
+    }
+
+    function initPWA() {
+        registerServiceWorker();
+        if (isAppInstalled()) {
+            console.log('[PWA] Running as installed app');
+            document.body.classList.add('pwa-installed');
+            return;
+        }
+        if (shouldShowBanner()) {
+            setTimeout(function() {
+                if (isInstallable && !isAppInstalled() && !bannerShown) {
+                    showInstallBanner();
+                }
+            }, 3000);
+        }
+        setTimeout(function() {
+            if (!isInstallable && !isAppInstalled() && shouldShowBanner() && !bannerShown) {
+                const platform = detectPlatform();
+                if (platform.isIOS || platform.isSafari) {
+                    showInstallBanner();
+                }
+            }
+        }, 5000);
+    }
+
+    // Add CSS
+    const style = document.createElement('style');
+    style.textContent = '@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}@keyframes slideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}body.pwa-installed .header{padding-top:env(safe-area-inset-top)}body.pwa-installed{padding-top:env(safe-area-inset-top)}';
+    document.head.appendChild(style);
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPWA);
+    } else {
+        initPWA();
+    }
+})();
+</script>
+
 </body>
 </html>

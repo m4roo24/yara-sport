@@ -1,12 +1,13 @@
 {
+  "id": "yara-sport-pwa",
   "name": "Yara Sport",
   "short_name": "Yara Sport",
   "description": "Football Live Streaming - Watch beIN Sport, FIFA, and Kurdish Sports channels",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
   "display_override": [
+    "window-controls-overlay",
     "standalone",
-    "fullscreen",
     "minimal-ui"
   ],
   "orientation": "any",
@@ -25,31 +26,31 @@
       "src": "icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-192x192.png",
@@ -72,18 +73,18 @@
   ],
   "screenshots": [
     {
-      "src": "screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Yara Sport Live Streaming"
-    },
-    {
       "src": "screenshot-narrow.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Yara Sport Mobile View"
+      "label": "Yara Sport Mobile App View"
+    },
+    {
+      "src": "screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Yara Sport Live Streaming Desktop"
     }
   ],
   "shortcuts": [
@@ -98,28 +99,6 @@
           "sizes": "96x96"
         }
       ]
-    },
-    {
-      "name": "Settings",
-      "short_name": "Settings",
-      "description": "Open app settings",
-      "url": "/?page=settings",
-      "icons": [
-        {
-          "src": "icon-96x96.png",
-          "sizes": "96x96"
-        }
-      ]
     }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "edge_side_panel": {},
-  "handle_links": "preferred",
-  "launch_handler": {
-    "client_mode": [
-      "navigate-existing",
-      "auto"
-    ]
-  }
+  ]
 }

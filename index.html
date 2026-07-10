@@ -4792,212 +4792,207 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
     </script>
 
 
-<!-- ===== PWA INSTALLATION SYSTEM ===== -->
+<!-- ===== PWA INSTALL BANNER ===== -->
+<style>
+#pwa-install-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #1a1a2e, #0f0f23);
+    border-top: 2px solid #7c3aed;
+    padding: 14px 16px;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+}
+#pwa-install-bar.show {
+    display: flex;
+    animation: pwaSlideUp 0.35s ease;
+}
+@keyframes pwaSlideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+#pwa-install-bar .pwa-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+#pwa-install-bar .pwa-text {
+    flex: 1;
+    min-width: 0;
+}
+#pwa-install-bar .pwa-title {
+    font-weight: 700;
+    color: #fff;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+#pwa-install-bar .pwa-sub {
+    color: #a1a1aa;
+    font-size: 0.75rem;
+}
+#pwa-install-bar .pwa-btns {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+#pwa-install-bar .pwa-btn-later {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #a1a1aa;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+}
+#pwa-install-bar .pwa-btn-install {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 2px 12px rgba(124,58,237,0.3);
+}
+@media (max-width: 360px) {
+    #pwa-install-bar .pwa-sub { display: none; }
+    #pwa-install-bar { padding: 10px 12px; }
+}
+</style>
+
+<div id="pwa-install-bar">
+    <img src="icon-192x192.png" class="pwa-icon" alt="Yara Sport">
+    <div class="pwa-text">
+        <div class="pwa-title">Install Yara Sport</div>
+        <div class="pwa-sub">Add to your device for instant access</div>
+    </div>
+    <div class="pwa-btns">
+        <button class="pwa-btn-later" onclick="pwaLater()">Later</button>
+        <button class="pwa-btn-install" onclick="pwaInstall()">
+            <i class="fas fa-download" style="margin-right:4px;"></i>Install
+        </button>
+    </div>
+</div>
+
 <script>
-// ============================================
-// PWA INSTALL - TOP LEVEL EVENT CAPTURE
-// Must be at top level to catch beforeinstallprompt
-// ============================================
-
-// Capture install prompt IMMEDIATELY (before DOM ready)
-let __deferredPrompt = null;
-let __isInstallable = false;
-
-window.addEventListener('beforeinstallprompt', function(e) {
-    console.log('[PWA] beforeinstallprompt CAPTURED at top level');
-    e.preventDefault();
-    __deferredPrompt = e;
-    __isInstallable = true;
-});
-
-// Track successful installation
-window.addEventListener('appinstalled', function() {
-    console.log('[PWA] App installed');
-    __deferredPrompt = null;
-    __isInstallable = false;
-    hidePWABanner();
-    showToast('Yara Sport installed!', 'fas fa-check-circle');
-});
-
-// ============================================
-// PWA UI & LOGIC (runs after DOM ready)
-// ============================================
+// ===== PWA INSTALL LOGIC =====
 (function() {
     'use strict';
 
-    let installDismissed = false;
-    let bannerShown = false;
+    let deferredPrompt = null;
+    let bannerEl = document.getElementById('pwa-install-bar');
 
-    function isAppInstalled() {
+    // Check if already installed
+    function isInstalled() {
         return window.matchMedia('(display-mode: standalone)').matches ||
                window.navigator.standalone === true;
     }
 
-    function detectPlatform() {
+    // Detect platform
+    function getPlatform() {
         const ua = navigator.userAgent;
         return {
             isIOS: /iPad|iPhone|iPod/.test(ua),
             isAndroid: /Android/.test(ua),
             isSamsung: /SamsungBrowser/.test(ua),
             isChrome: /Chrome/.test(ua) && !/Edge|Edg/.test(ua),
-            isEdge: /Edge|Edg/.test(ua),
-            isDesktop: !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)),
-            isOneUI: /Samsung/.test(ua) && /Android/.test(ua),
-            isFirefox: /Firefox/.test(ua)
+            isEdge: /Edge|Edg/.test(ua)
         };
     }
 
     // Register Service Worker
-    function registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(function(registration) {
-                    console.log('[PWA] SW registered:', registration.scope);
-                })
-                .catch(function(err) {
-                    console.warn('[PWA] SW registration failed:', err);
-                });
-        }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(function(reg) { console.log('[PWA] SW registered'); })
+            .catch(function(err) { console.warn('[PWA] SW failed:', err); });
     }
 
-    function showUpdateNotification() {
-        if (document.getElementById('pwa-update-toast')) return;
-        const toast = document.createElement('div');
-        toast.id = 'pwa-update-toast';
-        toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;padding:14px 24px;border-radius:12px;font-weight:600;font-size:0.9rem;z-index:10000;box-shadow:0 8px 32px rgba(124,58,237,0.4);display:flex;align-items:center;gap:12px;animation:slideUp 0.4s ease;';
-        toast.innerHTML = '<i class="fas fa-sync-alt"></i> Update available! <button style="background:rgba(255,255,255,0.2);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:600;margin-left:8px;">Reload</button>';
-        toast.querySelector('button').onclick = function() { window.location.reload(); };
-        document.body.appendChild(toast);
-        setTimeout(function() { if (toast.parentNode) toast.remove(); }, 8000);
+    // Capture install prompt (top level)
+    window.addEventListener('beforeinstallprompt', function(e) {
+        console.log('[PWA] beforeinstallprompt captured');
+        e.preventDefault();
+        deferredPrompt = e;
+        showBanner();
+    });
+
+    // Track installation
+    window.addEventListener('appinstalled', function() {
+        console.log('[PWA] App installed');
+        deferredPrompt = null;
+        hideBanner();
+    });
+
+    // Show banner
+    function showBanner() {
+        if (!bannerEl || isInstalled()) return;
+        bannerEl.classList.add('show');
     }
 
-    // ===== INSTALL BANNER =====
-    window.showPWABanner = function() {
-        if (bannerShown || isAppInstalled()) return;
-        bannerShown = true;
+    // Hide banner
+    function hideBanner() {
+        if (!bannerEl) return;
+        bannerEl.classList.remove('show');
+    }
 
-        const platform = detectPlatform();
-        const banner = document.createElement('div');
-        banner.id = 'pwa-install-banner';
-
-        let html = '';
-
-        if (platform.isOneUI) {
-            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport App</div><div style="color:#a1a1aa;font-size:0.8rem;">Add to Apps for instant access</div></div></div><div style="display:flex;gap:8px;"><button onclick="hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install</button></div></div>';
-        } else if (platform.isIOS) {
-            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #3b82f6;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport</div><div style="color:#a1a1aa;font-size:0.8rem;line-height:1.4;">Tap <i class="fas fa-share-square" style="color:#3b82f6;"></i> then <strong style="color:#fbbf24;">'Add to Home Screen'</strong></div></div></div><button onclick="hidePWABanner()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">Got it</button></div>';
-        } else if (platform.isDesktop) {
-            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #22c55e;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport on Desktop</div><div style="color:#a1a1aa;font-size:0.8rem;">Launch like a real app from your taskbar</div></div></div><div style="display:flex;gap:8px;"><button onclick="hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="triggerPWAInstall()" style="background:linear-gradient(135deg,#22c55e,#16a34a);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(34,197,94,0.3);"><i class="fas fa-download"></i> Install App</button></div></div>';
-        } else {
-            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport App</div><div style="color:#a1a1aa;font-size:0.8rem;">Add to home screen for instant access</div></div></div><div style="display:flex;gap:8px;"><button onclick="hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install</button></div></div>';
-        }
-
-        banner.innerHTML = html;
-        document.body.appendChild(banner);
+    // Later button - hide for this session only, show again on restart
+    window.pwaLater = function() {
+        hideBanner();
+        // NO localStorage - banner will show again on next page load
+        console.log('[PWA] User clicked Later - will show again on restart');
     };
 
-    window.hidePWABanner = function() {
-        installDismissed = true;
-        bannerShown = false;
-        const banner = document.getElementById('pwa-install-banner');
-        if (banner) {
-            banner.style.animation = 'slideDown 0.3s ease forwards';
-            setTimeout(function() { if (banner.parentNode) banner.remove(); }, 300);
-        }
-        try { localStorage.setItem('yara_install_dismissed', Date.now().toString()); } catch(e) {}
-    };
+    // Install button
+    window.pwaInstall = function() {
+        const platform = getPlatform();
 
-    window.triggerPWAInstall = function() {
-        console.log('[PWA] triggerPWAInstall called, deferredPrompt:', !!__deferredPrompt);
-        if (__deferredPrompt) {
-            __deferredPrompt.prompt();
-            __deferredPrompt.userChoice.then(function(choiceResult) {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('[PWA] User accepted install');
+        if (deferredPrompt) {
+            // Chrome/Edge/Android - native install
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function(choice) {
+                if (choice.outcome === 'accepted') {
+                    console.log('[PWA] Install accepted');
                 } else {
-                    console.log('[PWA] User dismissed install');
-                    installDismissed = true;
+                    console.log('[PWA] Install dismissed');
                 }
-                __deferredPrompt = null;
+                deferredPrompt = null;
             });
+        } else if (platform.isIOS) {
+            // iOS - show instructions
+            alert('Tap the Share button, then "Add to Home Screen"');
         } else {
-            const platform = detectPlatform();
-            if (platform.isIOS) {
-                showToast('Tap Share button, then "Add to Home Screen"', 'fas fa-share-square');
-            } else if (platform.isOneUI) {
-                showSamsungInstallGuide();
-            } else {
-                showToast('Use your browser menu to install this app', 'fas fa-info-circle');
-            }
+            // Fallback
+            alert('Use your browser menu to install this app');
         }
-        hidePWABanner();
+        hideBanner();
     };
 
-    function showSamsungInstallGuide() {
-        const modal = document.createElement('div');
-        modal.id = 'samsung-install-guide';
-        modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);z-index:10001;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.3s ease;';
-        modal.innerHTML = '<div style="background:linear-gradient(145deg,#1a1a2e,#0f0f23);border:1px solid rgba(124,58,237,0.3);border-radius:24px;padding:32px;max-width:400px;width:100%;text-align:center;animation:scaleIn 0.3s ease;"><div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(124,58,237,0.4);"><i class="fas fa-mobile-alt" style="font-size:1.8rem;color:#fff;"></i></div><h3 style="font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:12px;">Install to Apps</h3><p style="color:#a1a1aa;font-size:0.9rem;line-height:1.6;margin-bottom:20px;">After installing, the app icon will appear on your <strong style="color:#fbbf24;">Home Screen</strong>.<br><br>To move it to your <strong style="color:#22c55e;">Apps Drawer</strong>:</p><div style="text-align:left;background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;margin-bottom:20px;"><ol style="color:#a1a1aa;font-size:0.85rem;line-height:1.8;margin:0;padding-left:20px;"><li>Long press the <strong style="color:#fff;">Yara Sport</strong> icon</li><li>Tap <strong style="color:#fff;">Remove from Home</strong></li><li>The app stays in your <strong style="color:#22c55e;">Apps Drawer</strong></li></ol></div><button onclick="document.getElementById('samsung-install-guide').remove()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:12px 32px;border-radius:12px;cursor:pointer;font-weight:700;font-size:0.95rem;width:100%;">Got it</button></div>';
-        document.body.appendChild(modal);
-        modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
-    }
-
-    function shouldShowBanner() {
-        try {
-            const dismissed = localStorage.getItem('yara_install_dismissed');
-            if (!dismissed) return true;
-            const daysSince = (Date.now() - parseInt(dismissed)) / (1000 * 60 * 60 * 24);
-            return daysSince > 7;
-        } catch(e) { return true; }
-    }
-
-    // ===== INIT =====
-    function initPWA() {
-        registerServiceWorker();
-
-        if (isAppInstalled()) {
-            console.log('[PWA] Running as installed app');
-            document.body.classList.add('pwa-installed');
-            return;
+    // Auto-show banner after delay if prompt was captured before DOM ready
+    setTimeout(function() {
+        if (deferredPrompt && !isInstalled()) {
+            showBanner();
         }
+    }, 2000);
 
-        console.log('[PWA] Init - isInstallable:', __isInstallable, 'deferredPrompt:', !!__deferredPrompt);
-
-        // Show banner if we captured the install prompt
-        if (__isInstallable && __deferredPrompt && !isAppInstalled() && !bannerShown && shouldShowBanner()) {
-            console.log('[PWA] Showing banner immediately (prompt captured)');
-            window.showPWABanner();
-            return;
+    // Also try showing for iOS (no beforeinstallprompt on iOS)
+    setTimeout(function() {
+        const platform = getPlatform();
+        if (!deferredPrompt && !isInstalled() && platform.isIOS) {
+            showBanner();
         }
+    }, 3000);
 
-        // Wait a bit and check again (prompt might fire after init)
-        if (shouldShowBanner()) {
-            setTimeout(function() {
-                console.log('[PWA] Delayed check - isInstallable:', __isInstallable, 'bannerShown:', bannerShown);
-                if ((__isInstallable || __deferredPrompt) && !isAppInstalled() && !bannerShown) {
-                    window.showPWABanner();
-                } else if (!isAppInstalled() && !bannerShown) {
-                    // Show generic banner for iOS/Samsung even without prompt
-                    const platform = detectPlatform();
-                    if (platform.isIOS || platform.isOneUI) {
-                        window.showPWABanner();
-                    }
-                }
-            }, 3000);
-        }
-    }
-
-    // Add CSS
-    const style = document.createElement('style');
-    style.textContent = '@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}@keyframes slideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes scaleIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}body.pwa-installed .header{padding-top:env(safe-area-inset-top)}body.pwa-installed{padding-top:env(safe-area-inset-top)}';
-    document.head.appendChild(style);
-
-    // Run init
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPWA);
-    } else {
-        initPWA();
-    }
 })();
 </script>
 

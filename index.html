@@ -3855,103 +3855,88 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
 
     </script>
 
-    <!-- Adsterra Smart Direct Link - Premium Aware -->
-    <script>
-        (function() {
-            const SMART_LINK = 'https://expulsiondatabaseinnocent.com/any9cjisjf?key=74816e2209a52c651f8eee97c1e78e74';
-            let adOpened = false;
-            let lastAdTime = 0;
-            const AD_COOLDOWN = 15000; // 15 seconds between ads
-            let clickCount = 0;
-            const CLICKS_BEFORE_AD = 1; // Show ad every 1 click
+    <!-- Adsterra Smart Direct Link - Fixed: Click Only + 15s Cooldown -->
+<script>
+(function() {
+    const SMART_LINK = 'https://expulsiondatabaseinnocent.com/any9cjisjf?key=74816e2209a52c651f8eee97c1e78e74';
+    let lastAdTime = 0;
+    const AD_COOLDOWN = 15000; // 15 seconds
+    let adWindow = null;
 
-            function isPremium() {
-                try {
-                    const saved = localStorage.getItem('yara_premium');
-                    if (saved) {
-                        const data = JSON.parse(saved);
-                        return data.active === true;
-                    }
-                } catch(e) {}
-                return false;
+    function isPremium() {
+        try {
+            const saved = localStorage.getItem('yara_premium');
+            if (saved) {
+                const data = JSON.parse(saved);
+                return data.active === true;
             }
+        } catch(e) {}
+        return false;
+    }
 
-            function openAd() {
-                if (isPremium()) {
-                    console.log('[Ad] Premium user - skipping popunder');
-                    return;
-                }
-                const now = Date.now();
-                if (adOpened || (now - lastAdTime) < AD_COOLDOWN) return;
+    function canShowAd() {
+        if (isPremium()) return false;
+        const now = Date.now();
+        return (now - lastAdTime) >= AD_COOLDOWN;
+    }
 
-                adOpened = true;
-                lastAdTime = now;
-                clickCount = 0;
+    function openAd() {
+        if (!canShowAd()) {
+            console.log('[Ad] Cooldown active, skipping');
+            return false;
+        }
 
-                // Method 1: window.open
-                try {
-                    const win = window.open(SMART_LINK, '_blank', 'noopener,noreferrer');
-                    if (win) {
-                        console.log('[Ad] Popunder opened via window.open');
-                        setTimeout(() => { adOpened = false; }, AD_COOLDOWN);
-                        return;
-                    }
-                } catch(e) {}
+        lastAdTime = Date.now();
 
-                // Method 2: iframe fallback
-                try {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;z-index:-1;';
-                    iframe.src = SMART_LINK;
-                    document.body.appendChild(iframe);
-                    setTimeout(() => { if (iframe.parentNode) iframe.remove(); }, 5000);
-                    console.log('[Ad] Popunder opened via iframe');
-                } catch(e) {}
-
-                setTimeout(() => { adOpened = false; }, AD_COOLDOWN);
+        // Try window.open
+        try {
+            adWindow = window.open(SMART_LINK, '_blank', 'noopener,noreferrer');
+            if (adWindow) {
+                console.log('[Ad] Popunder opened');
+                return true;
             }
+        } catch(e) {}
 
-            // Global click handler - triggers on ANY click
-            function handleGlobalClick(e) {
-                clickCount++;
-                if (clickCount >= CLICKS_BEFORE_AD) {
-                    openAd();
-                }
-            }
+        // Fallback: iframe
+        try {
+            const iframe = document.createElement('iframe');
+            iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;z-index:-1;';
+            iframe.src = SMART_LINK;
+            document.body.appendChild(iframe);
+            setTimeout(() => { if (iframe.parentNode) iframe.remove(); }, 5000);
+            console.log('[Ad] Popunder opened via iframe');
+            return true;
+        } catch(e) {}
 
-            // Attach to document (capturing phase to catch all clicks)
-            document.addEventListener('click', handleGlobalClick, true);
-            document.addEventListener('touchend', handleGlobalClick, true);
+        return false;
+    }
 
-            // Also attach to specific interactive elements
-            const INTERACTIVE_SELECTORS = 'button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .ch-nav-btn, .cast-btn, .virtual-remote-btn, .virtual-remote-color, .virtual-remote-action';
+    // Expose globally so buttons can call it
+    window.showAdOnClick = function(e) {
+        if (e) e.stopPropagation();
+        if (canShowAd()) {
+            openAd();
+        }
+    };
 
-            function attachAdToElements() {
-                document.querySelectorAll(INTERACTIVE_SELECTORS).forEach(function(el) {
-                    if (el.dataset.adAttached) return;
-                    el.dataset.adAttached = 'true';
-                    el.addEventListener('click', function(e) {
-                        clickCount++;
-                        if (clickCount >= CLICKS_BEFORE_AD) {
-                            openAd();
-                        }
-                    }, true);
-                });
-            }
+    // Track clicks on the page - only show ad on INTERACTIVE elements
+    // NOT on every single click
+    document.addEventListener('click', function(e) {
+        // Only trigger on specific interactive elements, not everywhere
+        const target = e.target;
+        const isInteractive = target.closest('button, a, .channel-item, .cat-tab, .control-btn, .ch-nav-btn, .cast-btn, .settings-btn, .premium-header-btn');
 
-            attachAdToElements();
-            const adObserver = new MutationObserver(attachAdToElements);
-            adObserver.observe(document.body, { childList: true, subtree: true });
+        if (isInteractive && canShowAd()) {
+            // Small delay so the user's intended action happens first
+            setTimeout(function() {
+                openAd();
+            }, 300);
+        }
+    }, true);
 
-            // Also trigger on video play
-            video.addEventListener('play', function() {
-                clickCount++;
-                if (clickCount >= CLICKS_BEFORE_AD) openAd();
-            });
-
-            console.log('[Ad] Popunder active - every click');
-        })();
-    </script>
+    console.log('[Ad] Click-only popunder loaded - 15s cooldown');
+})();
+</script>
 
     <!-- ===== PREMIUM SYSTEM ===== -->
     <style>

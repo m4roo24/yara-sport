@@ -4795,6 +4795,7 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
 <!-- ===== PWA INSTALLATION SYSTEM ===== -->
 <script>
 // PWA: Real App Install for Android, iOS, Desktop
+// Samsung One UI: Guides to App Drawer install
 (function() {
     'use strict';
 
@@ -4814,12 +4815,12 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
         return {
             isIOS: /iPad|iPhone|iPod/.test(ua),
             isAndroid: /Android/.test(ua),
-            isSafari: /^((?!chrome|android).)*safari/i.test(ua),
+            isSamsung: /SamsungBrowser/.test(ua),
             isChrome: /Chrome/.test(ua) && !/Edge|Edg/.test(ua),
             isEdge: /Edge|Edg/.test(ua),
             isDesktop: !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)),
-            isFirefox: /Firefox/.test(ua),
-            isSamsung: /SamsungBrowser/.test(ua)
+            isOneUI: /Samsung/.test(ua) && /Android/.test(ua),
+            isFirefox: /Firefox/.test(ua)
         };
     }
 
@@ -4884,14 +4885,16 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
         banner.id = 'pwa-install-banner';
 
         let html = '';
-        if (platform.isIOS) {
-            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport</div><div style="color:#a1a1aa;font-size:0.8rem;line-height:1.4;">Tap <i class="fas fa-share-square" style="color:#3b82f6;"></i> then <strong style="color:#fbbf24;">'Add to Home Screen'</strong></div></div></div><button onclick="window.hidePWABanner()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">Got it</button></div>';
-        } else if (platform.isAndroid || platform.isChrome || platform.isEdge || platform.isSamsung) {
-            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport App</div><div style="color:#a1a1aa;font-size:0.8rem;">Add to home screen for instant access</div></div></div><div style="display:flex;gap:8px;"><button onclick="window.hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="window.triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install</button></div></div>';
+
+        // Samsung One UI - Show App Drawer option
+        if (platform.isOneUI) {
+            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport App</div><div style="color:#a1a1aa;font-size:0.8rem;">Add to Apps for instant access</div></div></div><div style="display:flex;gap:8px;"><button onclick="window.hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="window.triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install</button></div></div>';
+        } else if (platform.isIOS) {
+            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #3b82f6;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport</div><div style="color:#a1a1aa;font-size:0.8rem;line-height:1.4;">Tap <i class="fas fa-share-square" style="color:#3b82f6;"></i> then <strong style="color:#fbbf24;">'Add to Home Screen'</strong></div></div></div><button onclick="window.hidePWABanner()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">Got it</button></div>';
         } else if (platform.isDesktop) {
-            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport on Desktop</div><div style="color:#a1a1aa;font-size:0.8rem;">Launch like a real app from your taskbar</div></div></div><div style="display:flex;gap:8px;"><button onclick="window.hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="window.triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install App</button></div></div>';
+            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #22c55e;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport on Desktop</div><div style="color:#a1a1aa;font-size:0.8rem;">Launch like a real app from your taskbar</div></div></div><div style="display:flex;gap:8px;"><button onclick="window.hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="window.triggerPWAInstall()" style="background:linear-gradient(135deg,#22c55e,#16a34a);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(34,197,94,0.3);"><i class="fas fa-download"></i> Install App</button></div></div>';
         } else {
-            html = '<div style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport</div><div style="color:#a1a1aa;font-size:0.8rem;">Add this app to your device</div></div></div><button onclick="window.hidePWABanner()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">Dismiss</button></div>';
+            html = '<div id="pwa-banner-inner" style="position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#1a1a2e,#0f0f23);border-top:2px solid #7c3aed;padding:16px 20px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:'Inter',sans-serif;animation:slideUp 0.4s ease;"><div style="display:flex;align-items:center;gap:14px;flex:1;"><img src="icon-192x192.png" style="width:48px;height:48px;border-radius:12px;" alt="Yara Sport"><div><div style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Install Yara Sport App</div><div style="color:#a1a1aa;font-size:0.8rem;">Add to home screen for instant access</div></div></div><div style="display:flex;gap:8px;"><button onclick="window.hidePWABanner()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:#a1a1aa;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.85rem;">Later</button><button onclick="window.triggerPWAInstall()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.85rem;box-shadow:0 4px 16px rgba(124,58,237,0.3);"><i class="fas fa-download"></i> Install</button></div></div>';
         }
 
         banner.innerHTML = html;
@@ -4925,12 +4928,24 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
             const platform = detectPlatform();
             if (platform.isIOS) {
                 showToast('Tap Share button, then "Add to Home Screen"', 'fas fa-share-square');
+            } else if (platform.isOneUI) {
+                showSamsungInstallGuide();
             } else {
                 showToast('Use your browser menu to install this app', 'fas fa-info-circle');
             }
         }
         window.hidePWABanner();
     };
+
+    // Samsung One UI: Show guide for moving to App Drawer
+    function showSamsungInstallGuide() {
+        const modal = document.createElement('div');
+        modal.id = 'samsung-install-guide';
+        modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);z-index:10001;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.3s ease;';
+        modal.innerHTML = '<div style="background:linear-gradient(145deg,#1a1a2e,#0f0f23);border:1px solid rgba(124,58,237,0.3);border-radius:24px;padding:32px;max-width:400px;width:100%;text-align:center;animation:scaleIn 0.3s ease;"><div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 24px rgba(124,58,237,0.4);"><i class="fas fa-mobile-alt" style="font-size:1.8rem;color:#fff;"></i></div><h3 style="font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:12px;">Install to Apps</h3><p style="color:#a1a1aa;font-size:0.9rem;line-height:1.6;margin-bottom:20px;">After installing, the app icon will appear on your <strong style="color:#fbbf24;">Home Screen</strong>.<br><br>To move it to your <strong style="color:#22c55e;">Apps Drawer</strong>:</p><div style="text-align:left;background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;margin-bottom:20px;"><ol style="color:#a1a1aa;font-size:0.85rem;line-height:1.8;margin:0;padding-left:20px;"><li>Long press the <strong style="color:#fff;">Yara Sport</strong> icon</li><li>Tap <strong style="color:#fff;">Remove from Home</strong></li><li>The app stays in your <strong style="color:#22c55e;">Apps Drawer</strong></li></ol></div><button onclick="document.getElementById('samsung-install-guide').remove()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:12px 32px;border-radius:12px;cursor:pointer;font-weight:700;font-size:0.95rem;width:100%;">Got it</button></div>';
+        document.body.appendChild(modal);
+        modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+    }
 
     function shouldShowBanner() {
         try {
@@ -4958,7 +4973,7 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
         setTimeout(function() {
             if (!isInstallable && !isAppInstalled() && shouldShowBanner() && !bannerShown) {
                 const platform = detectPlatform();
-                if (platform.isIOS || platform.isSafari) {
+                if (platform.isIOS || platform.isSafari || platform.isOneUI) {
                     showInstallBanner();
                 }
             }
@@ -4967,7 +4982,7 @@ console.log('Yara Sport V2.0- Sports Only - All channels use ⚽️ logo');
 
     // Add CSS
     const style = document.createElement('style');
-    style.textContent = '@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}@keyframes slideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}body.pwa-installed .header{padding-top:env(safe-area-inset-top)}body.pwa-installed{padding-top:env(safe-area-inset-top)}';
+    style.textContent = '@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}@keyframes slideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(100%);opacity:0}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes scaleIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}body.pwa-installed .header{padding-top:env(safe-area-inset-top)}body.pwa-installed{padding-top:env(safe-area-inset-top)}';
     document.head.appendChild(style);
 
     if (document.readyState === 'loading') {

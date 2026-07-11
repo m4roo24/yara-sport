@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/live/:channel", "destination": "/index.html" },
+    { "source": "/live/:channel/", "destination": "/index.html" }
+  ]
+}

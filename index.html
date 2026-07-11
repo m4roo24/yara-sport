@@ -1315,6 +1315,40 @@
             .ch-nav-row { padding: 8px 12px; }
             .ch-nav-btn { padding: 6px 10px; font-size: 0.75rem; }
         }
+
+        /* Ad Banner Responsive */
+        .ad-banner-wrapper { margin-top: 12px; }
+        .ad-banner-desktop { display: flex !important; }
+        .ad-banner-mobile { display: none !important; }
+        @media (max-width: 768px) {
+            .ad-banner-desktop { display: none !important; }
+            .ad-banner-mobile { display: flex !important; min-height: 50px !important; }
+            .ad-banner-wrapper { margin-top: 8px; }
+        }
+        .ad-banner-wrapper iframe,
+        .ad-banner-wrapper div[id*="container-"] {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+        }
+        .ad-banner-desktop iframe { width: 728px !important; height: 90px !important; }
+        .ad-banner-mobile iframe { width: 320px !important; height: 50px !important; }
+        @media (max-width: 768px) {
+            .ad-banner-desktop iframe { display: none !important; }
+        }
+        @media (min-width: 769px) {
+            .ad-banner-mobile iframe { display: none !important; }
+        }
+        /* Premium hide new ads */
+        body.premium-active .ad-banner-wrapper,
+        body.premium-active .ad-banner-desktop,
+        body.premium-active .ad-banner-mobile,
+        body.premium-active [id*="container-429c44cefe452387f618d4b26b8d1601"] {
+            display: none !important; visibility: hidden !important; opacity: 0 !important;
+            height: 0 !important; width: 0 !important; pointer-events: none !important;
+            padding: 0 !important; margin: 0 !important; overflow: hidden !important;
+        }
+
     </style>
 
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -1454,7 +1488,35 @@
                     <i class="fas fa-step-forward"></i> Next
                 </button>
             </div>
-        </div>
+        
+            <!-- Ad Banner -->
+            <div class="ad-banner-wrapper" style="margin-top:12px; width:100%; overflow:hidden;">
+                <div class="ad-banner-desktop" style="display:flex; justify-content:center; align-items:center; min-height:90px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+                    <script>
+                        atOptions = {
+                            'key' : 'c5b319e3624c4cc1c39c21e5f3a26b4b',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    </script>
+                    <script src="https://expulsiondatabaseinnocent.com/c5b319e3624c4cc1c39c21e5f3a26b4b/invoke.js"></script>
+                </div>
+                <div class="ad-banner-mobile" style="display:none; justify-content:center; align-items:center; min-height:50px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+                    <script>
+                        atOptions = {
+                            'key' : 'c5b319e3624c4cc1c39c21e5f3a26b4b',
+                            'format' : 'iframe',
+                            'height' : 50,
+                            'width' : 320,
+                            'params' : {}
+                        };
+                    </script>
+                    <script src="https://expulsiondatabaseinnocent.com/c5b319e3624c4cc1c39c21e5f3a26b4b/invoke.js"></script>
+                </div>
+            </div>
+</div>
         <div class="sidebar">
             <div class="sidebar-card">
                 <div class="sidebar-header">
@@ -1464,7 +1526,18 @@
                 <div class="category-tabs" id="categoryTabs"></div>
                 <div class="channel-list" id="channelList"></div>
             </div>
-        </div>
+        
+            <!-- Native Ad -->
+            <div class="sidebar-card" style="margin-top:16px; overflow:hidden; border-radius:16px; border:1px solid var(--border);">
+                <div style="padding:12px 16px; border-bottom:1px solid var(--border); font-size:0.8rem; font-weight:700; color:var(--text-secondary); display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-ad" style="color:var(--primary-light);"></i> Sponsored
+                </div>
+                <div style="padding:8px; display:flex; justify-content:center; align-items:center; min-height:120px; background:var(--bg-card);">
+                    <script async="async" data-cfasync="false" src="https://expulsiondatabaseinnocent.com/429c44cefe452387f618d4b26b8d1601/invoke.js"></script>
+                    <div id="container-429c44cefe452387f618d4b26b8d1601"></div>
+                </div>
+            </div>
+</div>
     </div>
 
     <div class="footer">
@@ -2868,7 +2941,7 @@
     (function() {
         const SMART_LINK = 'https://expulsiondatabaseinnocent.com/va4tkxk6?key=584b2c926b75e2bfdf32568f0dd172cd';
         let lastAdTime = 0;
-        const AD_COOLDOWN = 8000;
+        const AD_COOLDOWN = 9000;
 
         function isPremium() {
             try {
@@ -3414,5 +3487,10 @@
         setTimeout(function() { const platform = getPlatform(); if (!deferredPrompt && !isInstalled() && platform.isIOS) showBanner(); }, 3000);
     })();
     </script>
+
+    <!-- Social Bar Ad -->
+    <script src="https://expulsiondatabaseinnocent.com/04/30/53/043053f8c5472cb8c966eef9780d0d3a.js"></script>
+
 </body>
 </html>
+

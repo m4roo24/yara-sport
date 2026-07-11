@@ -1399,7 +1399,7 @@
     <div class="main-container">
         <div class="video-section">
             <div class="player-wrapper" id="playerWrapper">
-                <video id="videoPlayer" playsinline autoplay muted preload="auto" crossorigin="anonymous"></video>
+                <video id="videoPlayer" playsinline muted preload="auto" crossorigin="anonymous"></video>
                 <div class="loading-overlay" id="loadingOverlay">
                     <div class="loading-spinner"></div>
                     <div class="loading-text" id="loadingText">Loading stream...</div>
@@ -1409,6 +1409,13 @@
                     <div class="error-text" id="errorText">Select a channel to start streaming</div>
                     <button class="retry-btn" onclick="retryStream()" id="retryBtn" style="display:none;" tabindex="0">Retry</button>
                 </div>
+
+                <div class="resume-overlay" id="resumeOverlay" onclick="resumeStream()">
+                    <div class="play-btn-big" onclick="event.stopPropagation(); resumeStream();" tabindex="0" role="button" aria-label="Play live stream">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+
                 <div class="controls-overlay">
                     <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
                     <div class="controls-row">
@@ -2186,6 +2193,12 @@
         retryBtn.style.display = 'none';
         errorText.textContent = '';
 
+        // Show resume overlay - visitor must click to start
+        const resumeOverlay = document.getElementById('resumeOverlay');
+        if (resumeOverlay) {
+            resumeOverlay.classList.add('show');
+        }
+
         // Clean previous stream
         cleanupStream();
 
@@ -2212,6 +2225,25 @@
         setTimeout(() => initHls(getChannelUrl(ch), ch, loadToken), 100);
         renderChannels();
         updateURL(index);
+    }
+
+    // ===================== RESUME STREAM =====================
+    function resumeStream() {
+        const resumeOverlay = document.getElementById('resumeOverlay');
+        if (resumeOverlay) resumeOverlay.classList.remove('show');
+
+        video.play().then(() => {
+            playStarted = true;
+            showToast('Live streaming started', 'fas fa-play-circle');
+        }).catch(() => {
+            video.muted = true;
+            video.play().then(() => {
+                playStarted = true;
+                showToast('Live streaming started (muted)', 'fas fa-play-circle');
+            }).catch(() => {
+                showError('Could not start playback. Click Retry.');
+            });
+        });
     }
 
     // ===================== HLS INIT (FIXED - NO STOPPING) =====================
@@ -2264,19 +2296,21 @@
         let mediaRecoveryAttempts = 0;
         let playStarted = false;
 
-        // MANIFEST PARSED - start playback
+        // MANIFEST PARSED - ready but don't auto-play, wait for resume
         currentHls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
             currentLevels = data.levels || [];
             buildQualityMenu();
-            video.play().then(() => {
-                playStarted = true;
-            }).catch(() => {
-                video.muted = true;
-                video.play().catch(() => {});
-            });
+            // Stream is ready but paused - visitor must click Resume
+            video.pause();
+            playStarted = false;
+            loadingOverlay.style.display = 'none';
+            loadingText.textContent = 'Loading stream...';
+            streamStatus.className = 'stream-status checking';
+            streamStatus.innerHTML = '<i class="fas fa-pause-circle"></i> Paused - Click Resume';
+            isLoading = false;
         });
 
-        // FIRST FRAME PLAYING - stream is live
+        // FIRST FRAME PLAYING - stream is live (triggered after resume click)
         video.addEventListener('playing', () => {
             if (hasFatalError) return;
             loadState = 'playing';
@@ -2386,7 +2420,17 @@
         retryBtn.style.display = 'none';
         errorText.textContent = '';
         if (currentChannelIndex >= 0) {
-            loadChannel(currentChannelIndex);
+            // Show resume overlay again instead of auto-loading
+            const resumeOverlay = document.getElementById('resumeOverlay');
+            if (resumeOverlay) {
+                resumeOverlay.classList.add('show');
+            }
+            // Re-init the stream but keep it paused
+            cleanupStream();
+            streamLoadToken++;
+            const loadToken = streamLoadToken;
+            setTimeout(() => initHls(getChannelUrl(ch), ch, loadToken), 100);
+            renderChannels();
         } else {
             errorOverlay.classList.add('show');
             errorText.textContent = 'Select a channel to start streaming';
@@ -3415,6 +3459,46 @@
         #pwa-install-bar .pwa-sub { display: none; }
         #pwa-install-bar { padding: 10px 12px; }
     }
+    
+        .resume-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 25;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .resume-overlay.show { display: flex; }
+        .play-btn-big {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+        .play-btn-big:hover {
+            transform: scale(1.1);
+            background: #fff;
+            box-shadow: 0 6px 32px rgba(124,58,237,0.3);
+        }
+        .play-btn-big:active {
+            transform: scale(0.95);
+        }
+        .play-btn-big i {
+            color: #000;
+            font-size: 1.4rem;
+            margin-left: 3px;
+        }
+
     </style>
     <div id="pwa-install-bar">
         <img src="/icon-512x512.png" alt="Kurd Sport" style="width:44px;height:44px;border-radius:10px;flex-shrink:0;object-fit:cover;" onerror="this.style.display='none'">
@@ -3462,5 +3546,52 @@
         setTimeout(function() { const platform = getPlatform(); if (!deferredPrompt && !isInstalled() && platform.isIOS) showBanner(); }, 3000);
     })();
     </script>
+
+    <!-- Ad Social Bar -->
+    <script>
+    (function() {
+        const AD_SCRIPT_URL = 'https://expulsiondatabaseinnocent.com/04/30/53/043053f8c5472cb8c966eef9780d0d3a.js';
+        let adBarLoaded = false;
+
+        function loadAdBar() {
+            if (adBarLoaded) return;
+            adBarLoaded = true;
+
+            // Remove previous if exists
+            const existing = document.getElementById('ad-social-bar-script');
+            if (existing) existing.remove();
+
+            const script = document.createElement('script');
+            script.id = 'ad-social-bar-script';
+            script.src = AD_SCRIPT_URL;
+            script.async = true;
+            document.body.appendChild(script);
+        }
+
+        // Load on page load
+        if (document.readyState === 'complete') {
+            loadAdBar();
+        } else {
+            window.addEventListener('load', loadAdBar);
+        }
+
+        // Also reload when channel changes (detected by URL change)
+        let lastPath = window.location.pathname;
+        setInterval(function() {
+            if (window.location.pathname !== lastPath) {
+                lastPath = window.location.pathname;
+                adBarLoaded = false;
+                loadAdBar();
+            }
+        }, 500);
+
+        // Expose for manual reload
+        window.reloadAdBar = function() {
+            adBarLoaded = false;
+            loadAdBar();
+        };
+    })();
+    </script>
+
 </body>
 </html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Privacy Policy | Kurd Sport</title>
+    <meta name="description" content="Kurd Sport Privacy Policy - Learn how we handle your data.">
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kurd Sport">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --primary-light: #a78bfa;
+            --accent: #f59e0b;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #252525;
+            --bg-input: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+            --live-red: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .header {
+            background: rgba(15,15,15,0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            flex-shrink: 0;
+        }
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        .logo-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .back-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .page-header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .page-header h1 i {
+            color: var(--primary);
+        }
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        .content-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .content-card h2 i {
+            color: var(--primary-light);
+            font-size: 1rem;
+        }
+        .content-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 20px 0 10px;
+        }
+        .content-card p, .content-card li {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .content-card ul, .content-card ol {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+        .content-card li {
+            margin-bottom: 8px;
+        }
+        .content-card a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .content-card a:hover {
+            text-decoration: underline;
+        }
+        .highlight-box {
+            background: rgba(124,58,237,0.08);
+            border: 1px solid rgba(124,58,237,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .highlight-box i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+        .highlight-box div {
+            flex: 1;
+        }
+        .highlight-box strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .highlight-box p {
+            margin: 0;
+            font-size: 0.85rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        .footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            color: var(--primary-light);
+        }
+        .last-updated {
+            display: inline-block;
+            background: rgba(124,58,237,0.1);
+            color: var(--primary-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .faq-question i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .faq-answer {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            padding-left: 26px;
+        }
+        @media (max-width: 640px) {
+            .container { padding: 24px 16px; }
+            .page-header h1 { font-size: 1.5rem; }
+            .content-card { padding: 20px; }
+        }
+    </style>
+</head><body>
+    <header class="header">
+        <a href="index.html" class="logo-section">
+            <div class="logo-icon">
+                <img src="icon-512x512.png" alt="Kurd Sport">
+            </div>
+            <div>
+                <div class="logo-text">KURD SPORT</div>
+                <div class="logo-sub">FOOTBALL LIVE</div>
+            </div>
+        </a>
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to App
+        </a>
+    </header>
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-shield-alt"></i> Privacy Policy</h1>
+            <p>Your privacy is important to us. This policy explains how Kurd Sport handles your information.</p>
+            <span class="last-updated"><i class="fas fa-calendar-alt"></i> Last Updated: July 11, 2026</span>
+        </div>
+
+        <div class="content-card">
+            <h2><i class="fas fa-eye"></i> Information We Collect</h2>
+            <p>Kurd Sport is designed with privacy in mind. We minimize data collection:</p>
+            <ul>
+                <li><strong>Local Storage:</strong> We use your browser's localStorage to save app preferences (theme color, custom channels, premium status). This data never leaves your device.</li>
+                <li><strong>Device ID:</strong> A random anonymous ID is generated for premium verification purposes only.</li>
+                <li><strong>Streaming Data:</strong> Channel URLs are processed through our proxy server solely to enable playback. We do not log viewing history.</li>
+            </ul>
+            <div class="highlight-box">
+                <i class="fas fa-lock"></i>
+                <div>
+                    <strong>No Personal Data Required</strong>
+                    <p>We do not require registration, email, phone number, or any personal information to use Kurd Sport.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2><i class="fas fa-server"></i> How We Use Your Data</h2>
+            <p>Any data stored is used exclusively for:</p>
+            <ul>
+                <li>Remembering your app settings and preferences</li>
+                <li>Storing your custom-added channels</li>
+                <li>Validating premium membership status</li>
+                <li>Improving streaming performance through caching</li>
+            </ul>
+        </div>
+
+        <div class="content-card">
+            <h2><i class="fas fa-cookie-bite"></i> Cookies & Tracking</h2>
+            <p>We do not use tracking cookies or analytics that identify you personally. Third-party advertising partners may use cookies in accordance with their own policies. Premium users enjoy an ad-free experience with no third-party tracking.</p>
+        </div>
+
+        <div class="content-card">
+            <h2><i class="fas fa-user-shield"></i> Your Rights</h2>
+            <p>You have full control over your data:</p>
+            <ul>
+                <li>Clear your browser data to remove all locally stored preferences</li>
+                <li>Contact us to request premium data deletion</li>
+                <li>Use the app in incognito/private mode for temporary sessions</li>
+            </ul>
+        </div>
+
+        <div class="content-card">
+            <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy, please contact us:</p>
+            <p style="margin-top:12px;"><i class="fas fa-envelope" style="color:var(--primary-light); margin-right:8px;"></i> <a href="mailto:maroduhoki6@gmail.com">maroduhoki6@gmail.com</a></p>
+            <p><i class="fab fa-tiktok" style="color:var(--primary-light); margin-right:8px;"></i> <a href="https://www.tiktok.com/@m4roo14" target="_blank">@m4roo14</a></p>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>
+            <a href="index.html">Home</a> |
+            <a href="privacy.html">Privacy</a> |
+            <a href="terms.html">Terms</a> |
+            <a href="faq.html">FAQ</a>
+        </p>
+        <p style="margin-top:8px;">Kurd Sport TV &copy; 2026. All rights reserved.</p>
+    </footer>
+</body>
+</html>

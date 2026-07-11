@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>FAQ | Kurd Sport</title>
+    <meta name="description" content="Kurd Sport Frequently Asked Questions - Get help with streaming, settings, and more.">
+    <meta name="theme-color" content="#7c3aed">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kurd Sport">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --primary-light: #a78bfa;
+            --accent: #f59e0b;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #252525;
+            --bg-input: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+            --live-red: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .header {
+            background: rgba(15,15,15,0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            flex-shrink: 0;
+        }
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        .logo-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .back-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .page-header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .page-header h1 i {
+            color: var(--primary);
+        }
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        .content-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .content-card h2 i {
+            color: var(--primary-light);
+            font-size: 1rem;
+        }
+        .content-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 20px 0 10px;
+        }
+        .content-card p, .content-card li {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .content-card ul, .content-card ol {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+        .content-card li {
+            margin-bottom: 8px;
+        }
+        .content-card a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .content-card a:hover {
+            text-decoration: underline;
+        }
+        .highlight-box {
+            background: rgba(124,58,237,0.08);
+            border: 1px solid rgba(124,58,237,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .highlight-box i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+        .highlight-box div {
+            flex: 1;
+        }
+        .highlight-box strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .highlight-box p {
+            margin: 0;
+            font-size: 0.85rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        .footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            color: var(--primary-light);
+        }
+        .last-updated {
+            display: inline-block;
+            background: rgba(124,58,237,0.1);
+            color: var(--primary-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .faq-question i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .faq-answer {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            padding-left: 26px;
+        }
+        @media (max-width: 640px) {
+            .container { padding: 24px 16px; }
+            .page-header h1 { font-size: 1.5rem; }
+            .content-card { padding: 20px; }
+        }
+    </style>
+</head><body>
+    <header class="header">
+        <a href="index.html" class="logo-section">
+            <div class="logo-icon">
+                <img src="icon-512x512.png" alt="Kurd Sport">
+            </div>
+            <div>
+                <div class="logo-text">KURD SPORT</div>
+                <div class="logo-sub">FOOTBALL LIVE</div>
+            </div>
+        </a>
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to App
+        </a>
+    </header>
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-question-circle"></i> Frequently Asked Questions</h1>
+            <p>Find answers to common questions about Kurd Sport.</p>
+            <span class="last-updated"><i class="fas fa-calendar-alt"></i> Last Updated: July 11, 2026</span>
+        </div>
+
+        <div class="content-card">
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-play-circle"></i> How do I start watching?</div>
+                <div class="faq-answer">Simply click on any channel from the sidebar list. The stream will load automatically. For best performance, we recommend a stable internet connection of at least 5 Mbps.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-wifi"></i> Why is the stream buffering or not loading?</div>
+                <div class="faq-answer">Streams may buffer due to slow internet, server overload, or channel being offline. Try switching to another channel or check your connection. Some channels use a proxy (marked with PROXY badge) which may take longer to connect.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-mobile-alt"></i> Can I use this on my phone or TV?</div>
+                <div class="faq-answer">Yes! Kurd Sport works on all devices: mobile phones, tablets, laptops, desktops, and Smart TVs. Install it as a PWA for the best experience. On TV, use your remote arrow keys to navigate and OK to select.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-download"></i> How do I install Kurd Sport as an app?</div>
+                <div class="faq-answer">On Android/Chrome: tap the install banner at the bottom or use the menu &rarr; "Add to Home Screen." On iOS Safari: tap Share &rarr; "Add to Home Screen." On desktop Chrome/Edge: click the install icon in the address bar. This gives you a full-screen app experience without browser UI.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-plus-circle"></i> Can I add my own channels?</div>
+                <div class="faq-answer">Yes! Open Settings (gear icon) and scroll to "Add Your Channel." Paste any M3U8 stream URL, give it a name, select a category, and click Add. Your custom channels are saved locally and persist across sessions.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-crown"></i> What is Premium and how do I get it?</div>
+                <div class="faq-answer">Premium removes all advertisements and gives you a faster, cleaner experience. Click the crown icon in the header, enter your premium code (format: YARA-XXXX-XXXX), and click Confirm. Premium is just $1/month.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-ad"></i> Why do I see ads?</div>
+                <div class="faq-answer">Ads help keep Kurd Sport free for everyone. If you see an ad-block warning, disable your ad blocker or consider upgrading to Premium for an ad-free experience. We never collect personal data through ads.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-gamepad"></i> What controls work on TV?</div>
+                <div class="faq-answer">All TV remote buttons are supported: D-Pad to navigate, OK/Enter to select, Back to close panels, CH+/- to change channels, Play/Pause for playback, and colored buttons (Red=Settings, Green=Fullscreen, Yellow=Mute, Blue=Controls Guide).</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-cast"></i> Can I cast to my TV?</div>
+                <div class="faq-answer">Yes! Click the Cast icon (TV symbol) in the header. Make sure your Chromecast or Android TV is on the same WiFi network. Note: Casting requires Chrome or Edge browser and may not work with all channels.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-palette"></i> How do I change the theme?</div>
+                <div class="faq-answer">Open Settings and look for "Theme Color" to pick your accent color, or "Theme Mode" to switch between Dark, Light, and Auto (follows system preference). Your choice is saved automatically.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-keyboard"></i> What are the keyboard shortcuts?</div>
+                <div class="faq-answer">Space = Play/Pause, F = Fullscreen, M = Mute, P = Picture-in-Picture, N/&rarr; = Next Channel, P/&larr; = Previous Channel, S = Settings, R = Virtual Remote, 0-9 = Channel numbers. Open Settings &rarr; Controls Guide for the full list.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question"><i class="fas fa-bug"></i> I found a bug. How do I report it?</div>
+                <div class="faq-answer">Email us at <a href="mailto:maroduhoki6@gmail.com">maroduhoki6@gmail.com</a> or message us on TikTok <a href="https://www.tiktok.com/@m4roo14" target="_blank">@m4roo14</a>. Please include your device, browser, and what you were doing when the issue occurred.</div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>
+            <a href="index.html">Home</a> |
+            <a href="privacy.html">Privacy</a> |
+            <a href="terms.html">Terms</a> |
+            <a href="faq.html">FAQ</a>
+        </p>
+        <p style="margin-top:8px;">Kurd Sport TV &copy; 2026. All rights reserved.</p>
+    </footer>
+</body>
+</html>

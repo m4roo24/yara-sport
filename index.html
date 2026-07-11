@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, interactive-widget=resizes-content">
     <meta name="msapplication-TileColor" content="#7c3aed">
     <meta name="tv" content="true">
-    <title>Yara Sport - Football Live</title>
+    <title>Kurd Sport - Football Live</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -51,7 +51,6 @@
         .social-btn:focus-visible,
         .faq-question:focus-visible,
         .custom-channel-item button:focus-visible,
-        .visitor-badge:focus-visible,
         .virtual-remote-btn:focus-visible,
         .ch-nav-btn:focus-visible,
         .cast-btn:focus-visible {
@@ -66,7 +65,6 @@
         .cat-tab:focus-visible { border-radius: 20px; }
         .control-btn:focus-visible { border-radius: 8px; }
         .color-option:focus-visible { border-radius: 50%; }
-        .visitor-badge:focus-visible { border-radius: 50px; }
         .virtual-remote-btn:focus-visible { border-radius: 12px; }
 
         @supports (padding: max(0px)) {
@@ -88,7 +86,7 @@
             .control-btn { font-size: 1.4rem; padding: 12px; }
         }
 
-        button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .visitor-badge, .virtual-remote-btn, .ch-nav-btn, .cast-btn {
+        button, a, .channel-item, .cat-tab, .control-btn, .settings-btn, .settings-close, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .virtual-remote-btn, .ch-nav-btn, .cast-btn {
             -webkit-tap-highlight-color: transparent !important;
             outline: none !important;
             -webkit-touch-callout: none !important;
@@ -181,57 +179,7 @@
             color: #22c55e;
         }
 
-        .visitor-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(34, 197, 94, 0.12);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--success);
-            cursor: default;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .visitor-badge::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(34,197,94,0.2), transparent);
-            animation: visitorShine 3s ease-in-out infinite;
-        }
-        @keyframes visitorShine {
-            0% { left: -100%; }
-            50% { left: 100%; }
-            100% { left: 100%; }
-        }
-        .visitor-badge i {
-            font-size: 0.9rem;
-            animation: visitorPulse 2s ease-in-out infinite;
-        }
-        @keyframes visitorPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-        .visitor-badge .visitor-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .visitor-badge .visitor-number {
-            font-family: 'Inter', monospace;
-            font-weight: 800;
-            font-size: 0.85rem;
-            min-width: 32px;
-            text-align: center;
-        }
-
+        
         .main-container {
             display: flex;
             gap: 20px;
@@ -1349,9 +1297,7 @@
         body.light-theme .virtual-remote-action:hover { background: var(--primary); color: #fff; }
 
         @media (max-width: 768px) {
-            .visitor-badge { padding: 5px 10px; }
-            .visitor-badge .visitor-label { display: none; }
-        }
+}
         @media (max-width: 640px) {
             .settings-panel { width: 100%; max-width: 100%; right: -100%; }
             .controls-help-grid { grid-template-columns: 1fr; }
@@ -1360,9 +1306,7 @@
         @media (max-width: 768px) {
             .logo-text { font-size: 1rem; }
             .header-right { gap: 6px; }
-            .visitor-badge { padding: 4px 10px; font-size: 0.75rem; }
-            .visitor-badge .visitor-label { display: none; }
-            .settings-btn { width: 32px; height: 32px; font-size: 0.9rem; }
+.settings-btn { width: 32px; height: 32px; font-size: 0.9rem; }
             .premium-header-btn { padding: 4px 10px; font-size: 0.7rem; }
             .cast-btn { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; }
             .logo-text { font-size: 1.1rem; }
@@ -1376,13 +1320,13 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="description" content="Yara Sport - Watch Football Live. beIN Sport, FIFA, and Kurdish Sports channels streaming.">
+    <meta name="description" content="Kurd Sport - Watch Football Live. beIN Sport, FIFA, and Kurdish Sports channels streaming.">
     <meta name="keywords" content="football, live, streaming, beIN Sport, FIFA, sports, TV">
-    <meta name="author" content="Yara Sport">
+    <meta name="author" content="Kurd Sport">
     <meta name="robots" content="index, follow">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Yara Sport">
+    <meta name="apple-mobile-web-app-title" content="Kurd Sport">
     <meta name="msapplication-TileColor" content="#7c3aed">
     <meta name="msapplication-TileImage" content="icon-144x144.png">
     <meta name="msapplication-config" content="browserconfig.xml">
@@ -1420,10 +1364,10 @@
     <header class="header">
         <div class="logo-section">
             <div class="logo-icon">
-                <img src="icon-512x512.png" alt="Yara Sport">
+                <img src="icon-512x512.png" alt="Kurd Sport">
             </div>
             <div>
-                <div class="logo-text">YARA SPORT</div>
+                <div class="logo-text">KURD SPORT</div>
                 <div class="logo-sub">FOOTBALL LIVE</div>
             </div>
         </div>
@@ -1435,12 +1379,7 @@
             <button class="premium-header-btn" onclick="openPremiumPage()" title="Premium" tabindex="0" style="padding:5px 10px;">
                 <i class="fas fa-crown"></i>
             </button>
-            <div class="visitor-badge" id="visitorBadge" tabindex="0" title="Total Visitors">
-                <i class="fas fa-users"></i>
-                <span class="visitor-label">Visitors</span>
-                <span class="visitor-number" id="visitorCount">--</span>
-            </div>
-        </div>
+</div>
     </header>
 
     <div id="premiumStatusBar" style="display:none; max-width:1600px; margin:12px auto 0; padding:0 20px;">
@@ -1529,7 +1468,7 @@
     </div>
 
     <div class="footer">
-        <p>Yara Sport TV &copy; 2026 — <a href="https://yara-sport.vercel.app/terms.html" target="_blank">Terms</a> | <a href="https://yara-sport.vercel.app/privacy.html" target="_blank">Privacy</a> | <a href="https://yara-sport.vercel.app/faq.html" target="_blank">FAQ</a></p>
+        <p>Kurd Sport TV &copy; 2026 — <a href="https://yara-sport.vercel.app/terms.html" target="_blank">Terms</a> | <a href="https://yara-sport.vercel.app/privacy.html" target="_blank">Privacy</a> | <a href="https://yara-sport.vercel.app/faq.html" target="_blank">FAQ</a></p>
     </div>
 
     <div class="settings-overlay" id="settingsOverlay" onclick="closeSettings(event)"></div>
@@ -1757,7 +1696,7 @@
         <div class="premium-container">
             <div class="premium-hero">
                 <h1><i class="fas fa-crown"></i> Premium Membership</h1>
-                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:8px;">Unlock the ultimate Yara Sport experience</p>
+                <p style="color:var(--text-muted); font-size:1rem; margin-bottom:8px;">Unlock the ultimate Kurd Sport experience</p>
                 <div class="price">$1<span>/month</span></div>
             </div>
             <div class="premium-card">
@@ -1796,7 +1735,7 @@
             </div>
             <div style="text-align:center; margin-top:24px;">
                 <button class="premium-btn" onclick="closePremiumPage()" tabindex="0" style="background:var(--bg-input); color:var(--text-secondary); border:1px solid var(--border);">
-                    <i class="fas fa-arrow-left"></i> Back to Yara Sport
+                    <i class="fas fa-arrow-left"></i> Back to Kurd Sport
                 </button>
             </div>
         </div>
@@ -1843,7 +1782,7 @@
                             <strong style="color:#fff;">uBlock:</strong> Extension icon &rarr; Power button
                         </p>
                     </div>
-                    <p style="font-size:0.7rem;color:#52525b;margin:0;"><i class="fas fa-lock" style="margin-right:4px;"></i>Ads keep Yara Sport free. No data collected.</p>
+                    <p style="font-size:0.7rem;color:#52525b;margin:0;"><i class="fas fa-lock" style="margin-right:4px;"></i>Ads keep Kurd Sport free. No data collected.</p>
                 </div>
                 <div style="background:linear-gradient(145deg, rgba(26,26,46,0.9), rgba(15,15,35,0.9));border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:18px;display:flex;align-items:flex-start;gap:14px;animation:adblockSlideUp 0.7s cubic-bezier(0.4,0,0.2,1);">
                     <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg, #22c55e, #16a34a);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(34,197,94,0.3);">
@@ -1851,7 +1790,7 @@
                     </div>
                     <div>
                         <h4 style="font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:6px;">Why We Show Ads</h4>
-                        <p style="font-size:0.8rem;color:#a1a1aa;line-height:1.5;margin:0;">Ad revenue helps us keep Yara Sport free for everyone. We never collect personal data or track your browsing.</p>
+                        <p style="font-size:0.8rem;color:#a1a1aa;line-height:1.5;margin:0;">Ad revenue helps us keep Kurd Sport free for everyone. We never collect personal data or track your browsing.</p>
                     </div>
                 </div>
                 <div style="background:linear-gradient(145deg, rgba(26,26,46,0.9), rgba(15,15,35,0.9));border:1px solid rgba(251,191,36,0.2);border-radius:16px;padding:18px;display:flex;align-items:flex-start;gap:14px;animation:adblockSlideUp 0.8s cubic-bezier(0.4,0,0.2,1);cursor:pointer;transition:all 0.2s ease;" onclick="adblockGoPremium()">
@@ -1991,7 +1930,7 @@
         mediaInfo.streamType = chrome.cast.media.StreamType.LIVE;
         mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
         mediaInfo.metadata.title = ch.name;
-        mediaInfo.metadata.subtitle = 'Yara Sport - Football Live';
+        mediaInfo.metadata.subtitle = 'Kurd Sport - Football Live';
         const request = new chrome.cast.media.LoadRequest(mediaInfo);
         request.autoplay = true;
         session.loadMedia(request).then(() => {
@@ -2016,123 +1955,6 @@
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
-
-    // ===================== REAL VISITOR COUNTER (Firebase) =====================
-    (function() {
-        // Using a free public visitor counter API - counts unique visitors globally
-        const COUNTER_KEY = 'yara_visitor_count_real';
-        const VISITED_KEY = 'yara_visitor_visited';
-
-        // Use CountAPI (free, no key needed) for real global counter
-        const API_NAMESPACE = 'yara-sport-tv';
-        const API_KEY = 'visitors';
-
-        function updateDisplay(num) {
-            const el = document.getElementById('visitorCount');
-            if (el) {
-                el.textContent = num.toLocaleString();
-                el.style.opacity = '1';
-            }
-        }
-
-        function animateCount(target) {
-            const el = document.getElementById('visitorCount');
-            if (!el) return;
-            const start = parseInt(el.textContent.replace(/,/g, '')) || 0;
-            if (start === target) return;
-            const duration = 800;
-            const startTime = performance.now();
-            function step(now) {
-                const progress = Math.min((now - startTime) / duration, 1);
-                const ease = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(start + (target - start) * ease);
-                el.textContent = current.toLocaleString();
-                if (progress < 1) requestAnimationFrame(step);
-            }
-            requestAnimationFrame(step);
-        }
-
-        // Try CountAPI first (real global counter)
-        function initRealCounter() {
-            // Check if this browser already counted in this session
-            const alreadyCounted = sessionStorage.getItem(VISITED_KEY);
-
-            if (!alreadyCounted) {
-                // This is a new visit - increment the global counter
-                fetch('https://api.countapi.xyz/hit/' + API_NAMESPACE + '/' + API_KEY)
-                    .then(function(res) { return res.json(); })
-                    .then(function(data) {
-                        if (data && typeof data.value === 'number') {
-                            sessionStorage.setItem(VISITED_KEY, 'true');
-                            localStorage.setItem(COUNTER_KEY, data.value.toString());
-                            animateCount(data.value);
-                        }
-                    })
-                    .catch(function() {
-                        // Fallback: use localStorage-based counter if API fails
-                        initFallbackCounter();
-                    });
-            } else {
-                // Already counted this session - just get current value
-                fetch('https://api.countapi.xyz/get/' + API_NAMESPACE + '/' + API_KEY)
-                    .then(function(res) { return res.json(); })
-                    .then(function(data) {
-                        if (data && typeof data.value === 'number') {
-                            localStorage.setItem(COUNTER_KEY, data.value.toString());
-                            animateCount(data.value);
-                        }
-                    })
-                    .catch(function() {
-                        initFallbackCounter();
-                    });
-            }
-        }
-
-        // Fallback: session-based counter using localStorage (per-browser, not global)
-        function initFallbackCounter() {
-            const SESSION_KEY = 'yara_visitor_session_count';
-            const LAST_SESSION_KEY = 'yara_visitor_last_session';
-
-            let count = parseInt(localStorage.getItem(SESSION_KEY)) || 95420;
-            const lastSession = localStorage.getItem(LAST_SESSION_KEY);
-            const currentSession = Date.now().toString().slice(0, 10); // daily-ish
-
-            if (lastSession !== currentSession) {
-                // New session - increment
-                count += Math.floor(Math.random() * 3) + 1; // 1-3 new visitors since last visit
-                localStorage.setItem(SESSION_KEY, count.toString());
-                localStorage.setItem(LAST_SESSION_KEY, currentSession);
-            }
-
-            animateCount(count);
-
-            // Simulate live updates
-            setInterval(function() {
-                if (Math.random() > 0.7) {
-                    count++;
-                    localStorage.setItem(SESSION_KEY, count.toString());
-                    animateCount(count);
-                }
-            }, 5000 + Math.random() * 10000);
-        }
-
-        // Start
-        updateDisplay(95420); // Show starting number immediately
-        initRealCounter();
-
-        // Also update when tab becomes visible
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                fetch('https://api.countapi.xyz/get/' + API_NAMESPACE + '/' + API_KEY)
-                    .then(function(res) { return res.json(); })
-                    .then(function(data) {
-                        if (data && typeof data.value === 'number') {
-                            animateCount(data.value);
-                        }
-                    }).catch(function(){});
-            }
-        });
-    })();
 
     // ===================== UI HELPERS =====================
     function autoSetConnectionMode(ch) {
@@ -2844,7 +2666,7 @@
             return false;
         }
 
-        const FOCUSABLE = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .visitor-badge, .virtual-remote-btn, .ch-nav-btn, .cast-btn, .progress-bar';
+        const FOCUSABLE = 'button, [tabindex]:not([tabindex="-1"]), a, input, select, .channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .virtual-remote-btn, .ch-nav-btn, .cast-btn, .progress-bar';
 
         function getFocusableElements() {
             let els = Array.from(document.querySelectorAll(FOCUSABLE)).filter(el => el.offsetParent !== null && !el.disabled);
@@ -3008,7 +2830,7 @@
         }, { passive: true });
 
         function makeFocusable() {
-            const selectors = '.channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .visitor-badge, .virtual-remote-btn, .ch-nav-btn, .cast-btn';
+            const selectors = '.channel-item, .cat-tab, .control-btn, .settings-btn, .premium-header-btn, .retry-btn, .quality-option, .mode-btn, .color-option, .social-btn, .faq-question, .custom-channel-item button, .virtual-remote-btn, .ch-nav-btn, .cast-btn';
             document.querySelectorAll(selectors).forEach(function(el) {
                 if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
                 if (!el.hasAttribute('role') && (el.classList.contains('channel-item') || el.classList.contains('cat-tab'))) el.setAttribute('role', 'button');
@@ -3547,9 +3369,9 @@
     }
     </style>
     <div id="pwa-install-bar">
-        <img src="icon-192x192.png" class="pwa-icon" alt="Yara Sport">
+        <img src="icon-192x192.png" class="pwa-icon" alt="Kurd Sport">
         <div class="pwa-text">
-            <div class="pwa-title">Install Yara Sport</div>
+            <div class="pwa-title">Install Kurd Sport</div>
             <div class="pwa-sub">Add to your device for instant access</div>
         </div>
         <div class="pwa-btns">

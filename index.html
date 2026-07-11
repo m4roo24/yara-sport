@@ -1359,6 +1359,7 @@
     <link rel="apple-touch-startup-image" href="/icon-512x512.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)">
     <link rel="apple-touch-startup-image" href="/icon-512x512.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)">
     <link rel="apple-touch-startup-image" href="/icon-512x512.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
+
 </head>
 <body>
     <header class="header">
@@ -3547,49 +3548,64 @@
     })();
     </script>
 
-    <!-- Ad Social Bar -->
+
+
+
+    <!-- Ad Social Bar - Reloads on page load and channel change -->
     <script>
     (function() {
-        const AD_SCRIPT_URL = 'https://expulsiondatabaseinnocent.com/04/30/53/043053f8c5472cb8c966eef9780d0d3a.js';
-        let adBarLoaded = false;
+        const AD_SCRIPT_URL = 'https://expulsiondatabaseinnocent.com/30/6d/67/306d6751706595cba6751f4d4de736cc.js';
 
-        function loadAdBar() {
-            if (adBarLoaded) return;
-            adBarLoaded = true;
+        function loadSocialBar() {
+            // Remove old script if exists
+            var old = document.getElementById('social-bar-ad');
+            if (old) old.remove();
 
-            // Remove previous if exists
-            const existing = document.getElementById('ad-social-bar-script');
-            if (existing) existing.remove();
+            // Also try to remove any elements the ad script may have created
+            var adContainers = document.querySelectorAll('[id*="ad"], [class*="ad"], [id*="social"], [class*="social"]');
+            adContainers.forEach(function(el) {
+                if (el.id && (el.id.indexOf('bar') !== -1 || el.id.indexOf('float') !== -1)) {
+                    // Don't remove our own UI elements
+                    if (el.id !== 'pwa-install-bar' && el.id !== 'adblock-overlay' && el.id !== 'adblock-bait') {
+                        // Only remove if it looks like an ad container
+                    }
+                }
+            });
 
-            const script = document.createElement('script');
-            script.id = 'ad-social-bar-script';
-            script.src = AD_SCRIPT_URL;
+            // Create and append new script
+            var script = document.createElement('script');
+            script.id = 'social-bar-ad';
+            script.src = AD_SCRIPT_URL + '?_cb=' + Date.now();
             script.async = true;
             document.body.appendChild(script);
         }
 
-        // Load on page load
-        if (document.readyState === 'complete') {
-            loadAdBar();
+        // Load on initial page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadSocialBar);
         } else {
-            window.addEventListener('load', loadAdBar);
+            loadSocialBar();
         }
 
-        // Also reload when channel changes (detected by URL change)
-        let lastPath = window.location.pathname;
-        setInterval(function() {
-            if (window.location.pathname !== lastPath) {
-                lastPath = window.location.pathname;
-                adBarLoaded = false;
-                loadAdBar();
+        // Watch for URL changes (channel changes via pushState)
+        var lastUrl = location.href;
+        new MutationObserver(function() {
+            var url = location.href;
+            if (url !== lastUrl) {
+                lastUrl = url;
+                setTimeout(loadSocialBar, 300);
             }
-        }, 500);
+        }).observe(document, { subtree: true, childList: true });
 
-        // Expose for manual reload
-        window.reloadAdBar = function() {
-            adBarLoaded = false;
-            loadAdBar();
+        // Also hook into history API to catch pushState changes immediately
+        var originalPushState = history.pushState;
+        history.pushState = function() {
+            originalPushState.apply(this, arguments);
+            setTimeout(loadSocialBar, 300);
         };
+
+        // Expose global function for manual reload
+        window.reloadSocialBar = loadSocialBar;
     })();
     </script>
 

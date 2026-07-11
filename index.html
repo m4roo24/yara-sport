@@ -119,7 +119,7 @@
             background: transparent;
             flex-shrink: 0;
         }
-        .logo-icon img {
+        .logo-icon img, .logo-icon svg {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -179,7 +179,7 @@
             color: #22c55e;
         }
 
-        
+
         .main-container {
             display: flex;
             gap: 20px;
@@ -1364,7 +1364,7 @@
     <header class="header">
         <div class="logo-section">
             <div class="logo-icon">
-                <img src="icon-512x512.png" alt="Kurd Sport">
+                <img src="icon-512x512.png" alt="Kurd Sport" onerror="this.style.display='none'">
             </div>
             <div>
                 <div class="logo-text">KURD SPORT</div>
@@ -1824,6 +1824,15 @@
     let categories = ["All"];
     let activeCategory = "All";
 
+    function slugify(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    }
+
     function initChannels() {
         const uniqueCats = [...new Set(channels.map(c => c.category))];
         categories = ['All', ...uniqueCats.filter(c => c !== 'All')];
@@ -1831,8 +1840,41 @@
         renderCategoryTabs();
         renderChannels();
         document.getElementById('channelCount').textContent = channels.length;
+        // Handle URL routing after channels are ready
         setTimeout(() => handleRoute(), 200);
     }
+
+    // ===================== URL ROUTING =====================
+    function handleRoute() {
+        const path = window.location.pathname;
+        const match = path.match(/^\/live\/(.+)$/);
+        if (match) {
+            const slug = match[1];
+            // Find channel by slug
+            const idx = channels.findIndex(ch => slugify(ch.name) === slug);
+            if (idx !== -1) {
+                loadChannel(idx);
+            } else {
+                // If no match, show error or just stay on home
+                console.log('Channel not found for slug:', slug);
+            }
+        }
+    }
+
+    function updateURL(index) {
+        if (index < 0 || index >= channels.length) return;
+        const ch = channels[index];
+        const slug = slugify(ch.name);
+        const newPath = '/live/' + slug;
+        if (window.location.pathname !== newPath) {
+            window.history.pushState({ channelIndex: index }, ch.name, newPath);
+        }
+    }
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function(e) {
+        handleRoute();
+    });
 
     // ===================== STATE =====================
     let currentHls = null;
@@ -2466,6 +2508,10 @@
         currentChannelIndex = -1;
         updateChannelNavDisplay();
         renderChannels();
+        // Reset URL to home
+        if (window.location.pathname !== '/') {
+            window.history.pushState({}, '', '/');
+        }
     }
     function tvHomeButton() {
         showToast('Home: Scroll to Top', 'fas fa-home');
@@ -3371,7 +3417,7 @@
     }
     </style>
     <div id="pwa-install-bar">
-        <img src="icon-192x192.png" class="pwa-icon" alt="Kurd Sport">
+        <img src="icon-512x512.png" alt="Kurd Sport" style="width:44px;height:44px;border-radius:10px;flex-shrink:0;object-fit:cover;" onerror="this.style.display='none'">
         <div class="pwa-text">
             <div class="pwa-title">Install Kurd Sport</div>
             <div class="pwa-sub">Add to your device for instant access</div>

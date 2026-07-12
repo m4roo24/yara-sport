@@ -1296,7 +1296,45 @@
         body.light-theme .virtual-remote-action { background: #f5f5f5; color: #1a1a1a; border-color: #e4e4e7; }
         body.light-theme .virtual-remote-action:hover { background: var(--primary); color: #fff; }
 
-        @media (max-width: 768px) {
+        
+        /* Hide TV D-pad focus rings on mobile touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            .channel-item:focus-visible,
+            .cat-tab:focus-visible,
+            .control-btn:focus-visible,
+            .settings-btn:focus-visible,
+            .premium-header-btn:focus-visible,
+            .retry-btn:focus-visible,
+            .quality-option:focus-visible,
+            .mode-btn:focus-visible,
+            .color-option:focus-visible,
+            .social-btn:focus-visible,
+            .faq-question:focus-visible,
+            .custom-channel-item button:focus-visible,
+            .virtual-remote-btn:focus-visible,
+            .ch-nav-btn:focus-visible,
+            .cast-btn:focus-visible {
+                outline: none !important;
+                box-shadow: none !important;
+                transform: none !important;
+            }
+            .channel-item:active,
+            .cat-tab:active,
+            .control-btn:active,
+            .settings-btn:active,
+            .ch-nav-btn:active,
+            .cast-btn:active {
+                transform: scale(0.95) !important;
+            }
+        }
+        /* Only show TV virtual remote on actual TV devices */
+        @media (hover: none) and (pointer: coarse) {
+            body:not(.tv-mode) .virtual-remote-overlay,
+            body:not(.tv-mode) .virtual-remote {
+                display: none !important;
+            }
+        }
+@media (max-width: 768px) {
 }
         @media (max-width: 640px) {
             .settings-panel { width: 100%; max-width: 100%; right: -100%; }
@@ -1540,6 +1578,70 @@
                 </div>
             </div>
             <div class="settings-section">
+                <h3><i class="fas fa-play-circle"></i> Playback</h3>
+                <p class="settings-desc">Control how streams start and behave on your device.</p>
+                <div class="input-group" style="gap:14px;">
+                    <label class="checkbox-label" style="padding:10px; background:var(--bg-input); border-radius:10px; border:1px solid var(--border);">
+                        <input type="checkbox" id="settingAutoPlay" onchange="savePlaybackSettings()">
+                        <span><strong>Auto-Play Stream</strong><br><span style="font-size:0.75rem;color:var(--text-muted);">Start live stream automatically when selecting a channel</span></span>
+                    </label>
+                    <label class="checkbox-label" style="padding:10px; background:var(--bg-input); border-radius:10px; border:1px solid var(--border);">
+                        <input type="checkbox" id="settingDataSaver" onchange="savePlaybackSettings()">
+                        <span><strong>Data Saver Mode</strong><br><span style="font-size:0.75rem;color:var(--text-muted);">Limit to 480p max, reduce buffer size for slow WiFi</span></span>
+                    </label>
+                    <label class="checkbox-label" style="padding:10px; background:var(--bg-input); border-radius:10px; border:1px solid var(--border);">
+                        <input type="checkbox" id="settingAlwaysControls" onchange="savePlaybackSettings()">
+                        <span><strong>Always Show Controls</strong><br><span style="font-size:0.75rem;color:var(--text-muted);">Keep player controls visible (good for TV / screen recording)</span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3><i class="fas fa-sliders-h"></i> Stream Quality</h3>
+                <p class="settings-desc">Set your preferred default quality. Auto lets the app choose based on your connection.</p>
+                <div class="mode-toggle" id="defaultQualityToggle">
+                    <button class="mode-btn" data-quality="auto" onclick="setDefaultQuality('auto')" tabindex="0">Auto</button>
+                    <button class="mode-btn" data-quality="low" onclick="setDefaultQuality('low')" tabindex="0">Low (360p)</button>
+                    <button class="mode-btn" data-quality="medium" onclick="setDefaultQuality('medium')" tabindex="0">Medium (720p)</button>
+                    <button class="mode-btn" data-quality="high" onclick="setDefaultQuality('high')" tabindex="0">High (1080p)</button>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3><i class="fas fa-clock"></i> Controls Timer</h3>
+                <p class="settings-desc">How long before player controls auto-hide when idle.</p>
+                <div class="mode-toggle" id="controlsTimerToggle">
+                    <button class="mode-btn" data-timer="2" onclick="setControlsTimer(2)" tabindex="0">2s</button>
+                    <button class="mode-btn" data-timer="4" onclick="setControlsTimer(4)" tabindex="0">4s</button>
+                    <button class="mode-btn" data-timer="8" onclick="setControlsTimer(8)" tabindex="0">8s</button>
+                    <button class="mode-btn" data-timer="0" onclick="setControlsTimer(0)" tabindex="0">Never</button>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3><i class="fas fa-database"></i> Data & Storage</h3>
+                <p class="settings-desc">Manage your custom channels and app data.</p>
+                <div class="input-group" style="gap:10px;">
+                    <button class="settings-btn-primary" onclick="exportCustomChannels()" tabindex="0">
+                        <i class="fas fa-file-export"></i> Export My Channels
+                    </button>
+                    <button class="settings-btn-primary" onclick="importCustomChannels()" tabindex="0" style="background:var(--bg-input); color:var(--text-primary); border:1px solid var(--border);">
+                        <i class="fas fa-file-import"></i> Import Channels
+                    </button>
+                    <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="handleImportFile(this)">
+                    <button class="settings-btn-primary" onclick="resetAllSettings()" tabindex="0" style="background:rgba(239,68,68,0.15); color:var(--live-red); border:1px solid rgba(239,68,68,0.3);">
+                        <i class="fas fa-trash-alt"></i> Reset All Settings
+                    </button>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3><i class="fas fa-info-circle"></i> About</h3>
+                <div class="help-box">
+                    <i class="fas fa-code-branch"></i>
+                    <div>
+                        <strong>Kurd Sport v2.0</strong>
+                        <p>Built for Kurdish football fans. Supports HLS streaming, Chromecast, TV remote, gamepad, and keyboard controls.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-section"><div class="settings-section">
                 <h3><i class="fas fa-external-link-alt"></i> Links</h3>
                 <div class="social-links">
                     <a href="https://kurd-sport.vercel.app/terms.html" target="_blank" class="social-btn email" tabindex="0">
@@ -2184,7 +2286,7 @@
 
     // ===================== LOAD CHANNEL (FIXED) =====================
     function loadChannel(index) {
-        if (index < 0 || index >= channels.length || isLoading) return;
+        if (index < 0 || index >= channels.length) return;
         isLoading = true;
         currentChannelIndex = index;
         const ch = channels[index];
@@ -2194,10 +2296,14 @@
         retryBtn.style.display = 'none';
         errorText.textContent = '';
 
-        // Show resume overlay - visitor must click to start
+        // Show resume overlay unless auto-play is enabled
         const resumeOverlay = document.getElementById('resumeOverlay');
         if (resumeOverlay) {
-            resumeOverlay.classList.add('show');
+            if (autoPlayEnabled) {
+                resumeOverlay.classList.remove('show');
+            } else {
+                resumeOverlay.classList.add('show');
+            }
         }
 
         // Clean previous stream
@@ -2253,43 +2359,58 @@
         if (!Hls.isSupported()) { showError('Browser does not support HLS.'); return; }
 
         const config = {
-            maxBufferLength: 120,
-            maxMaxBufferLength: 300,
-            liveSyncDurationCount: 3,
-            liveMaxLatencyDurationCount: 20,
-            liveBackBufferLength: 60,
-            backBufferLength: 60,
+            maxBufferLength: 8,
+            maxMaxBufferLength: 30,
+            liveSyncDurationCount: 2,
+            liveMaxLatencyDurationCount: 8,
+            liveBackBufferLength: 20,
+            backBufferLength: 20,
             enableWorker: true,
             lowLatencyMode: false,
             forceKeyFrameOnDiscontinuity: true,
             maxLiveSyncPlaybackRate: 1.05,
-            fragLoadingTimeOut: 60000,
-            fragLoadingMaxRetry: 8,
-            fragLoadingRetryDelay: 1000,
-            manifestLoadingTimeOut: 60000,
-            manifestLoadingMaxRetry: 8,
-            manifestLoadingRetryDelay: 1000,
-            levelLoadingTimeOut: 60000,
-            levelLoadingMaxRetry: 8,
-            levelLoadingRetryDelay: 1000,
-            abrEwmaFastLive: 3.0,
-            abrEwmaSlowLive: 9.0,
+            fragLoadingTimeOut: 30000,
+            fragLoadingMaxRetry: 10,
+            fragLoadingRetryDelay: 500,
+            manifestLoadingTimeOut: 20000,
+            manifestLoadingMaxRetry: 5,
+            manifestLoadingRetryDelay: 500,
+            levelLoadingTimeOut: 20000,
+            levelLoadingMaxRetry: 5,
+            levelLoadingRetryDelay: 500,
+            abrEwmaFastLive: 2.0,
+            abrEwmaSlowLive: 6.0,
+            abrBandWidthFactor: 0.6,
+            abrBandWidthUpFactor: 0.4,
+            maxStarvationDelay: 3,
             capLevelToPlayerSize: false,
-            startLevel: -1,
-            maxBufferHole: 3.0,
-            maxSeekHole: 3.0,
-            highBufferWatchdogPeriod: 3,
-            nudgeOffset: 0.3,
-            nudgeMaxRetry: 8,
+            startLevel: 0,
+            maxBufferHole: 2.0,
+            maxSeekHole: 2.0,
+            highBufferWatchdogPeriod: 2,
+            nudgeOffset: 0.2,
+            nudgeMaxRetry: 10,
             liveDurationInfinity: true,
             initialLiveManifestSize: 1,
-            maxFragLookUpTolerance: 0.5,
+            maxFragLookUpTolerance: 1.0,
             startPosition: -1,
             autoStartLoad: true,
+            testBandwidth: true,
             xhrSetup: function(xhr) { xhr.withCredentials = false; }
         };
 
         currentHls = new Hls(config);
+        // Data saver: cap to 480p max
+        if (dataSaverEnabled && currentHls) {
+            currentHls.on(Hls.Events.MANIFEST_PARSED, function() {
+                if (!currentHls || !currentHls.levels) return;
+                currentHls.levels.forEach((lvl, i) => {
+                    if (lvl.height && lvl.height > 480) {
+                        currentHls.removeLevel(i);
+                    }
+                });
+            });
+        }
         currentHls.loadSource(url);
         currentHls.attachMedia(video);
 
@@ -2299,21 +2420,35 @@
 
         // MANIFEST PARSED - ready but don't auto-play, wait for resume
         currentHls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+            if (loadToken !== streamLoadToken) return;
             currentLevels = data.levels || [];
             buildQualityMenu();
-            // Stream is ready but paused - visitor must click Resume
-            video.pause();
-            playStarted = false;
+            // Stream is ready - auto-play if enabled, else wait for resume click
+            if (autoPlayEnabled) {
+                video.play().then(() => {
+                    playStarted = true;
+                }).catch(() => {
+                    video.muted = true;
+                    video.play().then(() => { playStarted = true; }).catch(() => {});
+                });
+            } else {
+                video.pause();
+                playStarted = false;
+            }
             loadingOverlay.style.display = 'none';
             loadingText.textContent = 'Loading stream...';
             streamStatus.className = 'stream-status checking';
             streamStatus.innerHTML = '<i class="fas fa-pause-circle"></i> Paused - Click Resume';
             isLoading = false;
+            // If only 1 level or low bandwidth, show hint
+            if (currentLevels.length <= 1) {
+                streamStatus.innerHTML = '<i class="fas fa-signal"></i> Ready (Low Quality)';
+            }
         });
 
         // FIRST FRAME PLAYING - stream is live (triggered after resume click)
         video.addEventListener('playing', () => {
-            if (hasFatalError) return;
+            if (loadToken !== streamLoadToken || hasFatalError) return;
             loadState = 'playing';
             loadingOverlay.style.display = 'none';
             errorOverlay.classList.remove('show');
@@ -2331,21 +2466,35 @@
 
         // BUFFERING - show loading
         video.addEventListener('waiting', () => {
+            if (loadToken !== streamLoadToken) return;
             loadingText.textContent = 'Buffering...';
             loadingOverlay.style.display = 'flex';
         });
 
         // RESUME FROM BUFFERING
         video.addEventListener('playing', () => {
+            if (loadToken !== streamLoadToken) return;
             loadingOverlay.style.display = 'none';
         });
 
         // AUTO-RESUME IF PAUSED UNEXPECTEDLY
         video.addEventListener('pause', () => {
+            if (loadToken !== streamLoadToken) return;
             if (!video.ended && loadState === 'playing' && !video.seeking) {
                 setTimeout(() => {
                     if (video.paused && loadState === 'playing') video.play().catch(() => {});
                 }, 500);
+            }
+        });
+
+        // Level switched - show quality change in UI
+        currentHls.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
+            if (loadToken !== streamLoadToken) return;
+            const lvl = currentHls.levels[data.level];
+            if (lvl && lvl.height) {
+                qualityBtn.textContent = lvl.height + 'p';
+            } else {
+                qualityBtn.textContent = data.level === -1 ? 'AUTO' : (data.level + 1) + 'L';
             }
         });
 
@@ -2387,20 +2536,25 @@
             }
         });
 
-        // SAFETY: if no video after 25s, show error (but DON'T stop if still trying)
+        // SAFETY: if no video after 20s on slow WiFi, retry with lower settings
         setTimeout(() => {
             if (loadToken !== streamLoadToken) return;
             if (!hasFatalError && loadState === 'loading' && !playStarted) {
-                // Don't show error immediately - try one more time
-                if (mediaRecoveryAttempts < 3) {
+                loadingText.textContent = 'Slow network detected, retrying...';
+                if (mediaRecoveryAttempts < 5) {
                     mediaRecoveryAttempts++;
-                    try { currentHls.startLoad(); } catch(e) {}
+                    try {
+                        currentHls.startLoad();
+                        // Force lowest level on retry for slow networks
+                        currentHls.nextLevel = 0;
+                        currentHls.loadLevel = 0;
+                    } catch(e) {}
                 } else {
                     hasFatalError = true;
-                    showError('Stream is taking too long. The channel may be offline.');
+                    showError('Stream unavailable. Channel may be offline or your connection is too slow.');
                 }
             }
-        }, 25000);
+        }, 20000);
     }
 
     function showError(msg) {
@@ -2421,10 +2575,14 @@
         retryBtn.style.display = 'none';
         errorText.textContent = '';
         if (currentChannelIndex >= 0) {
-            // Show resume overlay again instead of auto-loading
+            // Show resume overlay again unless auto-play is on
             const resumeOverlay = document.getElementById('resumeOverlay');
             if (resumeOverlay) {
-                resumeOverlay.classList.add('show');
+                if (autoPlayEnabled) {
+                    resumeOverlay.classList.remove('show');
+                } else {
+                    resumeOverlay.classList.add('show');
+                }
             }
             // Re-init the stream but keep it paused
             cleanupStream();
@@ -2675,6 +2833,7 @@
             const savedMode = localStorage.getItem('yara_theme_mode');
             if (savedMode) setThemeMode(savedMode);
         } catch(e) {}
+        loadPlaybackSettings();
         mergeCustomChannels();
         if (window.matchMedia) {
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
@@ -2684,16 +2843,149 @@
         }
     }
 
+    // ===================== PLAYBACK SETTINGS =====================
+    let autoPlayEnabled = false;
+    let dataSaverEnabled = false;
+    let alwaysControlsEnabled = false;
+    let defaultQuality = 'auto';
+    let controlsHideDelay = 4000;
+
+    function savePlaybackSettings() {
+        try {
+            autoPlayEnabled = document.getElementById('settingAutoPlay').checked;
+            dataSaverEnabled = document.getElementById('settingDataSaver').checked;
+            alwaysControlsEnabled = document.getElementById('settingAlwaysControls').checked;
+            localStorage.setItem('yara_autoplay', autoPlayEnabled ? '1' : '0');
+            localStorage.setItem('yara_datasaver', dataSaverEnabled ? '1' : '0');
+            localStorage.setItem('yara_always_controls', alwaysControlsEnabled ? '1' : '0');
+            showToast('Settings saved', 'fas fa-check');
+        } catch(e) {}
+    }
+
+    function loadPlaybackSettings() {
+        try {
+            autoPlayEnabled = localStorage.getItem('yara_autoplay') === '1';
+            dataSaverEnabled = localStorage.getItem('yara_datasaver') === '1';
+            alwaysControlsEnabled = localStorage.getItem('yara_always_controls') === '1';
+            const savedQuality = localStorage.getItem('yara_default_quality');
+            if (savedQuality) defaultQuality = savedQuality;
+            const savedTimer = localStorage.getItem('yara_controls_timer');
+            if (savedTimer !== null) controlsHideDelay = parseInt(savedTimer) * 1000;
+
+            document.getElementById('settingAutoPlay').checked = autoPlayEnabled;
+            document.getElementById('settingDataSaver').checked = dataSaverEnabled;
+            document.getElementById('settingAlwaysControls').checked = alwaysControlsEnabled;
+
+            // Update UI toggles
+            document.querySelectorAll('#defaultQualityToggle .mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.quality === defaultQuality);
+            });
+            document.querySelectorAll('#controlsTimerToggle .mode-btn').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.timer) === (controlsHideDelay / 1000));
+            });
+        } catch(e) {}
+    }
+
+    function setDefaultQuality(q) {
+        defaultQuality = q;
+        try { localStorage.setItem('yara_default_quality', q); } catch(e) {}
+        document.querySelectorAll('#defaultQualityToggle .mode-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.quality === q);
+        });
+        showToast('Default quality: ' + q.toUpperCase(), 'fas fa-check');
+    }
+
+    function setControlsTimer(seconds) {
+        controlsHideDelay = seconds === 0 ? 99999999 : seconds * 1000;
+        try { localStorage.setItem('yara_controls_timer', seconds); } catch(e) {}
+        document.querySelectorAll('#controlsTimerToggle .mode-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.timer) === seconds);
+        });
+        showToast(seconds === 0 ? 'Controls: Always visible' : 'Controls hide: ' + seconds + 's', 'fas fa-check');
+    }
+
+    function exportCustomChannels() {
+        try {
+            const custom = getCustomChannels();
+            const data = JSON.stringify(custom, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'kurd-sport-channels.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Channels exported', 'fas fa-download');
+        } catch(e) { showToast('Export failed', 'fas fa-times'); }
+    }
+
+    function importCustomChannels() {
+        document.getElementById('importFileInput').click();
+    }
+
+    function handleImportFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (!Array.isArray(imported)) throw new Error('Invalid format');
+                const existing = getCustomChannels();
+                let added = 0;
+                imported.forEach(ch => {
+                    if (ch.name && ch.url) {
+                        existing.push({ name: ch.name, url: ch.url, category: ch.category || 'Custom', needsProxy: ch.needsProxy || false, id: Date.now() + Math.random() });
+                        added++;
+                    }
+                });
+                saveCustomChannels(existing);
+                mergeCustomChannels();
+                renderCustomChannels();
+                renderCategoryTabs();
+                renderChannels();
+                document.getElementById('channelCount').textContent = channels.length;
+                showToast('Imported ' + added + ' channels', 'fas fa-check');
+            } catch(err) {
+                showToast('Invalid file format', 'fas fa-times');
+            }
+        };
+        reader.readAsText(file);
+        input.value = '';
+    }
+
+    function resetAllSettings() {
+        if (!confirm('Reset ALL settings? This will delete custom channels and preferences. This cannot be undone.')) return;
+        try {
+            localStorage.removeItem('yara_theme_color');
+            localStorage.removeItem('yara_theme_mode');
+            localStorage.removeItem('yara_autoplay');
+            localStorage.removeItem('yara_datasaver');
+            localStorage.removeItem('yara_always_controls');
+            localStorage.removeItem('yara_default_quality');
+            localStorage.removeItem('yara_controls_timer');
+            localStorage.removeItem('yara_custom_channels');
+            localStorage.removeItem('yara_premium');
+            localStorage.removeItem('yara_device_id');
+            showToast('All settings reset. Reloading...', 'fas fa-check');
+            setTimeout(() => location.reload(), 1500);
+        } catch(e) { showToast('Reset failed', 'fas fa-times'); }
+    }
+
     // ===================== AUTO-HIDE CONTROLS =====================
     let controlsHideTimer = null;
-    const CONTROLS_HIDE_DELAY = 4000;
     let isControlsVisible = false;
     function showControls() {
+        if (alwaysControlsEnabled) {
+            if (!isControlsVisible) { playerWrapper.classList.add('show-controls'); isControlsVisible = true; }
+            return;
+        }
         if (!isControlsVisible) { playerWrapper.classList.add('show-controls'); isControlsVisible = true; }
         if (controlsHideTimer) clearTimeout(controlsHideTimer);
-        controlsHideTimer = setTimeout(() => { playerWrapper.classList.remove('show-controls'); isControlsVisible = false; }, CONTROLS_HIDE_DELAY);
+        controlsHideTimer = setTimeout(() => { playerWrapper.classList.remove('show-controls'); isControlsVisible = false; }, controlsHideDelay);
     }
     function hideControlsNow() {
+        if (alwaysControlsEnabled) return;
         if (controlsHideTimer) clearTimeout(controlsHideTimer);
         playerWrapper.classList.remove('show-controls');
         isControlsVisible = false;
@@ -2839,7 +3131,7 @@
             if (matchesKey(e, TV_KEYS.MUTE_KEY)) { e.preventDefault(); e.stopPropagation(); toggleMute(); return; }
             if (matchesKey(e, TV_KEYS.PIP)) { e.preventDefault(); e.stopPropagation(); togglePip(); return; }
             if (matchesKey(e, TV_KEYS.SETTINGS)) { e.preventDefault(); e.stopPropagation(); toggleSettings(); return; }
-            if (matchesKey(e, TV_KEYS.REMOTE)) { e.preventDefault(); e.stopPropagation(); showVirtualRemote(); return; }
+            if (matchesKey(e, TV_KEYS.REMOTE)) { e.preventDefault(); e.stopPropagation(); if (isTV) showVirtualRemote(); return; }
             if (matchesKey(e, TV_KEYS.HELP)) { e.preventDefault(); e.stopPropagation(); showControlsHelp(); return; }
             if (matchesKey(e, TV_KEYS.NEXT_CH)) { e.preventDefault(); e.stopPropagation(); channelUp(); return; }
             if (matchesKey(e, TV_KEYS.PREV_CH)) { e.preventDefault(); e.stopPropagation(); channelDown(); return; }
@@ -2935,12 +3227,13 @@
 
         const isTV = /SmartTV|TV|Android TV|webOS|Chromecast|Roku|AppleTV|HbbTV|NetCast|Tizen|Web0S|CrKey|VIDAA|PlayStation|Xbox/.test(navigator.userAgent);
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        if (isTV || isStandalone) {
+        // TV D-pad / remote navigation ONLY on actual TV devices
+        if (isTV) {
             document.body.classList.add('tv-mode');
             setTimeout(function() {
                 const firstChannel = document.querySelector('.channel-item');
                 if (firstChannel) { firstChannel.focus(); firstChannel.scrollIntoView({ block: 'center' }); }
-                if (isTV && !document.fullscreenElement) toggleFullscreen();
+                if (!document.fullscreenElement) toggleFullscreen();
             }, 2000);
             setTimeout(function() { if (currentChannelIndex === -1 && channels.length > 0) loadChannel(0); }, 3000);
         }

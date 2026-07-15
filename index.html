@@ -28,6 +28,7 @@
             --success: #22c55e;
             --warning: #f59e0b;
             --focus-ring: rgba(124, 58, 237, 0.6);
+            --telegram: #229ED9;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; -webkit-touch-callout: none; user-select: none; }
         input, textarea, select, [contenteditable] { user-select: auto; -webkit-user-select: auto; }
@@ -178,7 +179,6 @@
             background: rgba(34, 197, 94, 0.2);
             color: #22c55e;
         }
-
 
         .main-container {
             display: flex;
@@ -1296,7 +1296,6 @@
         body.light-theme .virtual-remote-action { background: #f5f5f5; color: #1a1a1a; border-color: #e4e4e7; }
         body.light-theme .virtual-remote-action:hover { background: var(--primary); color: #fff; }
 
-        
         /* Hide TV D-pad focus rings on mobile touch devices */
         @media (hover: none) and (pointer: coarse) {
             .channel-item:focus-visible,
@@ -1334,8 +1333,6 @@
                 display: none !important;
             }
         }
-@media (max-width: 768px) {
-}
         @media (max-width: 640px) {
             .settings-panel { width: 100%; max-width: 100%; right: -100%; }
             .controls-help-grid { grid-template-columns: 1fr; }
@@ -1344,7 +1341,7 @@
         @media (max-width: 768px) {
             .logo-text { font-size: 1rem; }
             .header-right { gap: 6px; }
-.settings-btn { width: 32px; height: 32px; font-size: 0.9rem; }
+            .settings-btn { width: 32px; height: 32px; font-size: 0.9rem; }
             .premium-header-btn { padding: 4px 10px; font-size: 0.7rem; }
             .cast-btn { width: 32px !important; height: 32px !important; font-size: 0.9rem !important; }
             .logo-text { font-size: 1.1rem; }
@@ -1398,8 +1395,206 @@
     <link rel="apple-touch-startup-image" href="/icon-512x512.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)">
     <link rel="apple-touch-startup-image" href="/icon-512x512.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)">
 
+    <!-- Telegram Popup Styles -->
+    <style>
+        .telegram-popup-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            z-index: 99998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: tgFadeIn 0.4s ease;
+        }
+        .telegram-popup-overlay.show { display: flex; }
+        @keyframes tgFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .telegram-popup {
+            background: linear-gradient(145deg, rgba(26,26,46,0.98), rgba(15,15,35,0.98));
+            border: 1px solid rgba(34,158,217,0.3);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 32px 96px rgba(0,0,0,0.6), 0 0 60px rgba(34,158,217,0.1);
+            animation: tgSlideUp 0.5s cubic-bezier(0.4,0,0.2,1);
+            overflow: hidden;
+        }
+        @keyframes tgSlideUp {
+            from { transform: translateY(60px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .telegram-popup-header {
+            background: linear-gradient(135deg, #229ED9, #1a8bc2);
+            padding: 32px 24px 24px;
+            position: relative;
+        }
+        .telegram-popup-header .tg-icon-bg {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        .telegram-popup-header .tg-icon-bg i {
+            font-size: 2.2rem;
+            color: #fff;
+        }
+        .telegram-popup-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .telegram-popup-header p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+            margin: 0;
+        }
+        .telegram-popup-body {
+            padding: 24px;
+        }
+        .telegram-popup-body .tg-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .tg-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: rgba(34,158,217,0.06);
+            border: 1px solid rgba(34,158,217,0.12);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .tg-feature i {
+            color: #229ED9;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .tg-feature strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .telegram-popup-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #229ED9, #1a8bc2);
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 20px rgba(34,158,217,0.3);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        .telegram-popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(34,158,217,0.4);
+        }
+        .telegram-popup-btn:active {
+            transform: translateY(0);
+        }
+        .telegram-popup-btn i {
+            font-size: 1.1rem;
+        }
+        .telegram-popup-later {
+            margin-top: 14px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: color 0.2s;
+        }
+        .telegram-popup-later:hover {
+            color: var(--text-secondary);
+        }
+        .telegram-popup-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34,158,217,0.1);
+            color: #229ED9;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+        @media (max-width: 480px) {
+            .telegram-popup { border-radius: 20px; }
+            .telegram-popup-header { padding: 24px 20px 20px; }
+            .telegram-popup-header .tg-icon-bg { width: 60px; height: 60px; }
+            .telegram-popup-header .tg-icon-bg i { font-size: 1.8rem; }
+            .telegram-popup-header h2 { font-size: 1.2rem; }
+            .telegram-popup-body { padding: 20px; }
+        }
+    </style>
+
 </head>
 <body>
+    <!-- Telegram Join Popup -->
+    <div class="telegram-popup-overlay" id="telegramPopup">
+        <div class="telegram-popup">
+            <div class="telegram-popup-header">
+                <div class="tg-icon-bg">
+                    <i class="fab fa-telegram-plane"></i>
+                </div>
+                <h2>Join Kurd Sport TV</h2>
+                <p>Get live match updates & new channels</p>
+            </div>
+            <div class="telegram-popup-body">
+                <div class="tg-features">
+                    <div class="tg-feature">
+                        <i class="fas fa-bolt"></i>
+                        <span><strong>Instant Notifications</strong> — Never miss a match</span>
+                    </div>
+                    <div class="tg-feature">
+                        <i class="fas fa-tv"></i>
+                        <span><strong>New Channels First</strong> — Be the first to know</span>
+                    </div>
+                    <div class="tg-feature">
+                        <i class="fas fa-users"></i>
+                        <span><strong>Community</strong> — Chat with fellow fans</span>
+                    </div>
+                </div>
+                <a href="https://t.me/kurd_sport_tv" target="_blank" rel="noopener noreferrer" class="telegram-popup-btn" onclick="closeTelegramPopup(true)" tabindex="0">
+                    <i class="fab fa-telegram-plane"></i> Join Telegram Channel
+                </a>
+                <button class="telegram-popup-later" onclick="closeTelegramPopup(false)" tabindex="0">
+                    Maybe Later
+                </button>
+                <div class="telegram-popup-count">
+                    <i class="fas fa-users"></i> <span id="tgMemberCount">5,000+</span> members already joined
+                </div>
+            </div>
+        </div>
+    </div>
+
     <header class="header">
         <div class="logo-section">
             <div class="logo-icon">
@@ -1418,7 +1613,7 @@
             <button class="premium-header-btn" onclick="openPremiumPage()" title="Premium" tabindex="0" style="padding:5px 10px;">
                 <i class="fas fa-crown"></i>
             </button>
-</div>
+        </div>
     </header>
 
     <div id="premiumStatusBar" style="display:none; max-width:1600px; margin:12px auto 0; padding:0 20px;">
@@ -1641,7 +1836,7 @@
                     </div>
                 </div>
             </div>
-            <div class="settings-section"><div class="settings-section">
+            <div class="settings-section">
                 <h3><i class="fas fa-external-link-alt"></i> Links</h3>
                 <div class="social-links">
                     <a href="https://kurd-sport.vercel.app/terms.html" target="_blank" class="social-btn email" tabindex="0">
@@ -1951,7 +2146,6 @@
         renderCategoryTabs();
         renderChannels();
         document.getElementById('channelCount').textContent = channels.length;
-        // Handle URL routing after channels are ready
         setTimeout(() => handleRoute(), 200);
     }
 
@@ -1961,12 +2155,10 @@
         const match = path.match(/^\/live\/(.+)$/);
         if (match) {
             const slug = match[1];
-            // Find channel by slug
             const idx = channels.findIndex(ch => slugify(ch.name) === slug);
             if (idx !== -1) {
                 loadChannel(idx);
             } else {
-                // If no match, show error or just stay on home
                 console.log('Channel not found for slug:', slug);
             }
         }
@@ -1982,7 +2174,6 @@
         }
     }
 
-    // Handle browser back/forward buttons
     window.addEventListener('popstate', function(e) {
         handleRoute();
     });
@@ -2285,7 +2476,7 @@
         qualityMenu.innerHTML = '';
     }
 
-    // ===================== LOAD CHANNEL (FIXED) =====================
+    // ===================== LOAD CHANNEL =====================
     function loadChannel(index) {
         if (index < 0 || index >= channels.length) return;
         isLoading = true;
@@ -2297,7 +2488,6 @@
         retryBtn.style.display = 'none';
         errorText.textContent = '';
 
-        // Show resume overlay unless auto-play is enabled
         const resumeOverlay = document.getElementById('resumeOverlay');
         if (resumeOverlay) {
             if (autoPlayEnabled) {
@@ -2307,7 +2497,6 @@
             }
         }
 
-        // Clean previous stream
         cleanupStream();
 
         document.getElementById('currentChannelName').textContent = ch.name;
@@ -2354,7 +2543,7 @@
         });
     }
 
-    // ===================== HLS INIT (FIXED - NO STOPPING) =====================
+    // ===================== HLS INIT =====================
     function initHls(url, ch, loadToken) {
         if (loadToken !== streamLoadToken) return;
         if (!Hls.isSupported()) { showError('Browser does not support HLS.'); return; }
@@ -2401,7 +2590,6 @@
         };
 
         currentHls = new Hls(config);
-        // Data saver: cap to 480p max
         if (dataSaverEnabled && currentHls) {
             currentHls.on(Hls.Events.MANIFEST_PARSED, function() {
                 if (!currentHls || !currentHls.levels) return;
@@ -2419,12 +2607,10 @@
         let mediaRecoveryAttempts = 0;
         let playStarted = false;
 
-        // MANIFEST PARSED - ready but don't auto-play, wait for resume
         currentHls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
             if (loadToken !== streamLoadToken) return;
             currentLevels = data.levels || [];
             buildQualityMenu();
-            // Stream is ready - auto-play if enabled, else wait for resume click
             if (autoPlayEnabled) {
                 video.play().then(() => {
                     playStarted = true;
@@ -2441,13 +2627,11 @@
             streamStatus.className = 'stream-status checking';
             streamStatus.innerHTML = '<i class="fas fa-pause-circle"></i> Paused - Click Resume';
             isLoading = false;
-            // If only 1 level or low bandwidth, show hint
             if (currentLevels.length <= 1) {
                 streamStatus.innerHTML = '<i class="fas fa-signal"></i> Ready (Low Quality)';
             }
         });
 
-        // FIRST FRAME PLAYING - stream is live (triggered after resume click)
         video.addEventListener('playing', () => {
             if (loadToken !== streamLoadToken || hasFatalError) return;
             loadState = 'playing';
@@ -2465,20 +2649,17 @@
             if (isCasting) castCurrentChannel();
         }, { once: true });
 
-        // BUFFERING - show loading
         video.addEventListener('waiting', () => {
             if (loadToken !== streamLoadToken) return;
             loadingText.textContent = 'Buffering...';
             loadingOverlay.style.display = 'flex';
         });
 
-        // RESUME FROM BUFFERING
         video.addEventListener('playing', () => {
             if (loadToken !== streamLoadToken) return;
             loadingOverlay.style.display = 'none';
         });
 
-        // AUTO-RESUME IF PAUSED UNEXPECTEDLY
         video.addEventListener('pause', () => {
             if (loadToken !== streamLoadToken) return;
             if (!video.ended && loadState === 'playing' && !video.seeking) {
@@ -2488,7 +2669,6 @@
             }
         });
 
-        // Level switched - show quality change in UI
         currentHls.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
             if (loadToken !== streamLoadToken) return;
             const lvl = currentHls.levels[data.level];
@@ -2499,14 +2679,12 @@
             }
         });
 
-        // HLS ERROR HANDLING - RECOVER DON'T STOP
         currentHls.on(Hls.Events.ERROR, (event, data) => {
             if (loadToken !== streamLoadToken || hasFatalError) return;
 
             if (data.fatal) {
                 console.log('[HLS Fatal]', data.type, data.details);
 
-                // MEDIA ERROR: recover up to 5 times
                 if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
                     if (mediaRecoveryAttempts < 5) {
                         mediaRecoveryAttempts++;
@@ -2515,7 +2693,6 @@
                     }
                 }
 
-                // NETWORK ERROR: retry loading
                 if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
                     if (mediaRecoveryAttempts < 5) {
                         mediaRecoveryAttempts++;
@@ -2524,7 +2701,6 @@
                     }
                 }
 
-                // Only show error after all recovery attempts exhausted
                 hasFatalError = true;
                 if (ch.needsProxy) {
                     showError('Proxy connection failed. Channel may be offline.');
@@ -2532,12 +2708,10 @@
                     showError('Direct connection failed. Channel may be offline.');
                 }
             } else {
-                // Non-fatal: just log, don't stop
                 console.log('[HLS Non-Fatal]', data.type, data.details);
             }
         });
 
-        // SAFETY: if no video after 20s on slow WiFi, retry with lower settings
         setTimeout(() => {
             if (loadToken !== streamLoadToken) return;
             if (!hasFatalError && loadState === 'loading' && !playStarted) {
@@ -2546,7 +2720,6 @@
                     mediaRecoveryAttempts++;
                     try {
                         currentHls.startLoad();
-                        // Force lowest level on retry for slow networks
                         currentHls.nextLevel = 0;
                         currentHls.loadLevel = 0;
                     } catch(e) {}
@@ -2576,7 +2749,6 @@
         retryBtn.style.display = 'none';
         errorText.textContent = '';
         if (currentChannelIndex >= 0) {
-            // Show resume overlay again unless auto-play is on
             const resumeOverlay = document.getElementById('resumeOverlay');
             if (resumeOverlay) {
                 if (autoPlayEnabled) {
@@ -2585,10 +2757,10 @@
                     resumeOverlay.classList.add('show');
                 }
             }
-            // Re-init the stream but keep it paused
             cleanupStream();
             streamLoadToken++;
             const loadToken = streamLoadToken;
+            const ch = channels[currentChannelIndex];
             setTimeout(() => initHls(getChannelUrl(ch), ch, loadToken), 100);
             renderChannels();
         } else {
@@ -2712,7 +2884,6 @@
         currentChannelIndex = -1;
         updateChannelNavDisplay();
         renderChannels();
-        // Reset URL to home
         if (window.location.pathname !== '/') {
             window.history.pushState({}, '', '/');
         }
@@ -2877,7 +3048,6 @@
             document.getElementById('settingDataSaver').checked = dataSaverEnabled;
             document.getElementById('settingAlwaysControls').checked = alwaysControlsEnabled;
 
-            // Update UI toggles
             document.querySelectorAll('#defaultQualityToggle .mode-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.quality === defaultQuality);
             });
@@ -3138,7 +3308,6 @@
             if (matchesKey(e, TV_KEYS.PREV_CH)) { e.preventDefault(); e.stopPropagation(); channelDown(); return; }
         }, true);
 
-        // Gamepad
         let gamepadIndex = null;
         let lastGamepadTime = 0;
         const GAMEPAD_DEBOUNCE = 250;
@@ -3170,7 +3339,6 @@
             requestAnimationFrame(pollGamepad);
         }
 
-        // Touch
         let touchStartX = 0, touchStartY = 0, touchStartTime = 0, touchStartEl = null;
         document.addEventListener('touchstart', function(e) {
             touchStartX = e.changedTouches[0].screenX;
@@ -3228,7 +3396,6 @@
 
         const isTV = /SmartTV|TV|Android TV|webOS|Chromecast|Roku|AppleTV|HbbTV|NetCast|Tizen|Web0S|CrKey|VIDAA|PlayStation|Xbox/.test(navigator.userAgent);
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        // TV D-pad / remote navigation ONLY on actual TV devices
         if (isTV) {
             document.body.classList.add('tv-mode');
             setTimeout(function() {
@@ -3572,7 +3739,7 @@
     })();
     </script>
 
-    <!-- Anti-Adblock -->
+    <!-- FIXED Anti-Adblock -->
     <style>
         @keyframes adblockSlideUp {
             from { transform: translateY(60px); opacity: 0; }
@@ -3588,8 +3755,10 @@
     </style>
     <script>
     (function() {
+        "use strict";
         var adblockDetected = false;
         var checkInterval = null;
+        var detectionRunning = false;
 
         function blockWebsite() {
             var overlay = document.getElementById('adblock-overlay');
@@ -3608,6 +3777,8 @@
             var overlay = document.getElementById('adblock-overlay');
             if (overlay) overlay.style.display = 'none';
         }
+
+        // Method 1: Bait element with common adblock filter classes
         function checkBaitElement() {
             return new Promise(function(resolve) {
                 var bait = document.createElement('div');
@@ -3625,50 +3796,87 @@
                     if (style.opacity === '0' || style.opacity === '0.0') isBlocked = true;
                     if (rect.width === 0 && rect.height === 0) isBlocked = true;
                     if (bait.offsetParent === null && style.position !== 'fixed') isBlocked = true;
-                    document.body.removeChild(bait);
+                    try { document.body.removeChild(bait); } catch(e) {}
                     resolve(isBlocked);
-                }, 500);
+                }, 600);
             });
         }
-        function checkFetchBlocked() {
+
+        // Method 2: Try to load a known ad script URL (detect blocked fetch)
+        function checkScriptBlocked() {
+            return new Promise(function(resolve) {
+                var testScript = document.createElement('script');
+                testScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+                testScript.setAttribute('data-adblock-test', '1');
+                testScript.async = true;
+                var resolved = false;
+                var onError = function() { if (!resolved) { resolved = true; resolve(true); } };
+                var onLoad = function() { if (!resolved) { resolved = true; resolve(false); } };
+                testScript.onerror = onError;
+                testScript.onload = onLoad;
+                document.head.appendChild(testScript);
+                setTimeout(function() {
+                    if (!resolved) { resolved = true; resolve(true); }
+                    try { document.head.removeChild(testScript); } catch(e) {}
+                }, 2000);
+            });
+        }
+
+        // Method 3: Check if common ad-related global variables are undefined (uBlock/AdGuard pattern)
+        function checkGlobalVars() {
             return new Promise(function(resolve) {
                 var blocked = false;
-                var done = false;
-                fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', { method: 'HEAD', mode: 'no-cors', cache: 'no-store' }).then(function(response) {
-                    if (response.redirected) blocked = true;
-                    done = true; resolve(blocked);
-                }).catch(function(err) { blocked = navigator.onLine; done = true; resolve(blocked); });
-                setTimeout(function() { if (!done) resolve(false); }, 2000);
+                try {
+                    // Check if fetch is monkey-patched (common adblocker technique)
+                    var originalFetch = window.fetch;
+                    if (originalFetch && originalFetch.toString().indexOf('[native code]') === -1) {
+                        blocked = true;
+                    }
+                } catch(e) {}
+                resolve(blocked);
             });
         }
-        function checkAdContainers() {
+
+        // Method 4: Check if an ad image URL is blocked
+        function checkImageBlocked() {
             return new Promise(function(resolve) {
-                var adSelectors = ['.adsterra-banner-top', '.adsterra-banner-728', '.adsterra-banner-mobile', '[id*="container-"]', 'iframe[src*="highperformanceformat"]', 'iframe[src*="effectivecpmnetwork"]'];
-                var foundAds = 0; var hiddenAds = 0;
-                adSelectors.forEach(function(selector) {
-                    var elements = document.querySelectorAll(selector);
-                    elements.forEach(function(el) {
-                        foundAds++;
-                        var style = window.getComputedStyle(el);
-                        var rect = el.getBoundingClientRect();
-                        if (style.display === 'none' || style.visibility === 'hidden' || rect.height === 0) hiddenAds++;
-                    });
-                });
-                resolve(foundAds > 0 && hiddenAds === foundAds);
+                var img = new Image();
+                var resolved = false;
+                img.src = 'https://pagead2.googlesyndication.com/pagead/imgad?id=CICAgKDLsYv-1wEQARgBMgjH2fK8gdeB3w';
+                img.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;';
+                img.onerror = function() { if (!resolved) { resolved = true; resolve(true); } };
+                img.onload = function() { if (!resolved) { resolved = true; resolve(false); } };
+                document.body.appendChild(img);
+                setTimeout(function() {
+                    if (!resolved) { resolved = true; resolve(true); }
+                    try { document.body.removeChild(img); } catch(e) {}
+                }, 2000);
             });
         }
+
         function runDetection() {
-            if (isPremiumUser()) return;
+            if (detectionRunning || isPremiumUser()) return;
+            detectionRunning = true;
             if (!adblockDetected) {
-                Promise.all([checkBaitElement(), checkFetchBlocked(), checkAdContainers()]).then(function(results) {
+                Promise.all([checkBaitElement(), checkScriptBlocked(), checkGlobalVars(), checkImageBlocked()]).then(function(results) {
                     var blockedMethods = results.filter(Boolean).length;
-                    if (blockedMethods >= 2) { adblockDetected = true; blockWebsite(); }
-                }).catch(function(err) { console.warn('[Adblock] Error:', err); });
+                    // Require at least 2 out of 4 methods to agree (more reliable)
+                    if (blockedMethods >= 2) {
+                        adblockDetected = true;
+                        blockWebsite();
+                    }
+                    detectionRunning = false;
+                }).catch(function(err) {
+                    console.warn('[Adblock] Detection error:', err);
+                    detectionRunning = false;
+                });
             }
         }
+
         window.adblockCheckRetry = function() {
             adblockDetected = false;
-            Promise.all([checkBaitElement(), checkFetchBlocked(), checkAdContainers()]).then(function(results) {
+            detectionRunning = false;
+            Promise.all([checkBaitElement(), checkScriptBlocked(), checkGlobalVars(), checkImageBlocked()]).then(function(results) {
                 var blockedMethods = results.filter(Boolean).length;
                 if (blockedMethods >= 2) {
                     adblockDetected = true;
@@ -3676,14 +3884,20 @@
                     if (overlay) { overlay.style.animation = 'none'; setTimeout(function() { overlay.style.animation = 'adblockShake 0.5s ease'; }, 10); }
                     var btn = document.querySelector('#adblock-overlay button[onclick="adblockCheckRetry()"]');
                     if (btn) { var originalText = btn.innerHTML; btn.innerHTML = '<i class="fas fa-times"></i> Still Detected - Try Again'; btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)'; setTimeout(function() { btn.innerHTML = originalText; btn.style.background = ''; }, 3000); }
-                } else { adblockDetected = false; unblockWebsite(); }
+                } else {
+                    adblockDetected = false;
+                    unblockWebsite();
+                }
             });
         };
+
         window.adblockHowTo = function() {
             var el = document.getElementById('adblock-howto');
             if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
         };
+
         window.adblockGoPremium = function() { openPremiumPage(); startPremiumWatch(); };
+
         function startPremiumWatch() {
             var watchInterval = setInterval(function() {
                 if (isPremiumUser()) { clearInterval(watchInterval); adblockDetected = false; unblockWebsite(); showToast('Premium activated! Enjoy ad-free streaming.', 'fas fa-crown'); }
@@ -3691,12 +3905,22 @@
                 if (!premiumPage || !premiumPage.classList.contains('show')) { clearInterval(watchInterval); if (isPremiumUser()) { adblockDetected = false; unblockWebsite(); showToast('Premium activated! Enjoy ad-free streaming.', 'fas fa-crown'); } }
             }, 1000);
         }
+
         function isPremiumUser() {
             try { var saved = localStorage.getItem('yara_premium'); if (saved) { var data = JSON.parse(saved); return data.active === true; } } catch(e) {}
             return false;
         }
-        if (document.readyState === 'complete') { setTimeout(function() { if (!isPremiumUser()) runDetection(); }, 1500); }
-        else { window.addEventListener('load', function() { setTimeout(function() { if (!isPremiumUser()) runDetection(); }, 2000); }); }
+
+        // Run detection after page load
+        if (document.readyState === 'complete') {
+            setTimeout(function() { if (!isPremiumUser()) runDetection(); }, 1500);
+        } else {
+            window.addEventListener('load', function() {
+                setTimeout(function() { if (!isPremiumUser()) runDetection(); }, 2000);
+            });
+        }
+
+        // Periodic recheck every 30 seconds
         checkInterval = setInterval(function() {
             if (isPremiumUser()) { if (adblockDetected) { adblockDetected = false; unblockWebsite(); } return; }
             if (adblockDetected) runDetection();
@@ -3754,46 +3978,44 @@
         #pwa-install-bar .pwa-sub { display: none; }
         #pwa-install-bar { padding: 10px 12px; }
     }
-    
-        .resume-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 25;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-        }
-        .resume-overlay.show { display: flex; }
-        .play-btn-big {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-        }
-        .play-btn-big:hover {
-            transform: scale(1.1);
-            background: #fff;
-            box-shadow: 0 6px 32px rgba(124,58,237,0.3);
-        }
-        .play-btn-big:active {
-            transform: scale(0.95);
-        }
-        .play-btn-big i {
-            color: #000;
-            font-size: 1.4rem;
-            margin-left: 3px;
-        }
-
+    .resume-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 25;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+    .resume-overlay.show { display: flex; }
+    .play-btn-big {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    .play-btn-big:hover {
+        transform: scale(1.1);
+        background: #fff;
+        box-shadow: 0 6px 32px rgba(124,58,237,0.3);
+    }
+    .play-btn-big:active {
+        transform: scale(0.95);
+    }
+    .play-btn-big i {
+        color: #000;
+        font-size: 1.4rem;
+        margin-left: 3px;
+    }
     </style>
     <div id="pwa-install-bar">
         <img src="/icon-512x512.png" alt="Kurd Sport" style="width:44px;height:44px;border-radius:10px;flex-shrink:0;object-fit:cover;" onerror="this.style.display='none'">
@@ -3842,64 +4064,64 @@
     })();
     </script>
 
-
-
-
-    <!-- Ad Social Bar - Reloads on page load and channel change -->
+    <!-- Telegram Popup Logic (24h cooldown) -->
     <script>
     (function() {
-        const AD_SCRIPT_URL = '';
+        'use strict';
+        const TG_STORAGE_KEY = 'kurd_sport_tg_popup';
+        const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
+        const DELAY_MS = 3000; // Show after 3 seconds
 
-        function loadSocialBar() {
-            // Remove old script if exists
-            var old = document.getElementById('social-bar-ad');
-            if (old) old.remove();
-
-            // Also try to remove any elements the ad script may have created
-            var adContainers = document.querySelectorAll('[id*="ad"], [class*="ad"], [id*="social"], [class*="social"]');
-            adContainers.forEach(function(el) {
-                if (el.id && (el.id.indexOf('bar') !== -1 || el.id.indexOf('float') !== -1)) {
-                    // Don't remove our own UI elements
-                    if (el.id !== 'pwa-install-bar' && el.id !== 'adblock-overlay' && el.id !== 'adblock-bait') {
-                        // Only remove if it looks like an ad container
-                    }
-                }
-            });
-
-            // Create and append new script
-            var script = document.createElement('script');
-            script.id = 'social-bar-ad';
-            script.src = AD_SCRIPT_URL + '?_cb=' + Date.now();
-            script.async = true;
-            document.body.appendChild(script);
-        }
-
-        // Load on initial page load
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadSocialBar);
-        } else {
-            loadSocialBar();
-        }
-
-        // Watch for URL changes (channel changes via pushState)
-        var lastUrl = location.href;
-        new MutationObserver(function() {
-            var url = location.href;
-            if (url !== lastUrl) {
-                lastUrl = url;
-                setTimeout(loadSocialBar, 300);
+        function shouldShowPopup() {
+            try {
+                var lastShown = localStorage.getItem(TG_STORAGE_KEY);
+                if (!lastShown) return true;
+                var lastTime = parseInt(lastShown, 10);
+                if (isNaN(lastTime)) return true;
+                return (Date.now() - lastTime) >= COOLDOWN_MS;
+            } catch(e) {
+                return true;
             }
-        }).observe(document, { subtree: true, childList: true });
+        }
 
-        // Also hook into history API to catch pushState changes immediately
-        var originalPushState = history.pushState;
-        history.pushState = function() {
-            originalPushState.apply(this, arguments);
-            setTimeout(loadSocialBar, 300);
+        function markPopupShown() {
+            try {
+                localStorage.setItem(TG_STORAGE_KEY, Date.now().toString());
+            } catch(e) {}
+        }
+
+        window.closeTelegramPopup = function(joined) {
+            var popup = document.getElementById('telegramPopup');
+            if (popup) {
+                popup.classList.remove('show');
+                setTimeout(function() {
+                    popup.style.display = 'none';
+                }, 400);
+            }
+            markPopupShown();
+            if (joined) {
+                showToast('Thanks! Joined Kurd Sport TV on Telegram', 'fab fa-telegram-plane');
+            }
         };
 
-        // Expose global function for manual reload
-        window.reloadSocialBar = loadSocialBar;
+        function initTelegramPopup() {
+            if (!shouldShowPopup()) return;
+            var popup = document.getElementById('telegramPopup');
+            if (!popup) return;
+            setTimeout(function() {
+                popup.style.display = 'flex';
+                // Force reflow
+                void popup.offsetWidth;
+                popup.classList.add('show');
+            }, DELAY_MS);
+        }
+
+        // Also show on page load / channel change (if 24h passed)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTelegramPopup);
+        } else {
+            initTelegramPopup();
+        }
     })();
     </script>
 

@@ -380,6 +380,8 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.9rem;
+            overflow: hidden;
+            flex-shrink: 0;
         }
         .channel-details h3 { font-size: 1rem; font-weight: 600; }
         .channel-details p { font-size: 0.8rem; color: var(--text-muted); }
@@ -481,7 +483,7 @@
             align-items: center;
             gap: 12px;
             padding: 10px 12px;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.2s ease;
             margin-bottom: 4px;
@@ -490,7 +492,7 @@
         .channel-item.active { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); }
         .channel-item.active .ch-number { background: var(--primary); color: #fff; }
         .ch-number {
-            width: 36px;
+            width: 52px;
             height: 36px;
             border-radius: 10px;
             background: rgba(124,58,237,0.1);
@@ -501,6 +503,7 @@
             font-size: 0.75rem;
             color: var(--primary-light);
             flex-shrink: 0;
+            overflow: hidden;
         }
         .ch-info { flex: 1; min-width: 0; }
         .ch-name {
@@ -1680,15 +1683,6 @@
                     <span class="connection-value" id="autoConnectionLabel">Auto</span>
                 </div>
             </div>
-            <div class="ch-nav-row" id="chNavRow">
-                <button class="ch-nav-btn" onclick="channelDown()" tabindex="0" title="Previous Channel (P/CH-)">
-                    <i class="fas fa-step-backward"></i> Prev
-                </button>
-                <div class="ch-nav-number" id="chNavNumber">--</div>
-                <button class="ch-nav-btn" onclick="channelUp()" tabindex="0" title="Next Channel (N/CH+)">
-                    <i class="fas fa-step-forward"></i> Next
-                </button>
-            </div>
         </div>
         <div class="sidebar">
             <div class="sidebar-card">
@@ -2109,16 +2103,16 @@
     <script>
     // ===================== CHANNELS =====================
     let channels = [
-        { name: 'beIN Sport Max 2', url: 'https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/PdyWAfVGn69DPmqMCm_y3BelIDB2w8if3vm2di3DkIopWgrMa-aNufNThCZJ1B8pBEsySkmkDivysCuzIsuQrw/transcode/us-east-1/periscope-replay-direct-prod-us-east-1-public/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInZlcnNpb24iOiIyIn0.eyJFbmNvZGVyU2V0dGluZyI6ImVuY29kZXJfc2V0dGluZ183MjBwMzBfMTAiLCJIZWlnaHQiOjcyMCwiS2JwcyI6Mjc1MCwiV2lkdGgiOjEyODB9.ldktM4fCFRfkP4ZEBfZPKtlAUNAcTPkoz994YJAzWpE/dynamic_playlist.m3u8?type=live', category: 'beIN Sport', needsProxy: true, logo: '⚽️' },
-        { name: 'beIN Sport Max 5', url: 'https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index', category: 'beIN Sport', needsProxy: true, logo: '⚽️' },
-        { name: 'beIN Sport 4K', url: 'https://live-aburayhan1111.telewebion.ir/ek/faratar/live/2160p/index.m3u8', category: 'beIN Sport', needsProxy: true, logo: '⚽️' },
-        { name: 'beIN Sport direct', url: 'https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8', category: 'beIN Sport', needsProxy: true, logo: '⚽️' },
-        { name: 'Alwan Sport', url: 'https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/gah7meYPERfQO2x9PayKlfB6_pJe_x_kRp7ZHsiHwiXQWKmBi9xxSOxiENb1nzqr5SCYCfDiXTUUrxwZy9eLcw/transcode/us-east-1/periscope-replay-direct-prod-us-east-1-public/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInZlcnNpb24iOiIyIn0.eyJFbmNvZGVyU2V0dGluZyI6ImVuY29kZXJfc2V0dGluZ183MjBwMzBfMTAiLCJIZWlnaHQiOjcyMCwiS2JwcyI6Mjc1MCwiV2lkdGgiOjEyODB9.ldktM4fCFRfkP4ZEBfZPKtlAUNAcTPkoz994YJAzWpE/dynamic_delta.m3u8?type=live', category: 'Alwan Sports', needsProxy: true, logo: '⚽️' },
-        { name: 'NRT Sport', url: 'https://183.bozztv.com/giatv/giatv-NRT-SPORT/NRT-SPORT/chunks.m3u8', category: 'Kurdish Sports', needsProxy: true, logo: '⚽️' },
-        { name: 'AVA Sport', url: 'https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/0r143oSa6ROVh1fU0N9YPEaE1iubZyxbFpNud21L6iXosByoNo79kcupxNyKFFMDm143o0Z5PrT-_SCBdjGy3w/transcode/us-east-1/periscope-replay-direct-prod-us-east-1-public/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInZlcnNpb24iOiIyIn0.eyJFbmNvZGVyU2V0dGluZyI6ImVuY29kZXJfc2V0dGluZ183MjBwMzBfMTAiLCJIZWlnaHQiOjcyMCwiS2JwcyI6Mjc1MCwiV2lkdGgiOjEyODB9.ldktM4fCFRfkP4ZEBfZPKtlAUNAcTPkoz994YJAzWpE/dynamic_playlist.m3u8?type=live', category: 'Kurdish Sports', needsProxy: true, logo: '⚽️' },
-        { name: 'Fussball Sport', url: 'https://cp11.adabmedia.com/hls2/sport.m3u8', category: 'FIFA', needsProxy: true, logo: '⚽️' },
-        { name: 'Korax 90', url: 'https://2.simokora.com/my-hls/0wo68p0w54v/master.m3u8', category: 'FIFA', needsProxy: true, logo: '⚽️' },
-        { name: 'TikTok: m4roo14', url: 'https://e.776740.n.ir/hls2/dhdj.m3u8', category: '', needsProxy: true, logo: '⚽️' },
+        { name: 'beIN Sport Max 2', url: 'https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/PdyWAfVGn69DPmqMCm_y3BelIDB2w8if3vm2di3DkIopWgrMa-aNufNThCZJ1B8pBEsySkmkDivysCuzIsuQrw/transcode/us-east-1/periscope-replay-direct-prod-us-east-1-public/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInZlcnNpb24iOiIyIn0.eyJFbmNvZGVyU2V0dGluZyI6ImVuY29kZXJfc2V0dGluZ183MjBwMzBfMTAiLCJIZWlnaHQiOjcyMCwiS2JwcyI6Mjc1MCwiV2lkdGgiOjEyODB9.ldktM4fCFRfkP4ZEBfZPKtlAUNAcTPkoz994YJAzWpE/dynamic_playlist.m3u8?type=live', category: 'beIN Sport', needsProxy: true, logo: '' },
+        { name: 'beIN Sport Max 5', url: 'https://node8.no-612.workers.dev/resource/MjQwNTk5MDY0MTY5OjI0MDU5OTA2NDE2OToxMjAzNTpsaXZl/index', category: 'beIN Sport', needsProxy: true, logo: '' },
+        { name: 'beIN Sport 4K', url: 'https://live-aburayhan1111.telewebion.ir/ek/faratar/live/2160p/index.m3u8', category: 'beIN Sport', needsProxy: true, logo: '' },
+        { name: 'beIN Sport direct', url: 'https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8', category: 'beIN Sport', needsProxy: true, logo: '' },
+        { name: 'Alwan Sport', url: 'https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/gah7meYPERfQO2x9PayKlfB6_pJe_x_kRp7ZHsiHwiXQWKmBi9xxSOxiENb1nzqr5SCYCfDiXTUUrxwZy9eLcw/transcode/us-east-1/periscope-replay-direct-prod-us-east-1-public/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInZlcnNpb24iOiIyIn0.eyJFbmNvZGVyU2V0dGluZyI6ImVuY29kZXJfc2V0dGluZ183MjBwMzBfMTAiLCJIZWlnaHQiOjcyMCwiS2JwcyI6Mjc1MCwiV2lkdGgiOjEyODB9.ldktM4fCFRfkP4ZEBfZPKtlAUNAcTPkoz994YJAzWpE/dynamic_delta.m3u8?type=live', category: 'Alwan Sports', needsProxy: true, logo: '' },
+        { name: 'NRT Sport', url: 'https://183.bozztv.com/giatv/giatv-NRT-SPORT/NRT-SPORT/chunks.m3u8', category: 'Kurdish Sports', needsProxy: true, logo: '' },
+        { name: 'AVA Sport', url: 'https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/0r143oSa6ROVh1fU0N9YPEaE1iubZyxbFpNud21L6iXosByoNo79kcupxNyKFFMDm143o0Z5PrT-_SCBdjGy3w/transcode/us-east-1/periscope-replay-direct-prod-us-east-1-public/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInZlcnNpb24iOiIyIn0.eyJFbmNvZGVyU2V0dGluZyI6ImVuY29kZXJfc2V0dGluZ183MjBwMzBfMTAiLCJIZWlnaHQiOjcyMCwiS2JwcyI6Mjc1MCwiV2lkdGgiOjEyODB9.ldktM4fCFRfkP4ZEBfZPKtlAUNAcTPkoz994YJAzWpE/dynamic_playlist.m3u8?type=live', category: 'Kurdish Sports', needsProxy: true, logo: '' },
+        { name: 'Fussball Sport', url: 'https://cp11.adabmedia.com/hls2/sport.m3u8', category: 'FIFA', needsProxy: true, logo: '' },
+        { name: 'Korax 90', url: 'https://2.simokora.com/my-hls/0wo68p0w54v/master.m3u8', category: 'FIFA', needsProxy: true, logo: '' },
+        { name: 'TikTok: m4roo14', url: 'https://e.776740.n.ir/hls2/dhdj.m3u8', category: '', needsProxy: true, logo: '' },
     ];
 
     let categories = ["All"];
@@ -2329,7 +2323,8 @@
             item.onclick = () => loadChannel(idx);
             item.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadChannel(idx); } };
             const proxyBadge = ch.needsProxy ? '<span class="proxy-badge"><i class="fas fa-bolt"></i> PROXY</span>' : '<span class="verified-badge"><i class="fas fa-check"></i> DIRECT</span>';
-            item.innerHTML = '<div class="ch-number" style="font-size:1.3rem;background:rgba(124,58,237,0.15);">⚽️</div><div class="ch-info"><div class="ch-name">' + ch.name + proxyBadge + '</div><div class="ch-category">' + (ch.category || 'Football') + '</div></div><div class="ch-status" id="ch-status-' + idx + '"></div>';
+            const logoHtml = ch.logo ? '<img src="' + ch.logo + '" alt="' + ch.name + '" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span style=font-size:1.3rem;>⚽️</span>\'">' : '<span style="font-size:1.3rem;">⚽️</span>';
+            item.innerHTML = '<div class="ch-number" style="background:rgba(124,58,237,0.15);">' + logoHtml + '</div><div class="ch-info"><div class="ch-name">' + ch.name + proxyBadge + '</div><div class="ch-category">' + (ch.category || 'Football') + '</div></div><div class="ch-status" id="ch-status-' + idx + '"></div>';
             listEl.appendChild(item);
         });
     }
@@ -2498,7 +2493,14 @@
         const toggleBar = document.getElementById('proxyToggleBar');
         toggleBar.style.display = 'flex';
         autoSetConnectionMode(ch);
-        document.getElementById('currentChannelIcon').innerHTML = '<span style="font-size:1.4rem;">⚽️</span>';
+        const currentIcon = document.getElementById('currentChannelIcon');
+        if (ch.logo) {
+            currentIcon.innerHTML = '<img src="' + ch.logo + '" alt="' + ch.name + '" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span style=font-size:1.4rem;>⚽️</span>\'">';
+            currentIcon.style.background = 'transparent';
+        } else {
+            currentIcon.innerHTML = '<span style="font-size:1.4rem;">⚽️</span>';
+            currentIcon.style.background = 'linear-gradient(135deg, var(--primary), var(--primary-dark))';
+        }
         streamStatus.className = 'stream-status checking';
         streamStatus.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Connecting...';
         loadingOverlay.style.display = 'flex';
@@ -2510,7 +2512,7 @@
 
         loadState = 'loading';
         showControls();
-        updateChannelNavDisplay();
+        
 
         const loadToken = streamLoadToken;
         setTimeout(() => initHls(getChannelUrl(ch), ch, loadToken), 100);
@@ -2872,11 +2874,18 @@
         video.pause();
         document.getElementById('currentChannelName').textContent = 'Select Football Channel';
         document.getElementById('currentChannelCategory').textContent = 'Direct Stream';
-        document.getElementById('currentChannelIcon').innerHTML = '<span style="font-size:1.4rem;">⚽️</span>';
+        const currentIcon = document.getElementById('currentChannelIcon');
+        if (ch.logo) {
+            currentIcon.innerHTML = '<img src="' + ch.logo + '" alt="' + ch.name + '" style="width:100%;height:100%;object-fit:contain;border-radius:12px;" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span style=font-size:1.4rem;>⚽️</span>\'">';
+            currentIcon.style.background = 'transparent';
+        } else {
+            currentIcon.innerHTML = '<span style="font-size:1.4rem;">⚽️</span>';
+            currentIcon.style.background = 'linear-gradient(135deg, var(--primary), var(--primary-dark))';
+        }
         streamStatus.className = 'stream-status checking';
         streamStatus.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Ready';
         currentChannelIndex = -1;
-        updateChannelNavDisplay();
+        
         renderChannels();
         if (window.location.pathname !== '/') {
             window.history.pushState({}, '', '/');
@@ -3407,7 +3416,7 @@
     document.getElementById('volumeSlider').value = 1;
     loadPreferences();
     updatePlayButton();
-    updateChannelNavDisplay();
+    
     initChannels();
     </script>
 

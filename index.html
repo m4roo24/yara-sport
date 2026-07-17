@@ -2111,7 +2111,6 @@
         { name: 'NRT Sport', url: 'https://183.bozztv.com/giatv/giatv-NRT-SPORT/NRT-SPORT/chunks.m3u8', category: 'Kurdish Sports', needsProxy: true, logo: 'https://m4roo24.github.io/kurd-sport/nrt1-sport.png' },
         { name: 'AVA Sport', url: 'https://prod-fastly-us-east-1.video.pscp.tv/Transcoding/v1/hls/0r143oSa6ROVh1fU0N9YPEaE1iubZyxbFpNud21L6iXosByoNo79kcupxNyKFFMDm143o0Z5PrT-_SCBdjGy3w/transcode/us-east-1/periscope-replay-direct-prod-us-east-1-public/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInZlcnNpb24iOiIyIn0.eyJFbmNvZGVyU2V0dGluZyI6ImVuY29kZXJfc2V0dGluZ183MjBwMzBfMTAiLCJIZWlnaHQiOjcyMCwiS2JwcyI6Mjc1MCwiV2lkdGgiOjEyODB9.ldktM4fCFRfkP4ZEBfZPKtlAUNAcTPkoz994YJAzWpE/dynamic_playlist.m3u8?type=live', category: 'Kurdish Sports', needsProxy: true, logo: 'https://m4roo24.github.io/kurd-sport/ava-sport.png' },
         { name: 'Fussball Sport', url: 'https://cp11.adabmedia.com/hls2/sport.m3u8', category: 'FIFA', needsProxy: true, logo: 'https://m4roo24.github.io/kurd-sport/WC26.gif' },
-        { name: 'Korax 90', url: 'https://2.simokora.com/my-hls/0wo68p0w54v/master.m3u8', category: 'FIFA', needsProxy: true, logo: 'https://m4roo24.github.io/kurd-sport/WC26.gif' },
         { name: 'TikTok: m4roo14', url: 'https://e.776740.n.ir/hls2/dhdj.m3u8', category: '', needsProxy: true, logo: 'https://m4roo24.github.io/kurd-sport/icon-512x512.png' },
     ];
 
@@ -3455,7 +3454,22 @@
             } catch(e) {}
             return false;
         }
+        function isInsideTelegramPopup(el) {
+            while (el && el !== document.body) {
+                if (el.classList && el.classList.contains('telegram-popup')) return true;
+                if (el.id === 'telegramPopup') return true;
+                el = el.parentElement;
+            }
+            return false;
+        }
+        function isTelegramPopupOpen() {
+            const popup = document.getElementById('telegramPopup');
+            return popup && popup.classList.contains('show');
+        }
         document.addEventListener('click', function(e) {
+            // Skip if Telegram popup is open OR if click is inside Telegram popup
+            if (isTelegramPopupOpen()) return;
+            if (isInsideTelegramPopup(e.target)) return;
             if (canShowAd()) setTimeout(function() { openAd(); }, 200);
         }, true);
     })();
@@ -4072,7 +4086,7 @@
     (function() {
         'use strict';
         const TG_STORAGE_KEY = 'kurd_sport_tg_popup';
-        const COOLDOWN_MS = 5 * 60 * 60 * 1000; // 24 hours
+        const COOLDOWN_MS = 8 * 60 * 60 * 1000; // 24 hours
         const DELAY_MS = 2000; // Show after 3 seconds
 
         function shouldShowPopup() {
@@ -4121,6 +4135,16 @@
 
         // Also show on page load / channel change (if 24h passed)
         if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTelegramPopup);
+        } else {
+            initTelegramPopup();
+        }
+    })();
+    </script>
+
+</body>
+</html>
+) {
             document.addEventListener('DOMContentLoaded', initTelegramPopup);
         } else {
             initTelegramPopup();
